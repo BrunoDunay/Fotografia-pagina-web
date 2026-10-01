@@ -1,0 +1,49 @@
+<article class="container doc">
+  @if (doc(); as d) {
+    <header class="doc__head">
+      <p class="eyebrow eyebrow--dash">Armando Ovalle Wedding Studio</p>
+      <h1 class="doc__title">{{ d.title }}</h1>
+      <p class="doc__meta">Versión {{ d.version }} · Actualizado el {{ updated() }}</p>
+      @if (d.isProvisional) {
+        <p class="doc__provisional" role="note">
+          Documento provisional: muestra la estructura y será sustituido por la versión definitiva.
+        </p>
+      }
+      <a appBtn variant="outline" size="sm" [href]="pdfUrl()" download>
+        <app-icon name="download" [size]="16" /> Descargar PDF
+      </a>
+    </header>
+
+    <div class="doc__layout">
+      <nav class="toc" aria-label="Índice">
+        <p class="toc__title">Índice</p>
+        <ol>
+          @for (section of d.sections; track section.number) {
+            <li>
+              <a [href]="'#s' + section.number">{{ section.number }}. {{ section.title }}</a>
+            </li>
+          }
+        </ol>
+      </nav>
+
+      <div class="doc__body">
+        @if (d.intro) {
+          <p class="intro">{{ d.intro }}</p>
+        }
+        @for (section of d.sections; track section.number) {
+          <section class="clause" [id]="'s' + section.number">
+            <h2>
+              <span class="clause__num">{{ section.number < 10 ? '0' + section.number : section.number }}</span>
+              {{ section.title }}
+            </h2>
+            <p>{{ section.body }}</p>
+          </section>
+        }
+      </div>
+    </div>
+  } @else if (doc() === null) {
+    <p class="text-muted">No se pudo cargar el documento. Intenta de nuevo más tarde.</p>
+  } @else {
+    <app-skeleton-text [lines]="10" />
+  }
+</article>

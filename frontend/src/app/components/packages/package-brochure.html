@@ -1,0 +1,40 @@
+<div class="sheet">
+  <div class="frame">
+    <header class="head">
+      <span class="head__name">{{ studio() }}</span>
+      <span class="head__sub script">{{ heading() }}</span>
+    </header>
+
+    <div class="columns" [style.--cols]="packages().length">
+      @for (pkg of packages(); track pkg.id) {
+        <article class="pkg" [class.is-featured]="pkg.isFeatured">
+          @if (pkg.isFeatured) {
+            <span class="pkg__badge">Recomendado</span>
+          }
+          <h3 class="pkg__name">{{ pkg.name }}</h3>
+          @if (pkg.subtitle) {
+            <p class="pkg__subtitle">{{ pkg.subtitle }}</p>
+          }
+          <ul class="pkg__features">
+            @for (feature of pkg.features; track $index) {
+              <li>
+                {{ feature.label }}
+                @if (feature.value) {
+                  <span class="value">· {{ feature.value }}</span>
+                }
+              </li>
+            }
+          </ul>
+          <span class="pkg__rule" aria-hidden="true"></span>
+          <p class="pkg__price" [class.is-pending]="pkg.price === null || pkg.isPriceProvisional">{{ priceLabel(pkg) }}</p>
+        </article>
+      }
+    </div>
+  </div>
+
+  <div class="strip">
+    @for (photo of photos(); track $index) {
+      <app-photo [media]="photo" ratio="4 / 5" sizes="(max-width: 700px) 33vw, 380px" />
+    }
+  </div>
+</div>

@@ -1,0 +1,15 @@
+# Entorno / secretos
+.env
+.env.*
+!.env.example
+
+# Dependencias y builds
+node_modules/
+dist/
+coverage/
+.angular/cache
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+*.log

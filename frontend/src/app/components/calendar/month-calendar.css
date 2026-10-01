@@ -1,0 +1,131 @@
+:host {
+  display: block;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+
+.title {
+  font-size: var(--text-2xl);
+}
+
+.title::first-letter {
+  text-transform: uppercase;
+}
+
+.nav {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: var(--hairline);
+  border-radius: 50%;
+  background: var(--color-surface);
+  transition: border-color var(--duration-fast), color var(--duration-fast);
+}
+
+.nav:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-2);
+  transition: opacity var(--duration);
+}
+
+.grid.is-loading {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.weekday {
+  padding-bottom: var(--space-2);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.day {
+  position: relative;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: var(--text-base);
+  font-weight: 400;
+  transition: border-color var(--duration-fast), background-color var(--duration-fast), transform var(--duration-fast);
+}
+
+.day:hover:not(:disabled) {
+  border-color: var(--color-available);
+  transform: translateY(-1px);
+}
+
+.day.is-outside {
+  border-color: transparent;
+  background: none;
+}
+
+.day.is-past {
+  color: var(--color-border-strong);
+  background: transparent;
+  cursor: default;
+}
+
+.day.is-today .num {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.day.is-busy {
+  border-color: var(--color-busy);
+  background: var(--color-busy);
+  color: var(--color-text-inverse);
+}
+
+.day.is-busy:hover {
+  border-color: var(--color-busy);
+}
+
+.day.is-selected {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.state {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+@media (max-width: 520px) {
+  .grid {
+    gap: 4px;
+  }
+
+  .day {
+    font-size: var(--text-sm);
+  }
+
+  .state {
+    display: none;
+  }
+}

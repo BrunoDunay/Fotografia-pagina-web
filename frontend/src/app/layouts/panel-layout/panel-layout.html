@@ -1,0 +1,58 @@
+<div class="shell" [class.menu-open]="menuOpen()">
+  <aside class="aside" aria-label="Menú del panel">
+    <div class="brand">
+      <span class="brand__name">Armando Ovalle</span>
+      <span class="brand__script script">Wedding Studio</span>
+    </div>
+
+    <nav class="nav">
+      @for (group of nav; track group.title) {
+        <p class="nav__group">{{ group.title }}</p>
+        <ul>
+          @for (item of group.items; track item.path) {
+            <li>
+              <a
+                class="nav__link"
+                [routerLink]="item.path"
+                routerLinkActive="is-active"
+                [routerLinkActiveOptions]="{ exact: item.path === '/panel' }"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="item.icon" /></svg>
+                {{ item.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </nav>
+
+    <div class="aside__footer">
+      <a class="nav__link" routerLink="/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6" /></svg>
+        Ver sitio
+      </a>
+    </div>
+  </aside>
+
+  <button type="button" class="scrim" aria-label="Cerrar menú" (click)="menuOpen.set(false)"></button>
+
+  <div class="main-col">
+    <header class="topbar">
+      <button
+        type="button"
+        class="menu-btn"
+        (click)="menuOpen.set(!menuOpen())"
+        [attr.aria-expanded]="menuOpen()"
+        aria-label="Abrir menú"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+      </button>
+      <span class="topbar__user">{{ auth.admin()?.name }}</span>
+      <button type="button" class="logout" (click)="auth.logout()">Cerrar sesión</button>
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

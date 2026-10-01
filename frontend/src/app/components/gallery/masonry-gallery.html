@@ -1,0 +1,31 @@
+@if (tiles().length) {
+  <div class="masonry">
+    @for (tile of tiles(); track tile.id; let i = $index) {
+      <button type="button" class="tile" (click)="setIndex(i)" [attr.aria-label]="'Ampliar fotografía ' + (i + 1) + ' de ' + total()">
+        <app-photo
+          [media]="tile"
+          [ratio]="tile.ratio"
+          [alt]="tile.alt ?? title()"
+          sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw"
+          [maxWidth]="900"
+        />
+      </button>
+    }
+  </div>
+}
+
+@if (loading()) {
+  <app-skeleton-gallery [count]="tiles().length ? 3 : 9" />
+}
+
+<span #sentinel class="sentinel" aria-hidden="true"></span>
+
+@if (openIndex() !== null) {
+  <app-lightbox
+    [items]="tiles()"
+    [index]="openIndex()!"
+    [total]="total()"
+    (indexChange)="setIndex($event)"
+    (closed)="openIndex.set(null)"
+  />
+}

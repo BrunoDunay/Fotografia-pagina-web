@@ -1,0 +1,39 @@
+<div class="header">
+  <button type="button" class="nav" (click)="go(-1)" [disabled]="!canPrev()" aria-label="Mes anterior">
+    <app-icon name="chevronLeft" />
+  </button>
+  <h3 class="title" aria-live="polite">{{ title() }}</h3>
+  <button type="button" class="nav" (click)="go(1)" [disabled]="!canNext()" aria-label="Mes siguiente">
+    <app-icon name="chevronRight" />
+  </button>
+</div>
+
+<div class="grid" role="grid" [class.is-loading]="loading()">
+  @for (weekday of weekdays; track weekday) {
+    <span class="weekday" role="columnheader">{{ weekday }}</span>
+  }
+  @for (day of days(); track day.date) {
+    @if (day.inMonth) {
+      <button
+        type="button"
+        role="gridcell"
+        class="day"
+        [class.is-busy]="day.isBusy && !day.isPast"
+        [class.is-past]="day.isPast"
+        [class.is-today]="day.isToday"
+        [class.is-selected]="day.date === selected()"
+        [disabled]="day.isPast"
+        [attr.aria-label]="label(day)"
+        [attr.aria-pressed]="day.date === selected()"
+        (click)="daySelect.emit(day)"
+      >
+        <span class="num">{{ day.day }}</span>
+        @if (day.isBusy && !day.isPast) {
+          <span class="state">Ocupado</span>
+        }
+      </button>
+    } @else {
+      <span class="day is-outside" aria-hidden="true"></span>
+    }
+  }
+</div>

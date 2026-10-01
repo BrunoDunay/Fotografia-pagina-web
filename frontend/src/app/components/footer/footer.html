@@ -1,0 +1,73 @@
+<footer class="footer">
+  <div class="container top">
+    <div class="brand">
+      <a routerLink="/" aria-label="Armando Ovalle Wedding Studio — inicio">
+        <img src="/brand/logo-light.png" alt="Armando Ovalle Wedding Studio" width="900" height="219" loading="lazy" />
+      </a>
+      @if (settings.brand()?.tagline; as tagline) {
+        <p class="tagline">{{ tagline }}</p>
+      }
+      <div class="social">
+        @if (settings.contact(); as contact) {
+          @if (contact.instagram.url) {
+            <a [href]="contact.instagram.url" target="_blank" rel="noopener" aria-label="Instagram"><app-icon name="instagram" /></a>
+          }
+          @if (contact.facebook.url) {
+            <a [href]="contact.facebook.url" target="_blank" rel="noopener" aria-label="Facebook"><app-icon name="facebook" /></a>
+          }
+        }
+        @if (settings.whatsappLink(); as wa) {
+          <a [href]="wa" target="_blank" rel="noopener" aria-label="WhatsApp"><app-icon name="whatsapp" /></a>
+        }
+      </div>
+    </div>
+
+    <nav class="col" aria-label="Sitio">
+      <p class="col__title">Navegación</p>
+      <a routerLink="/">Inicio</a>
+      @for (link of links; track link.path) {
+        <a [routerLink]="link.path">{{ link.label }}</a>
+      }
+    </nav>
+
+    <nav class="col" aria-label="Servicios">
+      <p class="col__title">Servicios</p>
+      @for (service of services(); track service.id) {
+        <a [routerLink]="['/events', service.slug]">{{ service.name }}</a>
+      }
+      <a routerLink="/events" class="more">Ver todos →</a>
+    </nav>
+
+    @if (settings.contact(); as contact) {
+      <address class="col">
+        <p class="col__title">Contacto</p>
+        <span>{{ contact.photographerName }}</span>
+        @if (contact.phone) {
+          <a [href]="settings.whatsappLink()" target="_blank" rel="noopener">{{ contact.phone }}</a>
+        }
+        @if (contact.email) {
+          <a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
+        }
+        @if (contact.instagram.handle) {
+          <a [href]="contact.instagram.url" target="_blank" rel="noopener">&#64;{{ contact.instagram.handle }}</a>
+        }
+        @if (contact.facebook.name) {
+          @if (contact.facebook.url) {
+            <a [href]="contact.facebook.url" target="_blank" rel="noopener">{{ contact.facebook.name }}</a>
+          } @else {
+            <span>Facebook: {{ contact.facebook.name }}</span>
+          }
+        }
+      </address>
+    }
+  </div>
+
+  <div class="container bottom">
+    <p>© {{ year }} {{ settings.brand()?.studioName ?? 'Armando Ovalle Wedding Studio' }}</p>
+    <nav class="legal" aria-label="Legal">
+      <a routerLink="/contract">Contrato</a>
+      <a routerLink="/legal/terms">Términos y condiciones</a>
+      <a routerLink="/legal/privacy">Aviso de privacidad</a>
+    </nav>
+  </div>
+</footer>

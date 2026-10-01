@@ -1,0 +1,127 @@
+<!-- 1. Hero (ref. Home/Hero y propuesta de valor — "Harlow") -->
+<section class="hero">
+  <app-photo [media]="heroImage()" [priority]="true" sizes="100vw" [maxWidth]="2400" alt="" />
+  <div class="hero__shade" aria-hidden="true"></div>
+  <div class="hero__content">
+    @if (home(); as h) {
+      <h1 class="hero__title display-thin fade-up">{{ h.hero.title }}</h1>
+      @if (h.hero.subtitle) {
+        <p class="hero__subtitle script fade-up">{{ h.hero.subtitle }}</p>
+      }
+      @if (h.hero.ctaLabel && h.hero.ctaLink) {
+        <a appBtn variant="light" class="hero__cta fade-up" [routerLink]="h.hero.ctaLink">{{ h.hero.ctaLabel }}</a>
+      }
+    }
+  </div>
+  <a class="hero__scroll" href="#propuesta">+ Desliza para explorar</a>
+</section>
+
+<!-- 2. Propuesta de valor -->
+<section id="propuesta" class="value section container container--narrow">
+  <span class="value__line" aria-hidden="true"></span>
+  @if (home(); as h) {
+    <h2 class="value__title" appReveal>{{ h.valueProposition.title }}</h2>
+    @if (h.valueProposition.text) {
+      <p class="value__text" appReveal [revealDelay]="120">{{ h.valueProposition.text }}</p>
+    }
+  } @else {
+    <app-skeleton-text [lines]="3" />
+  }
+</section>
+
+<!-- 3. Sobre mí resumido (ref. Home/Sobre mi — "Lena") -->
+@if (home()?.aboutTeaser; as about) {
+  <section class="about">
+    <div class="container about__grid">
+      <div class="about__media" appReveal>
+        <app-photo [media]="about.image" ratio="4 / 3" sizes="(max-width: 900px) 100vw, 60vw" />
+      </div>
+      <div class="about__text" appReveal [revealDelay]="150">
+        @if (about.eyebrow) {
+          <p class="eyebrow">{{ about.eyebrow }}</p>
+        }
+        <h2 class="about__title">{{ about.title }}</h2>
+        @if (about.subtitle) {
+          <p class="about__subtitle serif-italic">{{ about.subtitle }}</p>
+        }
+        @if (about.text) {
+          <p class="about__body">{{ about.text }}</p>
+        }
+        @if (settings.settings()?.about?.stats; as stats) {
+          <dl class="stats">
+            @for (stat of stats; track stat.label) {
+              <div>
+                <dt>{{ stat.label }}</dt>
+                <dd>{{ stat.value }}</dd>
+              </div>
+            }
+          </dl>
+        }
+        <a appBtn routerLink="/about">{{ about.ctaLabel || 'Conocer más' }}</a>
+      </div>
+    </div>
+  </section>
+}
+
+<!-- 4. Servicios (ref. Home/Servicios — "Featured Work") -->
+<section class="section container">
+  <app-section-title title="Lo que fotografío" eyebrow="Servicios" layout="center" />
+  <div class="services">
+    @if (services(); as list) {
+      @for (service of list; track service.id; let i = $index) {
+        <app-service-card [service]="service" appReveal [revealDelay]="(i % 4) * 80" />
+      }
+    } @else {
+      @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+        <app-skeleton-card [lines]="0" />
+      }
+    }
+  </div>
+</section>
+
+<!-- 5. Paquetes (ref. Home/Paquetes — folleto) -->
+@if (packages()?.length) {
+  <section class="packages section">
+    <div class="container">
+      <app-section-title title="Paquetes" eyebrow="Inversión" />
+      <div appReveal>
+        <app-package-brochure [packages]="packages()!" heading="Paquetes" />
+      </div>
+      <p class="packages__note">
+        Cada evento es distinto: los paquetes pueden ajustarse. Para eventos fuera de Aguascalientes o de México se prepara una
+        cotización personalizada.
+      </p>
+    </div>
+  </section>
+}
+
+<!-- 6. Banda de disponibilidad -->
+<app-cta-band />
+
+<!-- 7. Preguntas frecuentes -->
+@if (faqs()?.length) {
+  <section class="section container container--narrow">
+    <app-section-title title="Preguntas frecuentes" eyebrow="FAQ" layout="center" />
+    <app-faq-list [faqs]="faqs()!.slice(0, 5)" [openFirst]="true" />
+    <div class="faq__more">
+      <a appBtn variant="outline" routerLink="/faq">Ver todas las preguntas</a>
+    </div>
+  </section>
+}
+
+<!-- 8. Contacto -->
+<section class="contact section">
+  <div class="container contact__grid">
+    <div>
+      <p class="eyebrow eyebrow--dash">Contacto</p>
+      <h2 class="contact__title">Hablemos de tu evento</h2>
+      <p class="text-muted contact__text">
+        Cuéntame la fecha, el lugar y el tipo de evento. Te respondo con disponibilidad y opciones de paquete.
+      </p>
+      @if (settings.whatsappLink(); as wa) {
+        <a appBtn [href]="wa" target="_blank" rel="noopener"><app-icon name="whatsapp" [size]="18" /> Escribir por WhatsApp</a>
+      }
+    </div>
+    <app-contact-details />
+  </div>
+</section>

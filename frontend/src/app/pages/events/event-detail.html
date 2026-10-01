@@ -1,0 +1,104 @@
+@switch (state().status) {
+  @case ('missing') {
+    <div class="missing-offset">
+      <app-not-found />
+    </div>
+  }
+  @case ('loading') {
+    <section class="hero hero--loading" aria-busy="true"></section>
+    <section class="section container"><app-skeleton-text [lines]="4" /></section>
+  }
+  @default {
+    @if (service(); as s) {
+      <!-- Hero (ref. "Avery & Marcus") -->
+      <section class="hero">
+        <app-photo [media]="s.hero ?? s.cover" [priority]="true" sizes="100vw" [maxWidth]="2400" alt="" />
+        <div class="hero__shade" aria-hidden="true"></div>
+        <div class="hero__content container">
+          <p class="hero__eyebrow fade-up">Fotografía de</p>
+          <h1 class="hero__title fade-up">
+            {{ heroTitleParts().first }}
+            @if (heroTitleParts().joiner) {
+              <span class="hero__joiner">{{ heroTitleParts().joiner }}</span>
+              {{ heroTitleParts().second }}
+            }
+          </h1>
+          <span class="hero__rule fade-up" aria-hidden="true"></span>
+          @if (s.heroSubtitle || s.shortDescription) {
+            <p class="hero__meta fade-up">{{ s.heroSubtitle || s.shortDescription }}</p>
+          }
+        </div>
+        <a class="hero__down" href="#info" aria-label="Ir al contenido"><app-icon name="arrowDown" [size]="22" /></a>
+      </section>
+
+      <!-- Información -->
+      <section id="info" class="section container info">
+        <div class="info__head" appReveal>
+          <p class="eyebrow eyebrow--dash">{{ s.name }}</p>
+          <h2 class="info__title">{{ s.heroSubtitle || 'Cada historia, contada con detalle' }}</h2>
+        </div>
+        <div class="info__body" appReveal [revealDelay]="120">
+          @if (s.heroDescription) {
+            <p class="lead">{{ s.heroDescription }}</p>
+          }
+          @for (paragraph of descriptionParagraphs(); track $index) {
+            <p>{{ paragraph }}</p>
+          } @empty {
+            @if (!s.heroDescription) {
+              <p class="lead">{{ s.shortDescription }}</p>
+            }
+          }
+          <div class="info__actions">
+            <a appBtn routerLink="/availability">Consultar disponibilidad</a>
+            <a appBtn variant="ghost" [href]="settings.whatsappLink()" target="_blank" rel="noopener">Escribir por WhatsApp →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Video destacado (solo si hay URL) -->
+      @if (s.videoUrl) {
+        <section class="video section">
+          <div class="container">
+            <app-section-title title="Video" [eyebrow]="s.name" />
+            <app-video-embed [url]="s.videoUrl" [title]="'Video de ' + s.name" />
+          </div>
+        </section>
+      }
+
+      <!-- Paquetes -->
+      <section class="packages section">
+        <div class="container">
+          <app-section-title title="Paquetes" eyebrow="Inversión" />
+          @if (s.packages.length) {
+            <app-package-brochure [packages]="s.packages" [heading]="s.name" />
+          } @else {
+            <div class="custom-quote" appReveal>
+              <h3>Cotización a la medida</h3>
+              <p class="text-muted">
+                Para {{ s.name.toLowerCase() }} preparo una propuesta según la duración, el lugar y lo que necesites.
+              </p>
+              <a appBtn variant="outline" [href]="settings.whatsappLink()" target="_blank" rel="noopener">Solicitar cotización</a>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Galería -->
+      <section class="section container--wide gallery" id="galeria">
+        <app-section-title [title]="'Galería'" [eyebrow]="s.name" />
+        <app-masonry-gallery [serviceSlug]="s.slug" [title]="s.name" />
+      </section>
+
+      <!-- CTA -->
+      <app-cta-band [image]="s.cover" />
+
+      <!-- FAQ del servicio (si existen) -->
+      @if (s.faqs.length) {
+        <section class="section container container--narrow">
+          <app-section-title title="Preguntas frecuentes" [eyebrow]="s.name" layout="center" />
+          <app-faq-list [faqs]="s.faqs" />
+        </section>
+      }
+    }
+  }
+}

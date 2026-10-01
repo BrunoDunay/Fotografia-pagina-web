@@ -1,0 +1,62 @@
+<header class="page-head">
+  <h1>Dashboard</h1>
+  @if (data(); as d) {
+    <p class="text-muted">Hoy es {{ formatLongDate(d.today) }}</p>
+  }
+</header>
+
+@if (error()) {
+  <p class="alert" role="alert">{{ error() }}</p>
+} @else if (data(); as d) {
+  <div class="stats">
+    <div class="stat">
+      <span class="stat__label">Eventos este mes</span>
+      <span class="stat__value">{{ d.eventsThisMonth }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat__label">Saldo pendiente</span>
+      <span class="stat__value">{{ formatMoney(d.pendingPayments.balance) }}</span>
+      <span class="stat__hint">{{ d.pendingPayments.events }} evento(s)</span>
+    </div>
+    <div class="stat">
+      <span class="stat__label">Pendiente de confirmar</span>
+      <span class="stat__value">{{ d.provisional.length }}</span>
+      <span class="stat__hint">contenidos provisionales</span>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>Próximos eventos</h2>
+    @if (d.upcomingEvents.length) {
+      <ul class="list">
+        @for (event of d.upcomingEvents; track event.id) {
+          <li>
+            <span class="date">{{ formatLongDate(event.eventDate) }}</span>
+            <span>{{ event.title }} · {{ event.client.name }}</span>
+            <span class="badge" [class]="'badge--' + event.payment.status">{{ formatMoney(event.payment.balance) }} pendiente</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="text-muted">Todavía no hay eventos próximos.</p>
+    }
+  </section>
+
+  @if (d.provisional.length) {
+    <section class="card">
+      <h2>Pendiente de confirmar</h2>
+      <p class="text-muted">Contenido provisional que conviene sustituir por la información real.</p>
+      <ul class="list list--plain">
+        @for (item of d.provisional; track item.type + item.id) {
+          <li>{{ item.label }}</li>
+        }
+      </ul>
+    </section>
+  }
+} @else {
+  <app-skeleton-dashboard />
+}
+
+<p class="phase-note text-muted">
+  Fase 2: base técnica. Las secciones del menú se construyen en la Fase 4. <a routerLink="/">Ver sitio público</a>
+</p>

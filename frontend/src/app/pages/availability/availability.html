@@ -1,0 +1,67 @@
+<section class="container page">
+  <app-section-title title="Disponibilidad" eyebrow="Consulta tu fecha" [level]="1" layout="center">
+    <p class="intro">
+      {{ settings.settings()?.availability?.publicNote ?? 'Consulta si la fecha de tu evento está disponible.' }}
+    </p>
+  </app-section-title>
+
+  <div class="layout">
+    <div class="calendar-card">
+      @if (busy() === null) {
+        <app-skeleton-calendar />
+      } @else {
+        <app-month-calendar
+          [month]="month()"
+          [today]="today()"
+          [busyDates]="busy()!"
+          [selected]="selected()?.date ?? null"
+          [minMonth]="minMonth"
+          [maxMonth]="maxMonth"
+          [loading]="loading()"
+          (monthChange)="changeMonth($event)"
+          (daySelect)="selected.set($event)"
+        />
+      }
+
+      <ul class="legend" aria-label="Leyenda">
+        <li><span class="swatch swatch--free"></span> Disponible</li>
+        <li><span class="swatch swatch--busy"></span> Ocupado</li>
+        <li><span class="swatch swatch--past"></span> Fecha pasada</li>
+      </ul>
+
+      @if (failed()) {
+        <p class="error" role="alert">No se pudo cargar la disponibilidad. Intenta de nuevo en un momento.</p>
+      }
+    </div>
+
+    <aside class="panel" aria-live="polite">
+      @if (selected(); as day) {
+        <p class="eyebrow">Fecha seleccionada</p>
+        <p class="panel__date">{{ selectedLabel() }}</p>
+        @if (day.isBusy) {
+          <p class="status status--busy">Ocupado</p>
+          <p class="text-muted">
+            Esta fecha ya tiene un evento. Escríbeme de todos modos: en algunos casos es posible coordinar cobertura.
+          </p>
+        } @else {
+          <p class="status status--free">Disponible</p>
+          <p class="text-muted">
+            La fecha se aparta con la firma del contrato y el pago del apartado. Escríbeme para confirmar.
+          </p>
+        }
+      } @else {
+        <p class="eyebrow">¿Cómo funciona?</p>
+        <p class="panel__date">Elige una fecha</p>
+        <p class="text-muted">
+          Selecciona el día de tu evento para ver si está disponible. El calendario se actualiza en cuanto se confirma una
+          reservación.
+        </p>
+      }
+      @if (whatsappForDate(); as wa) {
+        <a appBtn [href]="wa" target="_blank" rel="noopener" [block]="true">
+          <app-icon name="whatsapp" [size]="18" /> Consultar por WhatsApp
+        </a>
+      }
+    </aside>
+  </div>
+</section>

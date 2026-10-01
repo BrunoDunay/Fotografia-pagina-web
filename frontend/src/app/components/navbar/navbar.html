@@ -1,0 +1,67 @@
+<header class="bar">
+  <button
+    type="button"
+    class="menu-toggle"
+    (click)="toggleMenu()"
+    [attr.aria-expanded]="menuOpen()"
+    aria-controls="mobile-menu"
+    [attr.aria-label]="menuOpen() ? 'Cerrar menú' : 'Abrir menú'"
+  >
+    <app-icon [name]="menuOpen() ? 'close' : 'menu'" [size]="24" />
+  </button>
+
+  <nav class="links" aria-label="Principal">
+    @for (link of links; track link.path) {
+      <a [routerLink]="link.path" routerLinkActive="is-active">{{ link.label }}</a>
+    }
+  </nav>
+
+  <a class="logo" routerLink="/" aria-label="Armando Ovalle Wedding Studio — inicio">
+    <img class="logo__img logo__img--light" src="/brand/logo-light.png" alt="" width="900" height="219" />
+    <img class="logo__img logo__img--dark" src="/brand/logo-dark.png" alt="" width="900" height="219" />
+    @if (theme.active()?.navbarBadge; as badge) {
+      <span class="season-badge" aria-hidden="true">{{ badge }}</span>
+    }
+  </a>
+
+  <div class="social">
+    @if (settings.contact(); as contact) {
+      @if (contact.instagram.url) {
+        <a [href]="contact.instagram.url" target="_blank" rel="noopener" aria-label="Instagram">
+          <app-icon name="instagram" [size]="19" />
+        </a>
+      }
+      @if (contact.facebook.url) {
+        <a [href]="contact.facebook.url" target="_blank" rel="noopener" aria-label="Facebook">
+          <app-icon name="facebook" [size]="19" />
+        </a>
+      }
+    }
+    @if (settings.whatsappLink(); as wa) {
+      <a [href]="wa" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <app-icon name="whatsapp" [size]="19" />
+      </a>
+    }
+  </div>
+</header>
+
+<div id="mobile-menu" class="mobile-menu" [class.is-open]="menuOpen()" [attr.aria-hidden]="!menuOpen()">
+  <nav aria-label="Menú móvil">
+    <a routerLink="/" [attr.tabindex]="menuOpen() ? 0 : -1">Inicio</a>
+    @for (link of links; track link.path; let i = $index) {
+      <a [routerLink]="link.path" [style.transition-delay.ms]="menuOpen() ? 80 + i * 50 : 0" [attr.tabindex]="menuOpen() ? 0 : -1">
+        {{ link.label }}
+      </a>
+    }
+  </nav>
+  @if (settings.contact(); as contact) {
+    <p class="mobile-menu__contact">
+      @if (contact.instagram.handle) {
+        <span>&#64;{{ contact.instagram.handle }}</span>
+      }
+      @if (contact.phone) {
+        <span>{{ contact.phone }}</span>
+      }
+    </p>
+  }
+</div>

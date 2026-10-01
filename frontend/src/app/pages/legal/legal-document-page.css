@@ -1,0 +1,118 @@
+.doc {
+  padding-bottom: var(--section-padding);
+}
+
+.doc__head {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-7);
+  margin-bottom: var(--space-7);
+  border-bottom: var(--hairline);
+  text-align: center;
+}
+
+.doc__title {
+  max-width: 20ch;
+  font-size: var(--text-4xl);
+}
+
+.doc__meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.doc__provisional {
+  max-width: 60ch;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+  font-size: var(--text-sm);
+}
+
+.doc__layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.toc {
+  position: sticky;
+  top: calc(var(--navbar-height) + var(--space-5));
+  font-size: var(--text-sm);
+}
+
+.toc__title {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.toc ol {
+  display: grid;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.toc a {
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast);
+}
+
+.toc a:hover {
+  color: var(--color-primary);
+}
+
+.doc__body {
+  max-width: 72ch;
+}
+
+.intro {
+  margin-bottom: var(--space-7);
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: 1.6;
+}
+
+.clause {
+  padding: var(--space-6) 0;
+  border-top: var(--hairline);
+  scroll-margin-top: calc(var(--navbar-height) + var(--space-6));
+}
+
+.clause h2 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+  font-size: var(--text-2xl);
+}
+
+.clause__num {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-primary);
+}
+
+.clause p {
+  line-height: 1.9;
+  white-space: pre-line;
+}
+
+@media (max-width: 900px) {
+  .doc__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .toc {
+    position: static;
+    padding: var(--space-5);
+    border: var(--hairline);
+    background: var(--color-surface);
+  }
+}

@@ -1,0 +1,109 @@
+@if (about(); as a) {
+  <!-- Hero con stats y riel de redes -->
+  <section class="hero">
+    <app-photo [media]="images()[0]" [priority]="true" sizes="100vw" [maxWidth]="2400" position="70% center" alt="" />
+    <div class="hero__shade" aria-hidden="true"></div>
+
+    <div class="hero__content container">
+      <h1 class="hero__name fade-up">{{ a.name }}</h1>
+      @if (a.headline) {
+        <p class="hero__headline fade-up">{{ a.headline }}</p>
+      }
+      <a appBtn variant="light" routerLink="/contact" class="fade-up">Contacto</a>
+
+      <dl class="hero__stats">
+        @for (stat of a.stats; track stat.label) {
+          <div>
+            <dd>{{ stat.value }}</dd>
+            <dt>{{ stat.label }}</dt>
+          </div>
+        }
+      </dl>
+    </div>
+
+    @if (settings.contact(); as c) {
+      <div class="rail" aria-label="Redes sociales">
+        <span class="rail__line" aria-hidden="true"></span>
+        @if (c.instagram.url) {
+          <a [href]="c.instagram.url" target="_blank" rel="noopener" aria-label="Instagram"><app-icon name="instagram" [size]="18" /></a>
+        }
+        @if (c.facebook.url) {
+          <a [href]="c.facebook.url" target="_blank" rel="noopener" aria-label="Facebook"><app-icon name="facebook" [size]="18" /></a>
+        }
+        <a [href]="settings.whatsappLink()" target="_blank" rel="noopener" aria-label="WhatsApp"><app-icon name="whatsapp" [size]="18" /></a>
+        <span class="rail__line" aria-hidden="true"></span>
+      </div>
+    }
+  </section>
+
+  <!-- Presentación: collage superpuesto + historia -->
+  <section class="section container intro">
+    <div class="collage" appReveal>
+      <span class="collage__rule" aria-hidden="true"></span>
+      <div class="collage__back"><app-photo [media]="images()[1]" sizes="(max-width: 900px) 70vw, 30vw" /></div>
+      <div class="collage__front"><app-photo [media]="images()[2]" sizes="(max-width: 900px) 60vw, 25vw" /></div>
+    </div>
+    <div class="intro__text" appReveal [revealDelay]="150">
+      <h2 class="intro__title">Sobre mí</h2>
+      @if (a.intro) {
+        <p class="lead">{{ a.intro }}</p>
+      }
+      @if (a.story) {
+        <p>{{ a.story }}</p>
+      }
+    </div>
+  </section>
+
+  <!-- Formación y especialidades -->
+  <section class="section facts">
+    <div class="container facts__grid">
+      <div appReveal>
+        <app-section-title title="Formación" [level]="2" />
+        <p class="degree">{{ a.education.degree }}</p>
+        <p class="text-muted">{{ a.education.institution }}</p>
+      </div>
+      <div appReveal [revealDelay]="120">
+        <app-section-title title="Especialidades" [level]="2" />
+        <ul class="chips">
+          @for (item of a.specialties; track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filosofía -->
+  @if (a.philosophy) {
+    <section class="section container container--narrow philosophy" appReveal>
+      <p class="eyebrow eyebrow--dash">Filosofía</p>
+      <blockquote>{{ a.philosophy }}</blockquote>
+    </section>
+  }
+
+  <!-- Fuera de Aguascalientes / fuera de México (sin mapa, según el brief) -->
+  <section class="section container travel">
+    <app-section-title title="Eventos fuera de Aguascalientes" eyebrow="Cobertura" />
+    <div class="travel__grid">
+      @if (a.travel.national) {
+        <article appReveal>
+          <h3>En México</h3>
+          <p>{{ a.travel.national }}</p>
+        </article>
+      }
+      @if (a.travel.international) {
+        <article appReveal [revealDelay]="120">
+          <h3>Fuera de México</h3>
+          <p>{{ a.travel.international }}</p>
+        </article>
+      }
+    </div>
+    <p class="travel__note">Los eventos fuera de Aguascalientes o de México pueden requerir una cotización diferente.</p>
+  </section>
+
+  <app-cta-band title="Cuéntame sobre tu evento" eyebrow="Hablemos" [image]="images()[0]" />
+} @else {
+  <section class="section container">
+    <app-skeleton-text [lines]="6" />
+  </section>
+}
