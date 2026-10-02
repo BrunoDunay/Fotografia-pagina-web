@@ -21,13 +21,10 @@ const passwordsMatch = (group: AbstractControl): ValidationErrors | null =>
     <section class="p-card p-form">
       <h2 class="p-card__title">Disponibilidad pública</h2>
       <form class="p-form" [formGroup]="availability" (ngSubmit)="saveAvailability()" novalidate>
-        <div class="p-grid">
-          <div class="field">
-            <label class="field__label" for="max">Eventos por día para marcar "Ocupado"</label>
-            <input id="max" class="field__control" type="number" min="1" max="10" formControlName="maxEventsPerDay" />
-            <span class="field__hint">Con 1, cualquier evento ocupa el día. Súbelo si a veces cubres eventos simultáneos con apoyo.</span>
-          </div>
-        </div>
+        <p class="p-help">
+          Un día aparece como "Ocupado" solo si tú lo decides: al crear un evento con la casilla "Ocupa la fecha" marcada, o al bloquearlo
+          desde el Calendario.
+        </p>
         <div class="field">
           <label class="field__label" for="note">Texto bajo el título del calendario</label>
           <input id="note" class="field__control" formControlName="publicNote" maxlength="300" />
@@ -80,7 +77,6 @@ export class SettingsAdmin {
   protected readonly passwordError = signal<string | null>(null);
 
   protected readonly availability = this.fb.group({
-    maxEventsPerDay: [1, [Validators.required, Validators.min(1), Validators.max(10)]],
     publicNote: [''],
   });
 
@@ -95,14 +91,14 @@ export class SettingsAdmin {
 
   constructor() {
     this.api.settings().subscribe((s) =>
-      this.availability.reset({ maxEventsPerDay: s.availability.maxEventsPerDay, publicNote: s.availability.publicNote ?? '' }),
+      this.availability.reset({ publicNote: s.availability.publicNote ?? '' }),
     );
   }
 
   protected saveAvailability(): void {
     const v = this.availability.getRawValue();
     this.savingAvailability.set(true);
-    this.saver.save('availability', { maxEventsPerDay: Number(v.maxEventsPerDay), publicNote: orNull(v.publicNote) }, 'Disponibilidad actualizada.').subscribe({
+    this.saver.save('availability', { publicNote: orNull(v.publicNote) }, 'Disponibilidad actualizada.').subscribe({
       next: () => {
         this.savingAvailability.set(false);
         this.availability.markAsPristine();

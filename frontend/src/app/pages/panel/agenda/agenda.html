@@ -68,6 +68,9 @@
                   {{ shortTime(e.startTime) || 'Sin hora' }} · {{ e.service?.name ?? 'Evento' }} · {{ e.client.name }}
                 </span>
                 <span class="p-badge" [class]="'p-badge p-badge--' + e.status">{{ statusLabel[e.status] }}</span>
+                @if (!e.blocksAvailability) {
+                  <span class="p-help">No ocupa la fecha en el sitio</span>
+                }
               </a>
             </li>
           }

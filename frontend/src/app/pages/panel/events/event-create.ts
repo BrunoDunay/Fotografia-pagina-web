@@ -65,6 +65,7 @@ export class EventCreate implements OnInit {
     venue: [''],
     city: ['Aguascalientes'],
     status: ['confirmed' as const as string],
+    blocksAvailability: [true],
     notes: [''],
     withPayment: [true],
     payment: this.fb.group({
@@ -162,6 +163,7 @@ export class EventCreate implements OnInit {
       venue: v.venue || null,
       city: v.city || null,
       status: v.status,
+      blocksAvailability: v.blocksAvailability,
       notes: v.notes || null,
       initialPayment: payment,
       reservation: { ticketPalette: v.palette },
@@ -171,7 +173,7 @@ export class EventCreate implements OnInit {
     this.serverErrors.set({});
     this.agenda.createEvent(body).subscribe({
       next: (event) => {
-        this.toast.success('Evento guardado. La fecha ya aparece como ocupada.');
+        this.toast.success(v.blocksAvailability ? 'Evento guardado. La fecha ya aparece como ocupada.' : 'Evento guardado.');
         void this.router.navigate(['/panel/events', event.id], { queryParams: { created: 1 } });
       },
       error: (err: ApiError) => {

@@ -41,7 +41,8 @@ export async function getBySlug(req, res) {
 
   const imageCount = gallery ? await GalleryImage.count({ where: { galleryId: gallery.id } }) : 0;
 
-  packages.sort((a, b) => a.ServicePackage.sortOrder - b.ServicePackage.sortOrder || a.sortOrder - b.sortOrder);
+  // El orden lo define el panel de Paquetes (orden global), igual que en la Home.
+  packages.sort((a, b) => a.sortOrder - b.sortOrder);
 
   res.json({
     ...toServiceDetail(service),

@@ -52,7 +52,6 @@ export interface SeoSettings {
 }
 
 export interface AvailabilitySettings {
-  maxEventsPerDay: number;
   publicNote: string | null;
 }
 

@@ -92,7 +92,6 @@ export const settings = {
   },
 
   availability: {
-    maxEventsPerDay: 1,
     publicNote: 'Consulta la fecha de tu evento. Para apartarla, escríbeme por WhatsApp.',
   },
 

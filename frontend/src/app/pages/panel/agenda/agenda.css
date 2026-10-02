@@ -5,7 +5,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
   gap: var(--space-5);
   align-items: start;
 }
@@ -143,7 +143,14 @@
   position: sticky;
   top: calc(var(--space-6) + 60px);
   display: grid;
+  /* minmax(0, 1fr): los hijos (botones, campos) nunca rebasan el ancho del panel. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
+  min-width: 0;
+}
+
+.day-panel :is(button, a) {
+  white-space: normal;
 }
 
 .day-panel__date {
@@ -164,6 +171,8 @@
   display: grid;
   gap: 2px;
   justify-items: start;
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: var(--space-3);
   border: var(--hairline);
   transition: border-color var(--duration-fast);
@@ -175,10 +184,18 @@
 
 .block-box {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-2);
-  justify-items: start;
   padding-top: var(--space-4);
   border-top: var(--hairline);
+}
+
+.block-box .field__control {
+  width: 100%;
+}
+
+.block-box button {
+  justify-self: start;
 }
 
 @media (max-width: 1100px) {

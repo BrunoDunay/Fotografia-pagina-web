@@ -71,7 +71,6 @@ export const settingsSchemas = {
   }),
 
   availability: z.object({
-    maxEventsPerDay: z.coerce.number().int().min(1).max(10),
     publicNote: optionalText(300),
   }),
 
