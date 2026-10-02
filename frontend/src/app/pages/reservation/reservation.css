@@ -1,0 +1,112 @@
+.stage {
+  --stage-bg: var(--ticket-mocha-dark);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-height: 100svh;
+  padding: var(--space-6) var(--space-4) var(--space-5);
+  overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--stage-bg) 75%, white), var(--stage-bg));
+  color: #fbf8f4;
+  isolation: isolate;
+}
+
+.stage--navy {
+  --stage-bg: var(--ticket-navy-dark);
+}
+
+.stage--burgundy {
+  --stage-bg: var(--ticket-burgundy-dark);
+}
+
+/* Portada de la reservación (si existe): de fondo, desenfocada y teñida. */
+.stage__backdrop {
+  position: absolute;
+  inset: -40px;
+  z-index: -1;
+  background-position: center;
+  background-size: cover;
+  filter: blur(24px) saturate(0.8);
+  opacity: 0.35;
+}
+
+/* El ticket cabe completo en pantalla: limita el ancho por el alto disponible. */
+.ticket-wrap,
+.ticket-skeleton {
+  width: min(100%, 420px, calc((100svh - 190px) * 9 / 16));
+  min-width: 260px;
+}
+
+.ticket-skeleton {
+  aspect-ratio: 9 / 16;
+  opacity: 0.25;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.actions button {
+  gap: var(--space-2);
+}
+
+/* Más específico que los estilos del botón "ghost" (pensado para fondo claro). */
+.actions .actions__ghost {
+  color: #fbf8f4;
+  opacity: 0.85;
+}
+
+.actions .actions__ghost:hover {
+  opacity: 1;
+}
+
+.hint {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  opacity: 0.7;
+}
+
+.missing {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  max-width: 28rem;
+  text-align: center;
+}
+
+.missing__eyebrow {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.missing h1 {
+  font-size: var(--text-3xl);
+  color: inherit;
+}
+
+.missing p {
+  opacity: 0.85;
+}
+
+.brand {
+  margin-top: var(--space-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  color: inherit;
+  opacity: 0.75;
+  transition: opacity var(--duration-fast);
+}
+
+.brand:hover {
+  opacity: 1;
+}

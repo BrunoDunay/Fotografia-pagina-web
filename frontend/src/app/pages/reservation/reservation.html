@@ -1,0 +1,38 @@
+<main class="stage" [class]="'stage stage--' + (reservation()?.palette ?? 'mocha')">
+  @if (backdrop(); as url) {
+    <div class="stage__backdrop" aria-hidden="true" [style.background-image]="'url(' + url + ')'"></div>
+  }
+
+  @switch (state().status) {
+    @case ('loading') {
+      <div class="ticket-skeleton skeleton" aria-busy="true" aria-label="Cargando ticket"></div>
+    }
+    @case ('ready') {
+      <div class="ticket-wrap fade-up">
+        <app-reservation-ticket [reservation]="reservation()!" [now]="now()" />
+      </div>
+
+      <div class="actions">
+        <button appBtn variant="light" type="button" [loading]="exporting()" [disabled]="exporting()" (click)="saveImage()">
+          <app-icon name="download" [size]="16" />
+          Guardar imagen
+        </button>
+        <button appBtn variant="ghost" class="actions__ghost" type="button" (click)="shareLink()">
+          <app-icon [name]="canShareLink() ? 'share' : 'link'" [size]="16" />
+          {{ canShareLink() ? 'Compartir enlace' : 'Copiar enlace' }}
+        </button>
+      </div>
+      <p class="hint">La imagen tiene formato de historia (1080 × 1920).</p>
+    }
+    @case ('missing') {
+      <div class="missing">
+        <p class="missing__eyebrow">Ticket no disponible</p>
+        <h1>Este enlace ya no está activo</h1>
+        <p>Puede que haya cambiado o que el evento se haya cancelado. Escríbenos y con gusto te ayudamos.</p>
+        <a appBtn variant="light" routerLink="/contact">Contacto</a>
+      </div>
+    }
+  }
+
+  <a class="brand" routerLink="/">Armando Ovalle · Wedding Studio</a>
+</main>

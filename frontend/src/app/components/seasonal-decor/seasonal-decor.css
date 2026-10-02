@@ -1,0 +1,170 @@
+:host {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: var(--z-decor);
+  height: 100svh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ---------- Partículas que caen ---------- */
+.particle {
+  --size: 1;
+
+  position: absolute;
+  top: 0;
+  display: block;
+  width: calc(var(--size) * 10px);
+  height: calc(var(--size) * 10px);
+  opacity: 0;
+  animation: fall linear infinite;
+  will-change: transform;
+}
+
+@keyframes fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -8vh, 0) rotate(0deg);
+  }
+  8% {
+    opacity: var(--decor-opacity, 0.75);
+  }
+  85% {
+    opacity: var(--decor-opacity, 0.75);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), 104svh, 0) rotate(var(--spin));
+  }
+}
+
+/* Nieve */
+:host(.decor--snow) .particle {
+  --decor-opacity: 0.85;
+
+  width: calc(var(--size) * 9px);
+  height: calc(var(--size) * 9px);
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 55%, rgb(255 255 255 / 0));
+}
+
+/* Pétalos */
+:host(.decor--petals) .particle {
+  width: calc(var(--size) * 12px);
+  height: calc(var(--size) * 9px);
+  border-radius: 100% 0 100% 0;
+  background: #f3c9cf;
+}
+
+:host(.decor--petals) .tone-1 {
+  background: #e9b0b9;
+}
+
+:host(.decor--petals) .tone-2 {
+  background: #fbe6e8;
+}
+
+/* Hojas de otoño */
+:host(.decor--leaves) .particle {
+  width: calc(var(--size) * 14px);
+  height: calc(var(--size) * 9px);
+  border-radius: 0 80% 0 80%;
+  background: #c9773b;
+}
+
+:host(.decor--leaves) .tone-1 {
+  background: #a5532c;
+}
+
+:host(.decor--leaves) .tone-2 {
+  background: #d9a441;
+}
+
+/* Confeti (tonos de la marca) */
+:host(.decor--confetti) .particle {
+  width: calc(var(--size) * 5px);
+  height: calc(var(--size) * 11px);
+  background: var(--color-accent);
+}
+
+:host(.decor--confetti) .tone-1 {
+  background: var(--color-primary);
+}
+
+:host(.decor--confetti) .tone-2 {
+  background: #fbf8f4;
+}
+
+/* En móvil, menos partículas. */
+@media (max-width: 640px) {
+  .particle:nth-child(n + 15) {
+    display: none;
+  }
+}
+
+/* ---------- Papel picado (Independencia): guirnalda bajo el navbar ---------- */
+.garland {
+  position: absolute;
+  inset: calc(var(--navbar-height) + 6px) 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2vw;
+  border-top: 1px solid rgb(255 255 255 / 0.45);
+}
+
+.flag {
+  width: calc((100% - 13 * 1.2vw) / 14);
+  height: clamp(22px, 3.2vw, 38px);
+  background: #2f7d4f;
+  opacity: 0.42;
+  clip-path: polygon(0 0, 100% 0, 100% 82%, 87.5% 100%, 75% 82%, 62.5% 100%, 50% 82%, 37.5% 100%, 25% 82%, 12.5% 100%, 0 82%);
+  /* Calado: pequeñas perforaciones como en el papel picado. */
+  mask:
+    radial-gradient(circle at 50% 36%, transparent 11%, #000 12%) center / 100% 100%,
+    radial-gradient(circle at 25% 58%, transparent 7%, #000 8%) center / 100% 100%,
+    radial-gradient(circle at 75% 58%, transparent 7%, #000 8%) center / 100% 100%;
+  mask-composite: intersect;
+  transform-origin: top center;
+  animation: sway 4.5s ease-in-out infinite alternate;
+}
+
+.flag--1 {
+  background: #f4efe8;
+}
+
+.flag--2 {
+  background: #b8323a;
+}
+
+@keyframes sway {
+  from {
+    rotate: -3deg;
+  }
+  to {
+    rotate: 3deg;
+  }
+}
+
+@media (max-width: 640px) {
+  .flag:nth-child(n + 9) {
+    display: none;
+  }
+
+  .flag {
+    width: calc((100% - 7 * 2vw) / 8);
+  }
+}
+
+/* ---------- Movimiento reducido: partículas quietas repartidas y guirnalda fija ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .particle {
+    top: var(--top);
+    opacity: 0.6;
+    animation: none;
+    rotate: var(--spin);
+  }
+
+  .flag {
+    animation: none;
+  }
+}

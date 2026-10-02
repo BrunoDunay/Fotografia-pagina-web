@@ -1,6 +1,6 @@
 import { parseVideoUrl } from './video-embed';
 import { buildWhatsAppLink } from './whatsapp-link';
-import { daysBetween, formatLongDate, ticketStage, todayInMexico } from './date-mx';
+import { countdownTo, dateParts, daysBetween, formatLongDate, ticketStage, todayInMexico } from './date-mx';
 import { cloudinarySrcset, cloudinaryUrl } from './cloudinary-url';
 
 describe('parseVideoUrl', () => {
@@ -77,5 +77,28 @@ describe('cloudinaryUrl', () => {
   });
   it('srcset con varios anchos', () => {
     expect(cloudinarySrcset(url, [400, 800])).toContain('w_400,c_limit/v1712/aows/foto.jpg 400w');
+  });
+});
+
+describe('countdownTo', () => {
+  it('cuenta hasta la hora de inicio en hora de México (UTC−6)', () => {
+    // 24 oct 2026 17:00 en México = 23:00 UTC
+    const now = Date.parse('2026-10-22T22:59:30Z');
+    expect(countdownTo('2026-10-24', '17:00:00', now)).toEqual({ days: 2, hours: 0, minutes: 0, seconds: 30 });
+  });
+
+  it('sin hora cuenta hasta las 00:00 del día del evento', () => {
+    const now = Date.parse('2026-10-24T05:00:00Z'); // 23 oct 23:00 en México
+    expect(countdownTo('2026-10-24', null, now)).toEqual({ days: 0, hours: 1, minutes: 0, seconds: 0 });
+  });
+
+  it('nunca es negativo', () => {
+    expect(countdownTo('2020-01-01', null)).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  });
+});
+
+describe('dateParts', () => {
+  it('separa la fecha sin desfase de zona horaria', () => {
+    expect(dateParts('2026-10-24')).toEqual({ weekday: 'sábado', day: 24, month: 'octubre', year: 2026 });
   });
 });

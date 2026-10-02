@@ -17,8 +17,13 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login').then((m) => m.Login),
   },
 
+  // ---- Ticket digital (layout propio, sin navbar) ----
+  {
+    path: 'reservation/:code',
+    loadComponent: () => import('./pages/reservation/reservation').then((m) => m.ReservationPage),
+  },
+
   // ---- Sitio público ----
-  // Fase 5: reservation/:code (ticket digital con layout propio, sin navbar).
   {
     path: '',
     component: PublicLayout,

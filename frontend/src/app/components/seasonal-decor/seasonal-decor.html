@@ -1,0 +1,23 @@
+@if (ready()) {
+  @if (decoration() === 'papel_picado') {
+    <div class="garland">
+      @for (tone of flags; track $index) {
+        <span class="flag" [class]="'flag flag--' + tone" [style.animation-delay.s]="-$index * 0.35"></span>
+      }
+    </div>
+  } @else {
+    @for (p of particles(); track $index) {
+      <span
+        class="particle"
+        [class]="'particle tone-' + p.tone"
+        [style.left.%]="p.left"
+        [style.--size]="p.size"
+        [style.--top]="p.top + '%'"
+        [style.--drift]="p.drift + 'px'"
+        [style.--spin]="p.spin + 'deg'"
+        [style.animation-delay.s]="p.delay"
+        [style.animation-duration.s]="p.duration"
+      ></span>
+    }
+  }
+}
