@@ -37,12 +37,21 @@
         <thead><tr><th>Tema</th><th>Fechas</th><th>Decoración</th><th>Automático</th><th>Prioridad</th></tr></thead>
         <tbody>
           @for (t of list; track t.id) {
-            <tr class="is-link" (click)="edit(t)" tabindex="0" (keydown.enter)="edit(t)" [class.inactive]="!t.isActive">
+            <tr
+              class="is-link"
+              (click)="edit(t)"
+              tabindex="0"
+              (keydown.enter)="edit(t)"
+              [class.inactive]="!t.isActive"
+              [class.is-current]="t.id === activeThemeId()"
+            >
               <td>
-                <strong>{{ t.name }}</strong>
-                @if (t.id === activeThemeId()) {
-                  <span class="p-badge p-badge--success">Activo hoy</span>
-                }
+                <div class="theme-name">
+                  <strong>{{ t.name }}</strong>
+                  @if (t.id === activeThemeId()) {
+                    <span class="p-badge p-badge--success">Activo hoy</span>
+                  }
+                </div>
               </td>
               <td>{{ range(t) }}</td>
               <td>{{ t.decoration === 'none' ? '—' : decorationLabel[t.decoration] }}</td>

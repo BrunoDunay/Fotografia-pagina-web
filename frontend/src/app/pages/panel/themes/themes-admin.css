@@ -47,6 +47,22 @@ tr.inactive td {
   opacity: 0.5;
 }
 
+.theme-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+/* Tema que se ve hoy en el sitio: barra verde a la izquierda, como el elemento activo del menú. */
+tr.is-current td {
+  background: var(--color-success-soft);
+}
+
+tr.is-current td:first-child {
+  box-shadow: inset 3px 0 0 var(--color-success);
+}
+
 .editor {
   position: sticky;
   top: calc(var(--space-6) + 60px);

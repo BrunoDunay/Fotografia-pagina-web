@@ -69,7 +69,17 @@ export interface Faq {
   isActive?: boolean;
 }
 
-export type ThemeDecoration = 'none' | 'snow' | 'leaves' | 'petals' | 'papel_picado' | 'confetti';
+export type ThemeDecoration =
+  | 'none'
+  | 'snow'
+  | 'christmas'
+  | 'hearts'
+  | 'petals'
+  | 'sunshine'
+  | 'leaves'
+  | 'confetti'
+  | 'papel_picado'
+  | 'dia_de_muertos';
 
 export interface ActiveTheme {
   key: string;

@@ -321,11 +321,13 @@ export const faqs = [
 
 /** Temas estacionales sugeridos (editables). Las festividades tienen más prioridad que las estaciones. */
 export const themes = [
-  { key: 'christmas', name: 'Navidad', startMonth: 12, startDay: 1, endMonth: 12, endDay: 31, autoEnabled: true, priority: 50, decoration: 'snow', navbarBadge: '❄' },
+  { key: 'christmas', name: 'Navidad', startMonth: 12, startDay: 1, endMonth: 12, endDay: 31, autoEnabled: true, priority: 50, decoration: 'christmas', navbarBadge: '❄' },
+  { key: 'valentines', name: 'San Valentín', startMonth: 2, startDay: 1, endMonth: 2, endDay: 14, autoEnabled: true, priority: 50, decoration: 'hearts', navbarBadge: null },
+  { key: 'dia-de-muertos', name: 'Día de Muertos', startMonth: 10, startDay: 25, endMonth: 11, endDay: 2, autoEnabled: true, priority: 50, decoration: 'dia_de_muertos', navbarBadge: null, tokenOverrides: { '--color-accent': '#E8912D' } },
   { key: 'independence', name: 'Día de la Independencia', startMonth: 9, startDay: 1, endMonth: 9, endDay: 16, autoEnabled: true, priority: 50, decoration: 'papel_picado', navbarBadge: null },
   { key: 'san-marcos', name: 'Feria de San Marcos', startMonth: 4, startDay: 15, endMonth: 5, endDay: 10, autoEnabled: true, priority: 50, decoration: 'confetti', navbarBadge: null },
   { key: 'spring', name: 'Primavera', startMonth: 3, startDay: 20, endMonth: 6, endDay: 20, autoEnabled: false, priority: 10, decoration: 'petals', navbarBadge: null },
-  { key: 'summer', name: 'Verano', startMonth: 6, startDay: 21, endMonth: 9, endDay: 21, autoEnabled: false, priority: 10, decoration: 'none', navbarBadge: null },
+  { key: 'summer', name: 'Verano', startMonth: 6, startDay: 21, endMonth: 9, endDay: 21, autoEnabled: false, priority: 10, decoration: 'sunshine', navbarBadge: null },
   { key: 'autumn', name: 'Otoño', startMonth: 9, startDay: 22, endMonth: 12, endDay: 20, autoEnabled: false, priority: 10, decoration: 'leaves', navbarBadge: null, tokenOverrides: { '--color-accent': '#C9935A' } },
   { key: 'winter', name: 'Invierno', startMonth: 12, startDay: 21, endMonth: 3, endDay: 19, autoEnabled: false, priority: 10, decoration: 'snow', navbarBadge: null },
 ];

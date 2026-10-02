@@ -13,7 +13,8 @@ export async function getPublic(req, res) {
   if (daysBetween(from, to) > MAX_RANGE_DAYS) throw new AppError(400, 'El rango consultado es demasiado grande.', 'BAD_RANGE');
 
   const busy = await getBusyDates(from, to);
-  res.set('Cache-Control', 'public, max-age=60');
+  // Sin caché: un bloqueo o evento nuevo debe verse de inmediato en el calendario público.
+  res.set('Cache-Control', 'no-cache');
   res.json({ from, to, today: todayInStudioTz(), days: busy.map((date) => ({ date, status: 'busy' })) });
 }
 

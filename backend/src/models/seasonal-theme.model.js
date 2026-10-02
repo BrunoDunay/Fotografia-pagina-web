@@ -1,7 +1,18 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/database.js';
 
-export const THEME_DECORATIONS = ['none', 'snow', 'leaves', 'petals', 'papel_picado', 'confetti'];
+export const THEME_DECORATIONS = [
+  'none',
+  'snow',
+  'christmas',
+  'hearts',
+  'petals',
+  'sunshine',
+  'leaves',
+  'confetti',
+  'papel_picado',
+  'dia_de_muertos',
+];
 
 export const SeasonalTheme = sequelize.define(
   'SeasonalTheme',

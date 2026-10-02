@@ -12,7 +12,8 @@ export async function getActive(_req, res) {
   const [themes, settings] = await Promise.all([SeasonalTheme.findAll(withHero), getSection('theme')]);
   const theme = resolveActiveTheme(themes, settings, todayInStudioTz());
 
-  res.set('Cache-Control', 'public, max-age=300');
+  // Sin caché: un cambio de tema en el panel debe verse al refrescar el sitio.
+  res.set('Cache-Control', 'no-cache');
   res.json(
     theme && {
       key: theme.key,

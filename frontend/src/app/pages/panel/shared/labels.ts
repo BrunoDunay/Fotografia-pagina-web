@@ -38,11 +38,15 @@ export const PALETTE_LABEL: Record<TicketPalette, string> = {
 
 export const DECORATION_LABEL: Record<ThemeDecoration, string> = {
   none: 'Sin decoración',
-  snow: 'Copos de nieve',
-  leaves: 'Hojas',
+  snow: 'Nieve',
+  christmas: 'Navidad (copos, galletas, bastones, muérdago)',
+  hearts: 'Corazones',
   petals: 'Pétalos',
-  papel_picado: 'Papel picado',
-  confetti: 'Confeti',
+  sunshine: 'Destellos de verano',
+  leaves: 'Hojas',
+  confetti: 'Confeti de colores',
+  papel_picado: 'Papel picado tricolor',
+  dia_de_muertos: 'Día de Muertos (calaveritas y cempasúchil)',
 };
 
 export const entries = <K extends string>(record: Record<K, string>) =>

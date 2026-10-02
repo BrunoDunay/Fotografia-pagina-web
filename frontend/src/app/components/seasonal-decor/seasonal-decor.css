@@ -1,3 +1,4 @@
+/* Decoraciones de temas. Las figuras (copos, galleta, cempasúchil, calaveritas…) están en public/decor/*.svg (solo se descargan con su tema activo). */
 :host {
   position: absolute;
   inset: 0 0 auto;
@@ -7,30 +8,34 @@
   pointer-events: none;
 }
 
-/* ---------- Partículas que caen ---------- */
+/* ---------- Partículas ---------- */
 .particle {
   --size: 1;
   --w: 12px;
   --h: 12px;
+  --speed: 1;
 
   position: absolute;
   top: 0;
   display: block;
   width: calc(var(--size) * var(--w));
   height: calc(var(--size) * var(--h));
+  background: center / contain no-repeat;
   opacity: 0;
   animation: fall linear infinite;
+  animation-duration: calc(var(--dur) * var(--speed));
+  animation-delay: calc(var(--delay) * var(--speed));
   will-change: transform, opacity;
 }
 
-/* Caída con vaivén lateral: la partícula oscila a ambos lados de su trayectoria. */
+/* Caída con vaivén lateral. */
 @keyframes fall {
   0% {
     opacity: 0;
     transform: translate3d(0, -6vh, 0) rotate(0deg);
   }
-  6% {
-    opacity: var(--decor-opacity, 0.9);
+  5% {
+    opacity: var(--decor-opacity, 0.92);
   }
   25% {
     transform: translate3d(calc(var(--drift) * 0.6), 22svh, 0) rotate(calc(var(--spin) * 0.25));
@@ -41,8 +46,8 @@
   75% {
     transform: translate3d(calc(var(--drift) * 0.9), 74svh, 0) rotate(calc(var(--spin) * 0.75));
   }
-  88% {
-    opacity: var(--decor-opacity, 0.9);
+  90% {
+    opacity: var(--decor-opacity, 0.92);
   }
   100% {
     opacity: 0;
@@ -50,15 +55,45 @@
   }
 }
 
-/* Nieve: copos suaves con brillo */
+/* Destellos que suben despacio y parpadean (verano). */
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 100svh, 0) scale(0.7);
+  }
+  15% {
+    opacity: var(--decor-opacity, 0.8);
+  }
+  35% {
+    opacity: calc(var(--decor-opacity, 0.8) * 0.45);
+  }
+  55% {
+    opacity: var(--decor-opacity, 0.8);
+    transform: translate3d(calc(var(--drift) * 0.5), 50svh, 0) scale(1);
+  }
+  80% {
+    opacity: calc(var(--decor-opacity, 0.8) * 0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), 8svh, 0) scale(0.8);
+  }
+}
+
+.particle--rise {
+  animation-name: rise;
+  animation-timing-function: ease-in-out;
+}
+
+/* Nieve (invierno): copos redondos con brillo */
 :host(.decor--snow) .particle {
-  --w: 11px;
-  --h: 11px;
+  --w: 10px;
+  --h: 10px;
   --decor-opacity: 0.95;
 
   border-radius: 50%;
   background: radial-gradient(circle at 40% 40%, #fff 35%, rgb(255 255 255 / 0.75) 60%, rgb(255 255 255 / 0) 72%);
-  box-shadow: 0 0 8px 2px rgb(255 255 255 / 0.55);
+  box-shadow: 0 0 8px 2px rgb(255 255 255 / 0.5);
 }
 
 :host(.decor--snow) .tone-1 {
@@ -66,7 +101,85 @@
   --h: 7px;
 }
 
-/* Pétalos */
+:host(.decor--snow) .tone-2 {
+  --w: 13px;
+  --h: 13px;
+}
+
+/* Navidad: copos con forma de copo + figuras navideñas */
+:host(.decor--christmas) .particle {
+  --w: 20px;
+  --h: 20px;
+  --decor-opacity: 0.95;
+
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.25));
+}
+
+:host(.decor--christmas) .tone-0 {
+  background-image: url('/decor/snowflake.svg');
+}
+
+:host(.decor--christmas) .tone-1 {
+  --w: 28px;
+  --h: 28px;
+
+  background-image: url('/decor/candy-cane.svg');
+}
+
+:host(.decor--christmas) .tone-2 {
+  --w: 28px;
+  --h: 28px;
+
+  background-image: url('/decor/gingerbread.svg');
+}
+
+:host(.decor--christmas) .tone-3 {
+  --w: 30px;
+  --h: 30px;
+
+  background-image: url('/decor/santa-hat.svg');
+}
+
+:host(.decor--christmas) .tone-4 {
+  --w: 28px;
+  --h: 28px;
+
+  background-image: url('/decor/mistletoe.svg');
+}
+
+:host(.decor--christmas) .tone-5 {
+  --w: 24px;
+  --h: 24px;
+
+  background-image: url('/decor/ornament.svg');
+}
+
+/* San Valentín: corazones */
+:host(.decor--hearts) .particle {
+  --w: 18px;
+  --h: 18px;
+  --decor-opacity: 0.9;
+
+  filter: drop-shadow(0 2px 3px rgb(90 10 30 / 0.25));
+}
+
+:host(.decor--hearts) .tone-0 {
+  background-image: url('/decor/heart-red.svg');
+}
+
+:host(.decor--hearts) .tone-1 {
+  background-image: url('/decor/heart-pink.svg');
+}
+
+:host(.decor--hearts) .tone-2 {
+  background-image: url('/decor/heart-blush.svg');
+}
+
+:host(.decor--hearts) .tone-3 {
+  background-image: url('/decor/heart-outline.svg');
+}
+
+/* Pétalos (primavera) */
 :host(.decor--petals) .particle {
   --w: 18px;
   --h: 13px;
@@ -84,7 +197,7 @@
   background: linear-gradient(135deg, #fff4f5, #f0c4cb);
 }
 
-/* Hojas de otoño */
+/* Hojas (otoño) */
 :host(.decor--leaves) .particle {
   --w: 22px;
   --h: 13px;
@@ -102,62 +215,170 @@
   background: linear-gradient(135deg, #ecc15a, #c98d2e);
 }
 
-/* Confeti (tonos de la marca) */
+/* Confeti de colores (Feria de San Marcos) */
 :host(.decor--confetti) .particle {
   --w: 7px;
-  --h: 15px;
+  --h: 14px;
+  --decor-opacity: 0.95;
 
   border-radius: 1px;
-  background: var(--color-accent);
+}
+
+:host(.decor--confetti) .tone-0 {
+  background: #e4007c;
 }
 
 :host(.decor--confetti) .tone-1 {
-  background: #c49a6c;
+  background: #ffc20e;
 }
 
 :host(.decor--confetti) .tone-2 {
-  background: #fbf8f4;
+  --w: 9px;
+  --h: 9px;
+
+  border-radius: 50%;
+  background: #00a5a8;
+}
+
+:host(.decor--confetti) .tone-3 {
+  background: #ff7a00;
+}
+
+:host(.decor--confetti) .tone-4 {
+  background: #7a3ccf;
+}
+
+:host(.decor--confetti) .tone-5 {
+  --w: 9px;
+  --h: 9px;
+
+  border-radius: 50%;
+  background: #2fb14d;
+}
+
+/* Verano: destellos dorados de luz (bokeh) que suben */
+:host(.decor--sunshine) .particle {
+  --w: 16px;
+  --h: 16px;
+  --decor-opacity: 0.75;
+
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 236 170 / 0.95) 0 30%, rgb(255 200 90 / 0.45) 55%, rgb(255 190 80 / 0) 72%);
+  box-shadow: 0 0 14px 4px rgb(255 214 120 / 0.35);
+}
+
+:host(.decor--sunshine) .tone-1 {
+  --w: 24px;
+  --h: 24px;
+  --decor-opacity: 0.55;
+}
+
+:host(.decor--sunshine) .tone-2 {
+  --w: 9px;
+  --h: 9px;
+  --decor-opacity: 0.9;
+}
+
+/* Día de Muertos: flores y pétalos de cempasúchil */
+:host(.decor--dia_de_muertos) .particle {
+  --w: 34px;
+  --h: 34px;
+  --decor-opacity: 0.95;
+
+  filter: drop-shadow(0 2px 3px rgb(90 30 0 / 0.3));
+}
+
+:host(.decor--dia_de_muertos) .tone-0 {
+  background-image: url('/decor/cempasuchil.svg');
+}
+
+:host(.decor--dia_de_muertos) .tone-1 {
+  --w: 13px;
+  --h: 18px;
+
+  background-image: url('/decor/cempasuchil-petal.svg');
+}
+
+:host(.decor--dia_de_muertos) .tone-2 {
+  --w: 12px;
+  --h: 17px;
+
+  background-image: url('/decor/cempasuchil-petal-dark.svg');
 }
 
 /* En móvil, menos partículas. */
 @media (max-width: 640px) {
-  .particle:nth-child(n + 17) {
+  .particle:nth-child(3n) {
     display: none;
   }
 }
 
-/* ---------- Papel picado (Independencia): guirnalda bajo el navbar ---------- */
+/* ---------- Papel picado: guirnalda bajo el navbar ---------- */
 .garland {
   position: absolute;
   inset: calc(var(--navbar-height) + 6px) 0 auto;
   display: flex;
   justify-content: space-between;
   padding: 0 2vw;
-  border-top: 1px solid rgb(255 255 255 / 0.45);
+  border-top: 1px solid rgb(255 255 255 / 0.5);
 }
 
 .flag {
   width: calc((100% - 13 * 1.2vw) / 14);
   height: clamp(22px, 3.2vw, 38px);
-  background: #2f7d4f;
-  opacity: 0.42;
+  opacity: 0.6;
   clip-path: polygon(0 0, 100% 0, 100% 82%, 87.5% 100%, 75% 82%, 62.5% 100%, 50% 82%, 37.5% 100%, 25% 82%, 12.5% 100%, 0 82%);
-  /* Calado: pequeñas perforaciones como en el papel picado. */
+  transform-origin: top center;
+  animation: sway 4.5s ease-in-out infinite alternate;
+}
+
+/* Independencia: tricolor con calado */
+.garland--tricolor .flag {
+  background: #2f7d4f;
   mask:
     radial-gradient(circle at 50% 36%, transparent 11%, #000 12%) center / 100% 100%,
     radial-gradient(circle at 25% 58%, transparent 7%, #000 8%) center / 100% 100%,
     radial-gradient(circle at 75% 58%, transparent 7%, #000 8%) center / 100% 100%;
   mask-composite: intersect;
-  transform-origin: top center;
-  animation: sway 4.5s ease-in-out infinite alternate;
 }
 
-.flag--1 {
+.garland--tricolor .flag--1 {
   background: #f4efe8;
 }
 
-.flag--2 {
+.garland--tricolor .flag--2 {
   background: #b8323a;
+}
+
+/* Día de Muertos: calaveritas recortadas, en los colores tradicionales */
+.garland--muertos .flag {
+  height: clamp(28px, 4vw, 46px);
+  opacity: 0.72;
+  mask: url('/decor/calaverita.svg') center / 100% 100% no-repeat;
+}
+
+.garland--muertos .flag--0 {
+  background: #e4007c;
+}
+
+.garland--muertos .flag--1 {
+  background: #ff8c00;
+}
+
+.garland--muertos .flag--2 {
+  background: #7a2d8f;
+}
+
+.garland--muertos .flag--3 {
+  background: #00a5a8;
+}
+
+.garland--muertos .flag--4 {
+  background: #ffc20e;
+}
+
+.garland--muertos .flag--5 {
+  background: #2e9a47;
 }
 
 @keyframes sway {
@@ -182,20 +403,20 @@
 /*
  * ---------- Movimiento reducido ----------
  * La decoración es parte del tema que elige el fotógrafo, así que no se apaga:
- * con "reducir movimiento" del sistema cae más lento, sin giros y con la mitad de partículas.
+ * con "reducir movimiento" del sistema cae más lento y sin giros.
  */
 @media (prefers-reduced-motion: reduce) {
+  /* !important: gana a la regla global de styles.css que corta las animaciones a un solo ciclo. */
   .particle {
     --spin: 0deg !important;
+    --speed: 1.6;
 
-    animation-duration: 40s !important;
-  }
-
-  .particle:nth-child(even) {
-    display: none;
+    animation-duration: calc(var(--dur) * var(--speed)) !important;
+    animation-iteration-count: infinite !important;
   }
 
   .flag {
-    animation-duration: 9s;
+    animation-duration: 9s !important;
+    animation-iteration-count: infinite !important;
   }
 }
