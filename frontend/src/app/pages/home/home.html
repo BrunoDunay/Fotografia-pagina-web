@@ -85,7 +85,7 @@
     <div class="container">
       <app-section-title title="Paquetes de boda" eyebrow="Inversión" />
       <div appReveal>
-        <app-package-brochure [packages]="packages()!" heading="Bodas" />
+        <app-package-brochure [packages]="packages()!" heading="Bodas" [photos]="weddings()?.gallery?.preview ?? []" />
       </div>
       <p class="packages__note">
         Cada evento es distinto: los paquetes pueden ajustarse. Para eventos fuera de Aguascalientes o de México se prepara una

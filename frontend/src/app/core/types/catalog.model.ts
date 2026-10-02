@@ -47,7 +47,8 @@ export interface ServiceDetail extends ServiceSummary {
 export interface ServicePage extends ServiceDetail {
   packages: StudioPackage[];
   faqs: Faq[];
-  gallery: { imageCount: number };
+  /** preview: hasta 3 fotos de la galería para la tira bajo los paquetes. */
+  gallery: { imageCount: number; preview: Media[] };
 }
 
 export interface AdminService extends ServiceDetail {

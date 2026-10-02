@@ -20,7 +20,12 @@ import { Media } from '../../core/types/common.model';
 export class PackageBrochure {
   readonly packages = input.required<StudioPackage[]>();
   readonly heading = input('Paquetes');
-  readonly photos = input<(Media | null)[]>([null, null, null]);
+  /** Fotos de la tira inferior (hasta 3); sin fotos se muestran las provisionales. */
+  readonly photos = input<Media[]>([]);
+  protected readonly strip = computed<(Media | null)[]>(() => {
+    const photos = this.photos().slice(0, 3);
+    return photos.length ? photos : [null, null, null];
+  });
 
   protected readonly settings = inject(SettingsStore);
   protected readonly studio = computed(() => this.settings.brand()?.photographerName ?? 'Armando Ovalle');

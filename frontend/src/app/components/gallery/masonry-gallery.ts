@@ -5,6 +5,7 @@ import {
   ElementRef,
   OnInit,
   afterNextRender,
+  computed,
   inject,
   input,
   signal,
@@ -21,6 +22,12 @@ interface Tile extends Media {
   ratio: string;
 }
 
+/** Alto relativo (alto / ancho) a partir de "ancho / alto". */
+function relativeHeight(ratio: string): number {
+  const [w, h = 1] = ratio.split('/').map(Number);
+  return w > 0 ? h / w : 1;
+}
+
 const PAGE_SIZE = 24;
 // Proporciones para el masonry de las fotos provisionales (simulan fotos verticales y horizontales).
 const PLACEHOLDER_RATIOS = ['3 / 4', '4 / 3', '2 / 3', '1', '4 / 5', '3 / 2', '3 / 4', '4 / 3', '2 / 3', '4 / 5', '1', '3 / 4'];
@@ -28,6 +35,8 @@ const PLACEHOLDER_RATIOS = ['3 / 4', '4 / 3', '2 / 3', '1', '4 / 5', '3 / 2', '3
 /**
  * Galería reutilizable para cualquier servicio (ref. Página_de_servicios_individual/Galería):
  * masonry de 3 columnas, paginada (carga más al acercarse al final), skeletons y lightbox.
+ * Cada foto va a la columna más corta: el orden elegido en el panel se lee de izquierda a derecha,
+ * las columnas quedan parejas y cargar más fotos no reacomoda las anteriores.
  * Si el servicio aún no tiene fotos, muestra fotos provisionales para previsualizar el diseño.
  */
 @Component({
@@ -48,6 +57,19 @@ export class MasonryGallery implements OnInit {
   protected readonly total = signal(0);
   protected readonly loading = signal(true);
   protected readonly openIndex = signal<number | null>(null);
+  /** 3 columnas en escritorio (también en SSR), 2 en tablet y 1 en celular. */
+  private readonly columnCount = signal(3);
+
+  protected readonly columns = computed(() => {
+    const count = this.columnCount();
+    const columns = Array.from({ length: count }, () => ({ height: 0, items: [] as { tile: Tile; index: number }[] }));
+    this.tiles().forEach((tile, index) => {
+      const shortest = columns.reduce((a, b) => (b.height < a.height - 0.01 ? b : a));
+      shortest.items.push({ tile, index });
+      shortest.height += relativeHeight(tile.ratio);
+    });
+    return columns.map((c) => c.items);
+  });
   private page = 0;
   private hasMore = true;
   private inFlight = false;
@@ -60,7 +82,19 @@ export class MasonryGallery implements OnInit {
         rootMargin: '600px 0px',
       });
       observer.observe(this.sentinel().nativeElement);
-      destroyRef.onDestroy(() => observer.disconnect());
+
+      const tablet = matchMedia('(max-width: 1000px)');
+      const phone = matchMedia('(max-width: 600px)');
+      const update = () => this.columnCount.set(phone.matches ? 1 : tablet.matches ? 2 : 3);
+      update();
+      tablet.addEventListener('change', update);
+      phone.addEventListener('change', update);
+
+      destroyRef.onDestroy(() => {
+        observer.disconnect();
+        tablet.removeEventListener('change', update);
+        phone.removeEventListener('change', update);
+      });
     });
   }
 

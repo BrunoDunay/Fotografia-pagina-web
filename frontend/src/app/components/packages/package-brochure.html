@@ -33,7 +33,7 @@
   </div>
 
   <div class="strip">
-    @for (photo of photos(); track $index) {
+    @for (photo of strip(); track $index) {
       <app-photo [media]="photo" ratio="4 / 5" sizes="(max-width: 700px) 33vw, 380px" />
     }
   </div>

@@ -1,15 +1,19 @@
 @if (tiles().length) {
   <div class="masonry">
-    @for (tile of tiles(); track tile.id; let i = $index) {
-      <button type="button" class="tile" (click)="setIndex(i)" [attr.aria-label]="'Ampliar fotografía ' + (i + 1) + ' de ' + total()">
-        <app-photo
-          [media]="tile"
-          [ratio]="tile.ratio"
-          [alt]="tile.alt ?? title()"
-          sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw"
-          [maxWidth]="900"
-        />
-      </button>
+    @for (column of columns(); track $index) {
+      <div class="masonry__col">
+        @for (item of column; track item.tile.id) {
+          <button type="button" class="tile" (click)="setIndex(item.index)" [attr.aria-label]="'Ampliar fotografía ' + (item.index + 1) + ' de ' + total()">
+            <app-photo
+              [media]="item.tile"
+              [ratio]="item.tile.ratio"
+              [alt]="item.tile.alt ?? title()"
+              sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw"
+              [maxWidth]="900"
+            />
+          </button>
+        }
+      </div>
     }
   </div>
 }

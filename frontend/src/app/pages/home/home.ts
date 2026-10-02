@@ -7,7 +7,7 @@ import { ThemeService } from '../../core/services/theme.service';
 import { PublicApiService } from '../../core/services/api/public-api.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SITE_URL } from '../../core/config/api.config';
-import { ServiceSummary, StudioPackage, Faq } from '../../core/types/catalog.model';
+import { ServiceSummary, Faq } from '../../core/types/catalog.model';
 import { Photo } from '../../components/photo/photo';
 import { Btn } from '../../components/buttons/btn';
 import { Icon } from '../../components/icon/icon';
@@ -57,7 +57,8 @@ export class Home {
 
   protected readonly services = toSignal(this.api.services().pipe(catchError(() => of([] as ServiceSummary[]))));
   /** La Home muestra los paquetes de boda (servicio principal); cada servicio muestra los suyos en su página. */
-  protected readonly packages = toSignal(this.api.packages('weddings').pipe(catchError(() => of([] as StudioPackage[]))));
+  protected readonly weddings = toSignal(this.api.service('weddings').pipe(catchError(() => of(null))));
+  protected readonly packages = computed(() => this.weddings()?.packages);
   protected readonly faqs = toSignal(this.api.faqs().pipe(catchError(() => of([] as Faq[]))));
 
   constructor() {

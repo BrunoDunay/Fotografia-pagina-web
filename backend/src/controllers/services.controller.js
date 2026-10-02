@@ -2,7 +2,7 @@ import { sequelize } from '../config/database.js';
 import { Service, MediaAsset, Gallery, GalleryImage, Package, PackageFeature, Faq } from '../models/index.js';
 import { notFound } from '../utils/app-error.js';
 import { slugify } from '../utils/slugify.js';
-import { toPackage, toServiceDetail, toServiceSummary } from '../services/serializers.js';
+import { toMedia, toPackage, toServiceDetail, toServiceSummary } from '../services/serializers.js';
 
 const mediaIncludes = [
   { model: MediaAsset, as: 'coverMedia' },
@@ -41,6 +41,19 @@ export async function getBySlug(req, res) {
 
   const imageCount = gallery ? await GalleryImage.count({ where: { galleryId: gallery.id } }) : 0;
 
+  // Tira de 3 fotos bajo los paquetes: las primeras de la galería, de preferencia verticales.
+  const firstImages = gallery
+    ? await GalleryImage.findAll({
+        where: { galleryId: gallery.id },
+        include: [{ model: MediaAsset, as: 'media' }],
+        order: [['sortOrder', 'ASC']],
+        limit: 12,
+      })
+    : [];
+  const media = firstImages.map((i) => i.media).filter(Boolean);
+  const isPortrait = (m) => m.height >= m.width;
+  const preview = [...media.filter(isPortrait), ...media.filter((m) => !isPortrait(m))].slice(0, 3).map(toMedia);
+
   // El orden lo define el panel de Paquetes (orden global), igual que en la Home.
   packages.sort((a, b) => a.sortOrder - b.sortOrder);
 
@@ -48,7 +61,7 @@ export async function getBySlug(req, res) {
     ...toServiceDetail(service),
     packages: packages.map(toPackage),
     faqs: faqs.map(({ id, question, answer }) => ({ id, question, answer })),
-    gallery: { imageCount },
+    gallery: { imageCount, preview },
   });
 }
 

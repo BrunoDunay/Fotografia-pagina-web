@@ -70,7 +70,7 @@
         <div class="container">
           <app-section-title title="Paquetes" eyebrow="Inversión" />
           @if (s.packages.length) {
-            <app-package-brochure [packages]="s.packages" [heading]="s.name" />
+            <app-package-brochure [packages]="s.packages" [heading]="s.name" [photos]="s.gallery.preview" />
           } @else {
             <div class="custom-quote" appReveal>
               <h3>Cotización a la medida</h3>

@@ -3,8 +3,14 @@
 }
 
 .masonry {
-  columns: 3 280px;
-  column-gap: var(--space-3);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.masonry__col {
+  flex: 1;
+  min-width: 0;
 }
 
 .tile {
@@ -14,7 +20,6 @@
   padding: 0;
   border: 0;
   background: none;
-  break-inside: avoid;
   overflow: hidden;
   cursor: zoom-in;
 }
