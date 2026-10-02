@@ -83,13 +83,18 @@
 @if (packages()?.length) {
   <section class="packages section">
     <div class="container">
-      <app-section-title title="Paquetes" eyebrow="Inversión" />
+      <app-section-title title="Paquetes de boda" eyebrow="Inversión" />
       <div appReveal>
-        <app-package-brochure [packages]="packages()!" heading="Paquetes" />
+        <app-package-brochure [packages]="packages()!" heading="Bodas" />
       </div>
       <p class="packages__note">
         Cada evento es distinto: los paquetes pueden ajustarse. Para eventos fuera de Aguascalientes o de México se prepara una
         cotización personalizada.
+      </p>
+      <p class="packages__links">
+        <a routerLink="/events/quinceanos">Ver paquetes de XV años</a>
+        <span aria-hidden="true">·</span>
+        <a routerLink="/events">Todos los servicios</a>
       </p>
     </div>
   </section>

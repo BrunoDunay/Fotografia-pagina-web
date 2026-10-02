@@ -120,59 +120,166 @@ export const services = [
   { slug: 'social-events', name: 'Otros eventos sociales', shortDescription: 'Cumpleaños, aniversarios y celebraciones especiales.' },
 ];
 
-/** Servicios a los que se ligan los paquetes provisionales (eventos sociales con paquete). */
-export const servicesWithPackages = ['weddings', 'beach-weddings', 'quinceanos', 'graduations', 'baby-showers', 'social-events'];
+/** Paquetes REALES (folletos "Wedding" y "XV años 2026" del fotógrafo). Precios en MXN. */
+const f = (...labels) => labels.map((label) => ({ label }));
+const BOX = 'Caja de madera personalizada con USB';
+const LINK = 'Link de descarga digital';
 
-/**
- * PROVISIONAL en su totalidad: nombres, precios (null → "Precio por confirmar") y características.
- * No se inventan cantidades de fotografías ni horas.
- */
-export const packages = [
+const weddingPackages = [
   {
-    name: 'Esencial',
-    subtitle: 'Paquete provisional',
-    isFeatured: false,
-    features: [{ label: 'Fotografías digitales editadas' }, { label: 'Entrega en galería digital' }],
+    name: 'Classic',
+    subtitle: 'Fotógrafo',
+    price: 11500,
+    features: f(
+      'Getting ready',
+      'First look',
+      'Sesión formal',
+      'Save the date',
+      'Ceremonia religiosa',
+      'Recepción y fiesta (4 hrs)',
+      '250 fotografías editadas',
+      '1 impresión de 16 x 20',
+      '30 impresiones de 6 x 8',
+      LINK,
+      BOX,
+    ),
   },
   {
-    name: 'Clásico',
-    subtitle: 'Paquete provisional',
-    isFeatured: false,
-    features: [{ label: 'Fotografías digitales editadas' }, { label: 'Fotografías impresas' }, { label: 'Entrega en USB' }],
+    name: 'Nova',
+    subtitle: 'Fotógrafo y videógrafo',
+    price: 15000,
+    features: f(
+      'Sesión formal',
+      'Ceremonia religiosa',
+      'Recepción y fiesta (4 hrs)',
+      '200 fotografías editadas',
+      '1 impresión de 16 x 20',
+      '30 impresiones de 6 x 8',
+      'Tráiler de 2 a 3 minutos',
+      LINK,
+      BOX,
+    ),
   },
   {
-    name: 'Signature',
-    subtitle: 'Paquete provisional',
-    isFeatured: true,
-    features: [
-      { label: 'Fotografías digitales editadas' },
-      { label: 'Fotografías impresas' },
-      { label: 'USB en caja de madera personalizada' },
-    ],
+    name: 'Luxe',
+    subtitle: 'Fotógrafo y videógrafo',
+    price: 20000,
+    features: f(
+      'Sesión formal',
+      'Ceremonia religiosa',
+      'Recepción y fiesta (4 hrs)',
+      'Tomas de drone',
+      'Invitación digital',
+      '300 a 350 fotografías editadas',
+      '1 impresión de 16 x 20',
+      '50 impresiones de 6 x 8',
+      'Tráiler de 2 a 3 min',
+      'Película de 60 min',
+      LINK,
+      BOX,
+    ),
   },
   {
-    name: 'Premium',
-    subtitle: 'Paquete provisional',
-    isFeatured: false,
-    features: [
-      { label: 'Fotografías digitales editadas' },
-      { label: 'Fotografías impresas' },
-      { label: 'USB en caja de madera personalizada' },
-      { label: 'Tomas con dron' },
-    ],
+    name: 'Aura',
+    subtitle: 'Fotógrafo principal, fotógrafo secundario y videógrafo',
+    price: 23000,
+    features: f(
+      'Getting ready',
+      'Arreglo de maquillaje',
+      'First look',
+      'Sesión formal',
+      'Save the date',
+      'Ceremonia religiosa',
+      'Recepción y fiesta (4 hrs)',
+      'Tomas de drone',
+      '9 horas de cobertura total',
+      'Invitación digital',
+      '500 a 600 fotografías editadas',
+      '1 impresión de 16 x 20 con marco',
+      '70 impresiones de 6 x 8',
+      'Tráiler de 2 a 3 min',
+      'Película de 90 min',
+      LINK,
+      BOX,
+    ),
+  },
+];
+
+const xvPackages = [
+  {
+    name: 'Aura',
+    subtitle: null,
+    price: 21500,
+    features: f(
+      'Getting ready',
+      'Sesión formal',
+      'Sesión informal',
+      'Ceremonia religiosa',
+      'Recepción y fiesta (5 horas)',
+      '500 a 600 fotografías digitales editadas',
+      '1 fotografía impresa de 16 x 20 con marco',
+      '70 fotografías impresas de 6 x 8',
+      'Video teaser de 30 a 35 seg',
+      'Tráiler de 2 a 3 min',
+      'Película de 1 hora y 20 min',
+      'Invitación digital',
+    ),
   },
   {
-    name: 'Gran Celebración',
-    subtitle: 'Paquete provisional',
-    isFeatured: false,
-    features: [
-      { label: 'Fotografías digitales editadas' },
-      { label: 'Fotografías impresas' },
-      { label: 'USB en caja de madera personalizada' },
-      { label: 'Tomas con dron' },
-      { label: 'Beneficios adicionales por definir' },
-    ],
+    name: 'Luxe',
+    subtitle: null,
+    price: 18000,
+    features: f(
+      'Sesión formal',
+      'Ceremonia religiosa',
+      'Recepción y fiesta (4 horas)',
+      '300 a 350 fotografías digitales editadas',
+      '1 fotografía impresa de 16 x 20',
+      '50 fotografías impresas de 6 x 8',
+      'Tráiler de 2 a 3 min',
+      'Película de 60 min',
+      `${BOX} y ${LINK.toLowerCase()}`,
+    ),
   },
+  {
+    name: 'Reveuss',
+    subtitle: null,
+    price: 13000,
+    features: f(
+      'Getting ready',
+      'Sesión formal',
+      'Sesión informal',
+      'Ceremonia religiosa',
+      'Recepción y fiesta (4 horas)',
+      'Video tráiler de 2 min con tomas de dron',
+      '200 fotografías digitales editadas',
+      '1 fotografía impresa de 16 x 20',
+      '30 fotografías impresas de 6 x 8',
+      `${BOX} y ${LINK.toLowerCase()}`,
+    ),
+  },
+  {
+    name: 'Classic',
+    subtitle: null,
+    price: 10000,
+    features: f(
+      'Getting ready',
+      'Sesión formal',
+      'Sesión informal',
+      'Ceremonia religiosa',
+      'Recepción y fiesta (4 horas)',
+      '200 fotografías digitales editadas',
+      '1 fotografía impresa de 16 x 20',
+      '30 fotografías impresas de 6 x 8',
+      `${BOX} y ${LINK.toLowerCase()}`,
+    ),
+  },
+];
+
+/** Cada grupo de paquetes con los servicios donde se ofrece (por slug). */
+export const packageGroups = [
+  { serviceSlugs: ['weddings', 'beach-weddings'], packages: weddingPackages },
+  { serviceSlugs: ['quinceanos'], packages: xvPackages },
 ];
 
 /** REAL: respuestas proporcionadas por el fotógrafo. */

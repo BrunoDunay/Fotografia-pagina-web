@@ -11,7 +11,7 @@
             <span class="p-drag" cdkDragHandle aria-label="Arrastrar para ordenar">⠿</span>
             <button type="button" class="row" (click)="edit(p)">
               <strong>{{ p.name }}</strong>
-              <span class="p-help">{{ p.features.length }} característica(s) · {{ p.serviceIds?.length ?? 0 }} servicio(s)</span>
+              <span class="p-help">{{ serviceNames(p.serviceIds) }} · {{ p.features.length }} característica(s)</span>
             </button>
             @if (p.isFeatured) {
               <span class="p-badge p-badge--accent">Recomendado</span>

@@ -167,6 +167,22 @@
   color: var(--color-text-muted);
 }
 
+.packages__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.packages__links a {
+  color: var(--color-primary);
+  border-bottom: 1px solid currentColor;
+}
+
 /* ---------- 7. FAQ ---------- */
 .faq__more {
   display: flex;

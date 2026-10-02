@@ -56,7 +56,8 @@ export class Home {
   protected readonly heroImage = computed(() => this.theme.active()?.heroImage ?? this.home()?.hero.image ?? null);
 
   protected readonly services = toSignal(this.api.services().pipe(catchError(() => of([] as ServiceSummary[]))));
-  protected readonly packages = toSignal(this.api.packages().pipe(catchError(() => of([] as StudioPackage[]))));
+  /** La Home muestra los paquetes de boda (servicio principal); cada servicio muestra los suyos en su página. */
+  protected readonly packages = toSignal(this.api.packages('weddings').pipe(catchError(() => of([] as StudioPackage[]))));
   protected readonly faqs = toSignal(this.api.faqs().pipe(catchError(() => of([] as Faq[]))));
 
   constructor() {

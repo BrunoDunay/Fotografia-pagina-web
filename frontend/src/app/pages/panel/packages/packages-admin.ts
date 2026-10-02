@@ -32,6 +32,12 @@ export class PackagesAdmin {
   protected readonly editing = signal<StudioPackage | 'new' | null>(null);
   protected readonly saving = signal(false);
   protected readonly services = toSignal(this.api.services().pipe(catchError(() => of([]))), { initialValue: [] });
+
+  /** "Bodas, Bodas en playa": distingue paquetes con el mismo nombre en distintos servicios. */
+  protected serviceNames(ids: string[] | undefined): string {
+    const names = (ids ?? []).map((id) => this.services().find((s) => s.id === id)?.name).filter(Boolean);
+    return names.length ? names.join(', ') : 'Sin servicio';
+  }
   protected readonly money = formatMoney;
 
   protected readonly form = this.fb.group({

@@ -9,8 +9,6 @@ interface Particle {
   drift: number;
   spin: number;
   tone: number;
-  /** Posición vertical fija (solo con movimiento reducido). */
-  top: number;
 }
 
 /** Generador pseudoaleatorio con semilla: mismas partículas en cada visita (sin "saltos"). */
@@ -27,7 +25,7 @@ const COUNT = 26;
  * Decoración del tema estacional (nieve, hojas, pétalos, confeti o papel picado).
  * - Solo sobre el área del Hero, detrás del navbar y sin capturar clics.
  * - Solo CSS (sin canvas ni librerías), se monta en el navegador después de pintar.
- * - Con `prefers-reduced-motion` las partículas se quedan quietas (sin animación).
+ * - Con `prefers-reduced-motion` caen más lento, sin giros y con la mitad de partículas.
  */
 @Component({
   selector: 'app-seasonal-decor',
@@ -45,13 +43,12 @@ export class SeasonalDecor {
     const random = seeded(this.decoration().length * 7919 + 17);
     return Array.from({ length: COUNT }, () => ({
       left: random() * 100,
-      size: 0.6 + random() * 0.8,
+      size: 0.7 + random() * 0.7,
       delay: -random() * 18,
       duration: 12 + random() * 12,
       drift: (random() - 0.5) * 120,
       spin: (random() > 0.5 ? 1 : -1) * (180 + random() * 360),
       tone: Math.floor(random() * 3),
-      top: 4 + random() * 88,
     }));
   });
 

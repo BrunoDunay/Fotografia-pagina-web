@@ -10,85 +10,109 @@
 /* ---------- Partículas que caen ---------- */
 .particle {
   --size: 1;
+  --w: 12px;
+  --h: 12px;
 
   position: absolute;
   top: 0;
   display: block;
-  width: calc(var(--size) * 10px);
-  height: calc(var(--size) * 10px);
+  width: calc(var(--size) * var(--w));
+  height: calc(var(--size) * var(--h));
   opacity: 0;
   animation: fall linear infinite;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
+/* Caída con vaivén lateral: la partícula oscila a ambos lados de su trayectoria. */
 @keyframes fall {
   0% {
     opacity: 0;
-    transform: translate3d(0, -8vh, 0) rotate(0deg);
+    transform: translate3d(0, -6vh, 0) rotate(0deg);
   }
-  8% {
-    opacity: var(--decor-opacity, 0.75);
+  6% {
+    opacity: var(--decor-opacity, 0.9);
   }
-  85% {
-    opacity: var(--decor-opacity, 0.75);
+  25% {
+    transform: translate3d(calc(var(--drift) * 0.6), 22svh, 0) rotate(calc(var(--spin) * 0.25));
+  }
+  50% {
+    transform: translate3d(calc(var(--drift) * -0.3), 48svh, 0) rotate(calc(var(--spin) * 0.5));
+  }
+  75% {
+    transform: translate3d(calc(var(--drift) * 0.9), 74svh, 0) rotate(calc(var(--spin) * 0.75));
+  }
+  88% {
+    opacity: var(--decor-opacity, 0.9);
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--drift), 104svh, 0) rotate(var(--spin));
+    transform: translate3d(var(--drift), 102svh, 0) rotate(var(--spin));
   }
 }
 
-/* Nieve */
+/* Nieve: copos suaves con brillo */
 :host(.decor--snow) .particle {
-  --decor-opacity: 0.85;
+  --w: 11px;
+  --h: 11px;
+  --decor-opacity: 0.95;
 
-  width: calc(var(--size) * 9px);
-  height: calc(var(--size) * 9px);
   border-radius: 50%;
-  background: radial-gradient(circle, #fff 55%, rgb(255 255 255 / 0));
+  background: radial-gradient(circle at 40% 40%, #fff 35%, rgb(255 255 255 / 0.75) 60%, rgb(255 255 255 / 0) 72%);
+  box-shadow: 0 0 8px 2px rgb(255 255 255 / 0.55);
+}
+
+:host(.decor--snow) .tone-1 {
+  --w: 7px;
+  --h: 7px;
 }
 
 /* Pétalos */
 :host(.decor--petals) .particle {
-  width: calc(var(--size) * 12px);
-  height: calc(var(--size) * 9px);
+  --w: 18px;
+  --h: 13px;
+
   border-radius: 100% 0 100% 0;
-  background: #f3c9cf;
+  background: linear-gradient(135deg, #fbe3e6, #eab0ba);
+  box-shadow: 0 2px 6px rgb(120 40 60 / 0.18);
 }
 
 :host(.decor--petals) .tone-1 {
-  background: #e9b0b9;
+  background: linear-gradient(135deg, #f6cdd4, #d98d9b);
 }
 
 :host(.decor--petals) .tone-2 {
-  background: #fbe6e8;
+  background: linear-gradient(135deg, #fff4f5, #f0c4cb);
 }
 
 /* Hojas de otoño */
 :host(.decor--leaves) .particle {
-  width: calc(var(--size) * 14px);
-  height: calc(var(--size) * 9px);
-  border-radius: 0 80% 0 80%;
-  background: #c9773b;
+  --w: 22px;
+  --h: 13px;
+
+  border-radius: 0 85% 0 85%;
+  background: linear-gradient(135deg, #e09a52, #b5602c);
+  box-shadow: 0 2px 6px rgb(80 30 10 / 0.2);
 }
 
 :host(.decor--leaves) .tone-1 {
-  background: #a5532c;
+  background: linear-gradient(135deg, #c0683a, #8e3d20);
 }
 
 :host(.decor--leaves) .tone-2 {
-  background: #d9a441;
+  background: linear-gradient(135deg, #ecc15a, #c98d2e);
 }
 
 /* Confeti (tonos de la marca) */
 :host(.decor--confetti) .particle {
-  width: calc(var(--size) * 5px);
-  height: calc(var(--size) * 11px);
+  --w: 7px;
+  --h: 15px;
+
+  border-radius: 1px;
   background: var(--color-accent);
 }
 
 :host(.decor--confetti) .tone-1 {
-  background: var(--color-primary);
+  background: #c49a6c;
 }
 
 :host(.decor--confetti) .tone-2 {
@@ -97,7 +121,7 @@
 
 /* En móvil, menos partículas. */
 @media (max-width: 640px) {
-  .particle:nth-child(n + 15) {
+  .particle:nth-child(n + 17) {
     display: none;
   }
 }
@@ -155,16 +179,23 @@
   }
 }
 
-/* ---------- Movimiento reducido: partículas quietas repartidas y guirnalda fija ---------- */
+/*
+ * ---------- Movimiento reducido ----------
+ * La decoración es parte del tema que elige el fotógrafo, así que no se apaga:
+ * con "reducir movimiento" del sistema cae más lento, sin giros y con la mitad de partículas.
+ */
 @media (prefers-reduced-motion: reduce) {
   .particle {
-    top: var(--top);
-    opacity: 0.6;
-    animation: none;
-    rotate: var(--spin);
+    --spin: 0deg !important;
+
+    animation-duration: 40s !important;
+  }
+
+  .particle:nth-child(even) {
+    display: none;
   }
 
   .flag {
-    animation: none;
+    animation-duration: 9s;
   }
 }

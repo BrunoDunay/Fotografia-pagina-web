@@ -44,21 +44,21 @@ async function seedCatalog(transaction) {
   );
   await Gallery.bulkCreate(services.map((s) => ({ serviceId: s.id, title: s.name })), { transaction });
 
-  const packages = [];
-  for (const [index, { features, ...data }] of content.packages.entries()) {
-    const pkg = await Package.create({ ...data, price: null, isPriceProvisional: true, sortOrder: index }, { transaction });
-    await PackageFeature.bulkCreate(
-      features.map((f, i) => ({ packageId: pkg.id, label: f.label, value: f.value ?? null, sortOrder: i })),
-      { transaction },
-    );
-    packages.push(pkg);
+  let sortOrder = 0;
+  for (const group of content.packageGroups) {
+    const linked = services.filter((s) => group.serviceSlugs.includes(s.slug));
+    for (const [index, { features, ...data }] of group.packages.entries()) {
+      const pkg = await Package.create({ ...data, isPriceProvisional: false, sortOrder: sortOrder++ }, { transaction });
+      await PackageFeature.bulkCreate(
+        features.map((f, i) => ({ packageId: pkg.id, label: f.label, value: f.value ?? null, sortOrder: i })),
+        { transaction },
+      );
+      await ServicePackage.bulkCreate(
+        linked.map((s) => ({ serviceId: s.id, packageId: pkg.id, sortOrder: index })),
+        { transaction },
+      );
+    }
   }
-
-  const linked = services.filter((s) => content.servicesWithPackages.includes(s.slug));
-  await ServicePackage.bulkCreate(
-    linked.flatMap((s) => packages.map((p, i) => ({ serviceId: s.id, packageId: p.id, sortOrder: i }))),
-    { transaction },
-  );
   return true;
 }
 
