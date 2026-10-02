@@ -7,7 +7,7 @@ import { Media } from '../types/common.model';
  */
 export const PLACEHOLDER_MEDIA: Media = {
   id: 'placeholder',
-  url: '/placeholders/foto-provisional.jpg',
+  url: '/placeholders/foto-provisional.webp',
   width: 816,
   height: 583,
   alt: 'Fotografía provisional',

@@ -20,7 +20,8 @@ export function cloudinaryUrl(url: string | null | undefined, options: { width?:
   return `${head}${parts.join(',')}/${tail}`;
 }
 
-export const RESPONSIVE_WIDTHS = [400, 800, 1200, 1600, 2400];
+/** Anchos intermedios: el navegador elige el más cercano a lo que realmente ocupa la foto. */
+export const RESPONSIVE_WIDTHS = [320, 480, 640, 800, 1080, 1280, 1600, 2000, 2400];
 
 /** srcset con varios anchos para imágenes responsivas. */
 export function cloudinarySrcset(url: string | null | undefined, widths = RESPONSIVE_WIDTHS): string {

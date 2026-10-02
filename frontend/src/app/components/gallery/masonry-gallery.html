@@ -8,7 +8,7 @@
               [media]="item.tile"
               [ratio]="item.tile.ratio"
               [alt]="item.tile.alt ?? title()"
-              sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw"
+              sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 1000px) calc(50vw - 32px), 420px"
               [maxWidth]="900"
             />
           </button>

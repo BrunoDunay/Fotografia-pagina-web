@@ -2,21 +2,21 @@
   <button type="button" class="nav" (click)="go(-1)" [disabled]="!canPrev()" aria-label="Mes anterior">
     <app-icon name="chevronLeft" />
   </button>
-  <h3 class="title" aria-live="polite">{{ title() }}</h3>
+  <h2 class="title" aria-live="polite">{{ title() }}</h2>
   <button type="button" class="nav" (click)="go(1)" [disabled]="!canNext()" aria-label="Mes siguiente">
     <app-icon name="chevronRight" />
   </button>
 </div>
 
-<div class="grid" role="grid" [class.is-loading]="loading()">
+<div class="grid" [class.is-loading]="loading()">
   @for (weekday of weekdays; track weekday) {
-    <span class="weekday" role="columnheader">{{ weekday }}</span>
+    <!-- Cada día ya incluye el nombre del día en su etiqueta accesible. -->
+    <span class="weekday" aria-hidden="true">{{ weekday }}</span>
   }
   @for (day of days(); track day.date) {
     @if (day.inMonth) {
       <button
         type="button"
-        role="gridcell"
         class="day"
         [class.is-busy]="day.isBusy && !day.isPast"
         [class.is-past]="day.isPast"

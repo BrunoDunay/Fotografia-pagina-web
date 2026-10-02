@@ -21,14 +21,14 @@
   --color-surface: #ffffff;
   --color-surface-alt: #f1ebe4;   /* greige */
   --color-text: #2a2421;          /* espresso */
-  --color-text-muted: #7a6f68;
+  --color-text-muted: #6f645d;    /* AA (4.5:1) también sobre greige */
   --color-text-inverse: #faf7f3;
   --color-border: #e4dcd3;
   --color-border-strong: #cfc3b6;
 
   /* ---- Color: marca ---- */
-  --color-primary: #8c6b55;       /* moca: texto de acento y botones (contraste AA) */
-  --color-primary-hover: #765843;
+  --color-primary: #7d5f4b;       /* moca: texto de acento y botones (AA también sobre greige) */
+  --color-primary-hover: #694f3e;
   --color-secondary: #2a2421;     /* espresso: botón sólido, footer */
   --color-secondary-hover: #3d3430;
   --color-accent: #d9b994;        /* arena del logo: decorativo, no para texto pequeño */
@@ -41,7 +41,7 @@
   --color-warning-soft: #f6ead7;
   --color-danger: #a14a3f;
   --color-danger-soft: #f5e1dd;
-  --color-busy: #8c6b55;
+  --color-busy: #7d5f4b;
   --color-available: #5f7a5b;
 
   /* ---- Color: imagen ---- */

@@ -48,8 +48,12 @@ type ServiceRow = AdminService & { imageCount?: number };
   styles: `
     :host { display: grid; gap: var(--space-5); }
     .thumb { width: 42px; flex: none; }
-    .info { display: grid; flex: 1; min-width: 0; }
+    .info { display: grid; flex: 1; min-width: 0; overflow-wrap: anywhere; }
     .is-hidden { opacity: 0.55; }
+    /* Celular: nombre y datos en la primera línea; insignia, "Visible" y "Editar" debajo. */
+    @media (max-width: 640px) {
+      .info { flex-basis: calc(100% - 90px); }
+    }
   `,
 })
 export class ServicesAdminList {

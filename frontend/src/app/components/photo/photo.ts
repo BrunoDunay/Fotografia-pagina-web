@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Media } from '../../core/types/common.model';
 import { orPlaceholder } from '../../core/utils/placeholder';
-import { cloudinarySrcset, cloudinaryUrl } from '../../core/utils/cloudinary-url';
+import { RESPONSIVE_WIDTHS, cloudinarySrcset, cloudinaryUrl } from '../../core/utils/cloudinary-url';
 
 /**
  * Imagen del sitio: optimizada (Cloudinary f_auto/q_auto + srcset), con lazy loading,
@@ -65,6 +65,11 @@ export class Photo {
 
   protected readonly image = computed(() => orPlaceholder(this.media()));
   protected readonly src = computed(() => cloudinaryUrl(this.image().url, { width: this.maxWidth() }));
-  protected readonly srcset = computed(() => cloudinarySrcset(this.image().url));
+  /** Sin anchos mayores al tope pedido ni a la foto original (Cloudinary no amplía: serían archivos repetidos). */
+  protected readonly srcset = computed(() => {
+    const limit = Math.min(this.maxWidth(), this.image().width || Infinity);
+    const widths = RESPONSIVE_WIDTHS.filter((w) => w <= limit);
+    return cloudinarySrcset(this.image().url, widths.length ? widths : [RESPONSIVE_WIDTHS[0]]);
+  });
   protected readonly altText = computed(() => this.alt() ?? this.image().alt ?? '');
 }

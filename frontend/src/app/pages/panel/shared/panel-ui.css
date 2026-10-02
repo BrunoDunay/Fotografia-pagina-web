@@ -107,6 +107,9 @@ select.field__control { appearance: none; background-image: linear-gradient(45de
   background: var(--color-surface);
   border: var(--hairline);
 }
+@media (max-width: 640px) {
+  .p-list-item { flex-wrap: wrap; }
+}
 .p-list-item.cdk-drag-preview { box-shadow: var(--shadow-lg); }
 .p-list-item.cdk-drag-placeholder { opacity: 0.35; }
 .cdk-drop-list-dragging .p-list-item:not(.cdk-drag-placeholder) { transition: transform 200ms var(--ease-out); }
@@ -131,3 +134,13 @@ select.field__control { appearance: none; background-image: linear-gradient(45de
 .p-link { color: var(--color-primary); text-decoration: underline; text-underline-offset: 3px; }
 .p-alert { padding: var(--space-3) var(--space-4); border-left: 3px solid var(--color-warning); background: var(--color-warning-soft); font-size: var(--text-sm); }
 .p-alert--danger { border-left-color: var(--color-danger); background: var(--color-danger-soft); }
+
+/*
+ * Cada página del panel (componente que pinta el router dentro de .content) es una cuadrícula de una columna:
+ * minmax(0, 1fr) evita que el contenido ancho (calendario, filas con botones) la estire más allá de la pantalla.
+ * Va aquí (estilos globales del panel) porque los estilos encapsulados del layout no alcanzan a esos componentes.
+ */
+.content > :not(router-outlet) {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}

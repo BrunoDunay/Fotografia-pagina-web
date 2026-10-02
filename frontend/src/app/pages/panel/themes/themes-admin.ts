@@ -34,7 +34,7 @@ type Mode = 'off' | 'manual' | 'auto';
 
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 const DEFAULT_ACCENT = '#d9b994';
-const DEFAULT_PRIMARY = '#8c6b55';
+const DEFAULT_PRIMARY = '#7d5f4b';
 
 @Component({
   selector: 'app-themes-admin',

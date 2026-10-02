@@ -32,6 +32,18 @@ if (!parsed.success) {
   process.exit(1);
 }
 
+// Producción: avisos de configuración insegura o incompleta (no detienen el arranque).
+if (parsed.data.NODE_ENV === 'production') {
+  const warnings = [];
+  if (/localhost|127\.0\.0\.1/.test(parsed.data.CORS_ORIGINS)) warnings.push('CORS_ORIGINS incluye localhost: deja solo el dominio real del sitio.');
+  if (/localhost/.test(parsed.data.PUBLIC_SITE_URL)) warnings.push('PUBLIC_SITE_URL apunta a localhost: usa el dominio real (enlaces de tickets).');
+  if (!(parsed.data.CLOUDINARY_CLOUD_NAME && parsed.data.CLOUDINARY_API_KEY && parsed.data.CLOUDINARY_API_SECRET)) {
+    warnings.push('Cloudinary no está configurado: no se podrán subir imágenes.');
+  }
+  if (parsed.data.JWT_SECRET.length < 48) warnings.push('JWT_SECRET es corto: usa al menos 48 caracteres aleatorios.');
+  for (const w of warnings) console.warn(`⚠ Producción: ${w}`);
+}
+
 export const env = {
   ...parsed.data,
   API_PUBLIC_URL: parsed.data.API_PUBLIC_URL ?? `http://localhost:${parsed.data.PORT}`,

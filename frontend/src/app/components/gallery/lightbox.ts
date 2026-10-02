@@ -3,9 +3,10 @@ import {
   Component,
   DOCUMENT,
   DestroyRef,
+  AfterViewInit,
   ElementRef,
-  afterNextRender,
   computed,
+  effect,
   inject,
   input,
   output,
@@ -54,9 +55,6 @@ import { Icon } from '../icon/icon';
       <app-icon name="chevronRight" [size]="32" />
     </button>
 
-    @if (nextItem(); as n) {
-      <link rel="prefetch" as="image" [attr.href]="full(n)" />
-    }
   `,
   styles: `
     :host { position: fixed; inset: 0; z-index: var(--z-modal); display: grid; place-items: center; animation: fade 0.25s ease-out; touch-action: pan-y; }
@@ -78,7 +76,7 @@ import { Icon } from '../icon/icon';
     }
   `,
 })
-export class Lightbox {
+export class Lightbox implements AfterViewInit {
   readonly items = input.required<Media[]>();
   readonly index = input.required<number>();
   /** Total real de la galería (puede haber páginas aún no cargadas). */
@@ -93,18 +91,27 @@ export class Lightbox {
   protected readonly current = computed(() => this.items()[this.index()]);
   protected readonly nextItem = computed(() => this.items()[this.index() + 1]);
 
+  private readonly document = inject(DOCUMENT);
+
   constructor() {
-    const document = inject(DOCUMENT);
-    const previousFocus = document.activeElement as HTMLElement | null;
-    afterNextRender(() => {
-      document.body.style.overflow = 'hidden';
-      this.closeBtn().nativeElement.focus();
+    const previousFocus = this.document.activeElement as HTMLElement | null;
+    // Precarga la siguiente foto para que el cambio sea instantáneo.
+    // (Con JS: Angular no permite enlazar URLs a <link>, error NG0904.)
+    effect(() => {
+      const next = this.nextItem();
+      if (next) new Image().src = this.full(next);
     });
     // Al cerrar: devolver el scroll y el foco a la miniatura que abrió el visor.
     inject(DestroyRef).onDestroy(() => {
-      document.body.style.overflow = '';
+      this.document.body.style.overflow = '';
       previousFocus?.focus?.();
     });
+  }
+
+  /** Al abrir (solo ocurre en el navegador): bloquear el scroll de la página y llevar el foco al visor. */
+  ngAfterViewInit(): void {
+    this.document.body.style.overflow = 'hidden';
+    this.closeBtn().nativeElement.focus();
   }
 
   protected full(item: Media): string {

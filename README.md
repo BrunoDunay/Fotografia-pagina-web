@@ -40,7 +40,7 @@ Al arrancar, el servidor:
 
 Otros comandos: `npm test` (pruebas), `npm run migrate`, `npm run migrate:down`.
 
-Sin las variables de Cloudinary, todo funciona excepto la subida de imágenes.
+Sin las variables de Cloudinary, en desarrollo las imágenes se guardan en `backend/uploads/` (excluida de git); en producción Cloudinary es obligatorio.
 
 ## 3. Frontend
 
@@ -57,3 +57,18 @@ npm start              # http://localhost:4200
 ## Contenido provisional
 
 Todo el texto comercial vive en la base de datos y se edita desde el panel. Lo que todavía es provisional (paquetes y precios, textos narrativos, contrato y legales) está marcado en BD y aparece en el dashboard del panel como **"Pendiente de confirmar"**. El contenido inicial está en `backend/seeders/initial-content.js`.
+
+## Producción
+
+**Backend** (`backend/.env`):
+- `NODE_ENV=production` y `DATABASE_URL` de la base en la nube (`DATABASE_SSL=true` si el proveedor lo pide).
+- `JWT_SECRET` nuevo y largo (48+ caracteres aleatorios) y las credenciales de Cloudinary.
+- `CORS_ORIGINS` y `PUBLIC_SITE_URL` con el dominio real (sin localhost). Al arrancar, el backend avisa si algo quedó mal.
+- `npm start`: aplica las migraciones pendientes y crea la cuenta inicial si no existe.
+
+**Frontend**:
+- En `frontend/src/environments/environment.prod.ts`: `apiUrl` (URL pública de la API) y `siteUrl` (dominio del sitio). Luego `npm run build`.
+- Ejecutar `node dist/frontend/server/server.mjs` con estas variables:
+  - `NG_ALLOWED_HOSTS`: dominios permitidos, separados por coma (ej. `armandoovalle.com,www.armandoovalle.com`). Angular rechaza cualquier otro (protección SSRF).
+  - `PORT` (por defecto 4000). Opcionales: `SITE_URL` y `API_URL` para el sitemap.
+- El servidor comprime las respuestas, envía encabezados de seguridad y publica `/robots.txt` y `/sitemap.xml` (con los servicios visibles).

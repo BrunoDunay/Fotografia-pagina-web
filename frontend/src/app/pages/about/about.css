@@ -234,3 +234,10 @@ blockquote {
     margin-top: var(--space-7);
   }
 }
+
+/* En pantallas angostas la línea del collage no debe salirse por la derecha. */
+@media (max-width: 900px) {
+  .collage__rule {
+    right: 0;
+  }
+}
