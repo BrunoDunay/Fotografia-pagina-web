@@ -54,13 +54,21 @@ export async function getBySlug(req, res) {
 /** Admin: todos los servicios, incluidos los ocultos. */
 export async function listAdmin(_req, res) {
   const services = await Service.findAll({
-    include: [...mediaIncludes, { model: Package, as: 'packages', attributes: ['id'], through: { attributes: ['sortOrder'] } }],
+    include: [
+      ...mediaIncludes,
+      { model: Package, as: 'packages', attributes: ['id'], through: { attributes: ['sortOrder'] } },
+      { model: Gallery, as: 'gallery', attributes: ['id'] },
+    ],
     order: [['sortOrder', 'ASC'], ['name', 'ASC']],
   });
+  const counts = await GalleryImage.count({ group: ['galleryId'] });
+  const countByGallery = Object.fromEntries(counts.map((c) => [c.galleryId, Number(c.count)]));
   res.json(
     services.map((s) => ({
       ...toServiceDetail(s),
       packageIds: s.packages.map((p) => p.id),
+      galleryId: s.gallery?.id ?? null,
+      imageCount: s.gallery ? (countByGallery[s.gallery.id] ?? 0) : 0,
     })),
   );
 }

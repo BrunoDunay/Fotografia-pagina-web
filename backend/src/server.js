@@ -3,6 +3,7 @@ import { connectDatabase, sequelize } from './config/database.js';
 import { runPendingMigrations } from './config/migrate.js';
 import { initializeData } from './config/initialize-data.js';
 import { createApp } from './app.js';
+import { localUploadsEnabled } from './config/cloudinary.js';
 
 async function start() {
   try {
@@ -18,7 +19,9 @@ async function start() {
   const init = await initializeData();
   if (init.adminCreated) console.log(`Cuenta administrativa creada: ${env.ADMIN_EMAIL}`);
 
-  if (!env.cloudinaryEnabled) {
+  if (localUploadsEnabled) {
+    console.warn('Cloudinary no está configurado: en desarrollo las imágenes se guardan en backend/uploads/.');
+  } else if (!env.cloudinaryEnabled) {
     console.warn('Cloudinary no está configurado: la subida de imágenes estará deshabilitada.');
   }
 

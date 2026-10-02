@@ -1,0 +1,196 @@
+<app-page-header title="Nuevo evento" subtitle="Registra una contratación en unos pocos pasos." backLink="/panel/agenda" backLabel="Calendario" />
+
+<form class="p-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <!-- 1. Cliente -->
+  <section class="p-card step">
+    <h2 class="step__title"><span>1</span> Cliente</h2>
+    <div class="p-tabs mode">
+      <button type="button" class="p-tab" [class.is-active]="clientMode() === 'new'" (click)="setClientMode('new')">Cliente nuevo</button>
+      <button type="button" class="p-tab" [class.is-active]="clientMode() === 'existing'" (click)="setClientMode('existing')">
+        Cliente existente
+      </button>
+    </div>
+
+    @if (clientMode() === 'new') {
+      <div class="p-grid" formGroupName="newClient">
+        <div class="field">
+          <label class="field__label" for="c-name">Nombre *</label>
+          <input id="c-name" class="field__control" formControlName="name" [attr.aria-invalid]="invalid('newClient.name')" />
+          @if (invalid('newClient.name')) {
+            <span class="field__error">Escribe el nombre del cliente.</span>
+          }
+        </div>
+        <div class="field">
+          <label class="field__label" for="c-phone">Teléfono / WhatsApp</label>
+          <input id="c-phone" class="field__control" formControlName="phone" inputmode="tel" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="c-email">Email</label>
+          <input id="c-email" class="field__control" type="email" formControlName="email" [attr.aria-invalid]="invalid('newClient.email')" />
+          @if (invalid('newClient.email')) {
+            <span class="field__error">Email inválido.</span>
+          }
+        </div>
+      </div>
+    } @else {
+      @if (selectedClient(); as c) {
+        <div class="picked">
+          <div>
+            <strong>{{ c.name }}</strong>
+            <span class="p-help">{{ c.phone }} {{ c.email ? '· ' + c.email : '' }}</span>
+          </div>
+          <button type="button" class="p-link" (click)="selectedClient.set(null)">Cambiar</button>
+        </div>
+      } @else {
+        <div class="field search">
+          <label class="field__label" for="c-search">Buscar por nombre, teléfono o email</label>
+          <input id="c-search" class="field__control" formControlName="clientSearch" autocomplete="off" placeholder="Escribe al menos 2 letras" />
+          @if (clientResults().length) {
+            <ul class="results">
+              @for (c of clientResults(); track c.id) {
+                <li>
+                  <button type="button" (click)="pickClient(c)">
+                    <strong>{{ c.name }}</strong>
+                    <span>{{ c.phone }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      }
+    }
+  </section>
+
+  <!-- 2-3. Fecha y tipo -->
+  <section class="p-card step">
+    <h2 class="step__title"><span>2</span> Evento</h2>
+    <div class="p-grid">
+      <div class="field p-span-all">
+        <label class="field__label" for="e-title">Nombre del evento *</label>
+        <input id="e-title" class="field__control" formControlName="title" placeholder="Ej. Camila & Sebastián" [attr.aria-invalid]="invalid('title')" />
+        <span class="field__hint">También es el título del ticket que verá el cliente.</span>
+      </div>
+      <div class="field">
+        <label class="field__label" for="e-date">Fecha *</label>
+        <input id="e-date" class="field__control" type="date" formControlName="eventDate" [attr.aria-invalid]="invalid('eventDate')" />
+        @if (invalid('eventDate')) {
+          <span class="field__error">Elige la fecha.</span>
+        }
+      </div>
+      <div class="field">
+        <label class="field__label" for="e-start">Hora inicio</label>
+        <input id="e-start" class="field__control" type="time" formControlName="startTime" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="e-end">Hora fin</label>
+        <input id="e-end" class="field__control" type="time" formControlName="endTime" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="e-service">Tipo de evento</label>
+        <select id="e-service" class="field__control" formControlName="serviceId">
+          <option value="">— Sin especificar —</option>
+          @for (s of services(); track s.id) {
+            <option [value]="s.id">{{ s.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label class="field__label" for="e-venue">Lugar</label>
+        <input id="e-venue" class="field__control" formControlName="venue" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="e-city">Ciudad</label>
+        <input id="e-city" class="field__control" formControlName="city" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="e-status">Estado</label>
+        <select id="e-status" class="field__control" formControlName="status">
+          @for (o of statusOptions; track o.value) {
+            <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4-5. Paquete y precio -->
+  <section class="p-card step">
+    <h2 class="step__title"><span>3</span> Paquete y precio</h2>
+    <div class="p-grid">
+      <div class="field">
+        <label class="field__label" for="e-package">Paquete</label>
+        <select id="e-package" class="field__control" formControlName="packageId">
+          <option value="">— Sin paquete / a la medida —</option>
+          @for (p of packageOptions(); track p.id) {
+            <option [value]="p.id">{{ p.name }}{{ p.price && !p.isPriceProvisional ? ' · $' + p.price : '' }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label class="field__label" for="e-price">Precio total (MXN)</label>
+        <input id="e-price" class="field__control" type="number" min="0" step="100" formControlName="totalPrice" />
+      </div>
+      <div class="field p-span-all">
+        <label class="field__label" for="e-notes">Notas privadas</label>
+        <textarea id="e-notes" class="field__control" formControlName="notes" placeholder="Solo tú las ves."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Apartado -->
+  <section class="p-card step">
+    <h2 class="step__title"><span>4</span> Apartado / primer pago</h2>
+    <label class="p-check"><input type="checkbox" formControlName="withPayment" /> Registrar un pago ahora</label>
+    @if (form.controls.withPayment.value) {
+      <div class="p-grid payment" formGroupName="payment">
+        <div class="field">
+          <label class="field__label" for="p-amount">Monto (MXN)</label>
+          <input id="p-amount" class="field__control" type="number" min="0" step="100" formControlName="amount" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="p-date">Fecha del pago</label>
+          <input id="p-date" class="field__control" type="date" formControlName="paidAt" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="p-concept">Concepto</label>
+          <select id="p-concept" class="field__control" formControlName="concept">
+            @for (o of conceptOptions; track o.value) {
+              <option [value]="o.value">{{ o.label }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label" for="p-method">Método</label>
+          <select id="p-method" class="field__control" formControlName="method">
+            @for (o of methodOptions; track o.value) {
+              <option [value]="o.value">{{ o.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- Ticket -->
+  <section class="p-card step">
+    <h2 class="step__title"><span>5</span> Ticket del cliente</h2>
+    <div class="field palette-field">
+      <span class="field__label">Color del ticket</span>
+      <div class="palettes">
+        @for (o of paletteOptions; track o.value) {
+          <label class="palette" [class]="'palette palette--' + o.value">
+            <input type="radio" formControlName="palette" [value]="o.value" />
+            <span class="swatch"></span>
+            {{ o.label }}
+          </label>
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="p-actions">
+    <a appBtn variant="ghost" routerLink="/panel/agenda">Cancelar</a>
+    <button appBtn type="submit" [loading]="saving()" [disabled]="saving()">Guardar evento</button>
+  </div>
+</form>

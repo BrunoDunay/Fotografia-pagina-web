@@ -1,0 +1,141 @@
+:host {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.step {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.step__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xl);
+}
+
+.step__title span {
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  color: var(--color-text-inverse);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+}
+
+.mode {
+  margin-bottom: var(--space-2);
+}
+
+.search {
+  position: relative;
+  max-width: 480px;
+}
+
+.results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  list-style: none;
+  background: var(--color-surface);
+  border: var(--hairline);
+  box-shadow: var(--shadow-md);
+}
+
+.results button {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.results button:hover {
+  background: var(--color-background);
+}
+
+.results span {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.picked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 480px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-primary);
+  background: var(--color-accent-soft);
+}
+
+.picked div {
+  display: grid;
+}
+
+.picked button {
+  border: 0;
+  background: none;
+}
+
+.payment {
+  margin-top: var(--space-2);
+}
+
+.palettes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.palette {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
+  border: var(--hairline);
+  background: var(--color-surface);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.palette input {
+  position: absolute;
+  opacity: 0;
+}
+
+.palette:has(input:checked) {
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 1px var(--color-text);
+}
+
+.palette:has(input:focus-visible) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.swatch {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: var(--radius-sm);
+}
+
+.palette--mocha .swatch {
+  background: var(--ticket-mocha);
+}
+
+.palette--navy .swatch {
+  background: var(--ticket-navy);
+}
+
+.palette--burgundy .swatch {
+  background: var(--ticket-burgundy);
+}

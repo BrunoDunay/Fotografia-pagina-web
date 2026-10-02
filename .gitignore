@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Imágenes subidas en desarrollo (sin Cloudinary)
+backend/uploads/
+
 # Dependencias y builds
 node_modules/
 dist/

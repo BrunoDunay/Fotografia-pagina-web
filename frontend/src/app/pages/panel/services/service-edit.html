@@ -1,0 +1,132 @@
+<app-page-header [title]="isNew() ? 'Nuevo servicio' : (service()?.name ?? 'Servicio')" backLink="/panel/services" backLabel="Servicios">
+  @if (service(); as s) {
+    <a appBtn variant="outline" [href]="'/events/' + s.slug" target="_blank" rel="noopener">Ver en el sitio</a>
+    <button appBtn variant="ghost" type="button" class="danger" (click)="remove()">Eliminar</button>
+  }
+</app-page-header>
+
+<div class="p-tabs" role="tablist">
+  @for (t of tabs(); track t.value) {
+    <button type="button" role="tab" class="p-tab" [class.is-active]="tab() === t.value" (click)="tab.set(t.value)">{{ t.label }}</button>
+  }
+</div>
+
+@if (loaded()) {
+  <form class="p-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <!-- Información -->
+    <section class="p-card p-form" [hidden]="tab() !== 'info'">
+      <div class="p-grid">
+        <div class="field">
+          <label class="field__label" for="name">Nombre *</label>
+          <input id="name" class="field__control" formControlName="name" [attr.aria-invalid]="form.controls.name.invalid && form.controls.name.touched" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="slug">Dirección (slug)</label>
+          <input id="slug" class="field__control" formControlName="slug" placeholder="se genera del nombre" />
+          <span class="field__hint">/events/{{ form.controls.slug.value || '…' }}</span>
+          @if (form.controls.slug.hasError('pattern')) {
+            <span class="field__error">Solo minúsculas, números y guiones.</span>
+          }
+          @if (form.controls.slug.hasError('duplicate')) {
+            <span class="field__error">Ya existe un servicio con esa dirección.</span>
+          }
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label" for="short">Descripción corta (cards y listados)</label>
+        <input id="short" class="field__control" formControlName="shortDescription" maxlength="300" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="desc">Descripción completa</label>
+        <textarea id="desc" class="field__control" formControlName="description" rows="7"></textarea>
+        <span class="field__hint">Deja una línea en blanco para separar párrafos.</span>
+      </div>
+      <label class="p-check"><input type="checkbox" formControlName="isVisible" /> Visible en el sitio</label>
+      <label class="p-check"><input type="checkbox" formControlName="isProvisional" /> Textos provisionales (aparece en el dashboard)</label>
+    </section>
+
+    <!-- Hero y portada -->
+    <section class="p-card p-form" [hidden]="tab() !== 'hero'">
+      <div class="p-grid p-grid--2">
+        <app-image-picker label="Imagen del Hero" folder="services" ratio="16 / 9" [(value)]="heroImage" hint="Si no hay, se usa la portada." />
+        <app-image-picker label="Portada (card en la Home)" folder="services" ratio="3 / 4" [(value)]="coverImage" />
+      </div>
+      <div class="p-grid">
+        <div class="field">
+          <label class="field__label" for="htitle">Título del Hero</label>
+          <input id="htitle" class="field__control" formControlName="heroTitle" placeholder="Ej. Bodas" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="hsub">Subtítulo</label>
+          <input id="hsub" class="field__control" formControlName="heroSubtitle" />
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label" for="hdesc">Texto destacado</label>
+        <textarea id="hdesc" class="field__control" formControlName="heroDescription"></textarea>
+      </div>
+    </section>
+
+    <!-- Video -->
+    <section class="p-card p-form" [hidden]="tab() !== 'video'">
+      <div class="field">
+        <label class="field__label" for="video">Enlace de YouTube o Vimeo</label>
+        <input id="video" class="field__control" type="url" formControlName="videoUrl" placeholder="https://www.youtube.com/watch?v=…" [attr.aria-invalid]="!videoValid()" />
+        @if (!videoValid()) {
+          <span class="field__error">Solo se aceptan enlaces de YouTube o Vimeo.</span>
+        } @else {
+          <span class="field__hint">Vacío = la página no muestra sección de video.</span>
+        }
+      </div>
+      @if (videoUrl() && videoValid()) {
+        <div class="video-preview"><app-video-embed [url]="videoUrl()" title="Vista previa" /></div>
+      }
+    </section>
+
+    <!-- Paquetes -->
+    <section class="p-card p-form" [hidden]="tab() !== 'packages'">
+      <p class="p-help">Paquetes que se muestran en la página de este servicio. Sin paquetes, la página invita a pedir una cotización.</p>
+      <ul class="pkg-list">
+        @for (p of allPackages(); track p.id) {
+          <li>
+            <label class="p-check">
+              <input type="checkbox" [checked]="packageIds().includes(p.id)" (change)="togglePackage(p.id, $any($event.target).checked); form.markAsDirty()" />
+              {{ p.name }}
+              @if (!p.isActive) {
+                <span class="p-badge">Inactivo</span>
+              }
+            </label>
+          </li>
+        }
+      </ul>
+      <a class="p-link" routerLink="/panel/packages">Administrar paquetes</a>
+    </section>
+
+    <!-- SEO -->
+    <section class="p-card p-form" [hidden]="tab() !== 'seo'">
+      <p class="p-help">Cómo aparece esta página en Google y al compartirla. Vacío = se genera automáticamente.</p>
+      <div class="field">
+        <label class="field__label" for="seot">Título</label>
+        <input id="seot" class="field__control" formControlName="seoTitle" maxlength="160" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="seod">Descripción</label>
+        <textarea id="seod" class="field__control" formControlName="seoDescription" maxlength="300"></textarea>
+      </div>
+    </section>
+
+    @if (tab() !== 'gallery') {
+      <div class="p-actions">
+        <button appBtn type="submit" [loading]="saving()" [disabled]="saving()">{{ isNew() ? 'Crear servicio' : 'Guardar cambios' }}</button>
+      </div>
+    }
+  </form>
+
+  @if (tab() === 'gallery' && service()?.galleryId; as galleryId) {
+    <section class="p-card">
+      <app-gallery-manager [galleryId]="galleryId" />
+    </section>
+  }
+} @else {
+  <app-skeleton-text [lines]="8" lineHeight="1.4rem" />
+}

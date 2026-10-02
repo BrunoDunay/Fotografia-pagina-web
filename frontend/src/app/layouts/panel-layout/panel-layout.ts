@@ -4,11 +4,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { PANEL_NAV } from './panel-nav';
+import { PanelUiStyles } from '../../pages/panel/shared/panel-ui-styles';
+import { ConfirmDialog } from '../../pages/panel/shared/confirm-dialog';
 
 /** Layout del panel: aside izquierdo con categorías + main central. */
 @Component({
   selector: 'app-panel-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, PanelUiStyles, ConfirmDialog],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './panel-layout.html',
   styleUrl: './panel-layout.css',

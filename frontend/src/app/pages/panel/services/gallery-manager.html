@@ -1,0 +1,49 @@
+@if (gallery(); as g) {
+  <div
+    class="dropzone"
+    [class.is-dragging]="dragging()"
+    (dragover)="$event.preventDefault(); dragging.set(true)"
+    (dragleave)="dragging.set(false)"
+    (drop)="onDrop($event)"
+  >
+    <p><strong>Arrastra fotos aquí</strong> o</p>
+    <label class="pick">
+      <input type="file" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif" (change)="onPick($event)" [disabled]="progress() !== null" />
+      elige desde tu equipo
+    </label>
+    <p class="p-help">JPG, PNG, WEBP o HEIC · máximo 15 MB por foto · se optimizan automáticamente</p>
+    <p class="count">{{ g.images.length }} / {{ g.maxImages }} fotos</p>
+    <label class="limit p-help">
+      Límite de fotos:
+      <input class="field__control" type="number" min="1" max="500" [value]="g.maxImages" (change)="setLimit($any($event.target).value)" aria-label="Límite de fotos de la galería" />
+    </label>
+    @if (progress() !== null) {
+      <div class="bar" role="progressbar" [attr.aria-valuenow]="progress()" aria-valuemin="0" aria-valuemax="100">
+        <span [style.width.%]="progress()"></span>
+      </div>
+    }
+  </div>
+
+  @if (g.images.length) {
+    <p class="p-help">Arrastra para ordenar. La primera foto aparece primero en la galería pública.</p>
+    <div class="grid" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)">
+      @for (img of g.images; track img.id; let i = $index) {
+        <figure class="tile" cdkDrag>
+          <app-photo [media]="img" ratio="1" sizes="160px" [maxWidth]="320" />
+          @if (g.cover?.id === img.mediaId) {
+            <span class="cover-tag">Portada</span>
+          }
+          <figcaption>
+            <span class="index">{{ i + 1 }}</span>
+            <button type="button" class="p-icon-btn" (click)="setCover(img)" [disabled]="g.cover?.id === img.mediaId" aria-label="Usar como portada" title="Usar como portada">★</button>
+            <button type="button" class="p-icon-btn p-icon-btn--danger" (click)="remove(img)" aria-label="Eliminar foto" title="Eliminar">
+              <app-icon name="close" [size]="14" />
+            </button>
+          </figcaption>
+        </figure>
+      }
+    </div>
+  } @else {
+    <p class="p-help">Esta galería aún no tiene fotos: el sitio muestra fotos provisionales.</p>
+  }
+}

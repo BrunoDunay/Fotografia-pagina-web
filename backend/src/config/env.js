@@ -15,6 +15,8 @@ const schema = z.object({
   ADMIN_NAME: z.string().default('Jorge Armando Ovalle'),
   CORS_ORIGINS: z.string().default('http://localhost:4200'),
   PUBLIC_SITE_URL: z.string().default('http://localhost:4200'),
+  /** URL pública de esta API (para las imágenes locales de desarrollo). */
+  API_PUBLIC_URL: z.string().optional(),
   APP_TIMEZONE: z.string().default('America/Mexico_City'),
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),
@@ -32,6 +34,7 @@ if (!parsed.success) {
 
 export const env = {
   ...parsed.data,
+  API_PUBLIC_URL: parsed.data.API_PUBLIC_URL ?? `http://localhost:${parsed.data.PORT}`,
   isProduction: parsed.data.NODE_ENV === 'production',
   corsOrigins: parsed.data.CORS_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean),
   cloudinaryEnabled: Boolean(

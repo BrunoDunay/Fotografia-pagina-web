@@ -1,0 +1,140 @@
+<app-page-header title="Temas estacionales" subtitle="Pequeños detalles por temporada (Navidad, Independencia, San Marcos…). Las fotografías siguen siendo protagonistas.">
+  <button appBtn type="button" (click)="edit('new')">+ Nuevo tema</button>
+</app-page-header>
+
+<section class="p-card">
+  <h2 class="p-card__title">Modo</h2>
+  <div class="modes" role="radiogroup" aria-label="Modo de temas">
+    <label class="mode" [class.is-active]="mode() === 'off'">
+      <input type="radio" name="mode" [checked]="mode() === 'off'" (change)="setMode('off')" />
+      <strong>Apagado</strong>
+      <span class="p-help">El sitio se ve siempre igual.</span>
+    </label>
+    <label class="mode" [class.is-active]="mode() === 'auto'">
+      <input type="radio" name="mode" [checked]="mode() === 'auto'" (change)="setMode('auto')" />
+      <strong>Automático</strong>
+      <span class="p-help">Se activa solo según las fechas de cada tema con "automático" encendido.</span>
+    </label>
+    <label class="mode" [class.is-active]="mode() === 'manual'">
+      <input type="radio" name="mode" [checked]="mode() === 'manual'" (change)="setMode('manual')" />
+      <strong>Manual</strong>
+      <span class="p-help">Tú eliges qué tema se ve, sin importar la fecha.</span>
+      @if (mode() === 'manual') {
+        <select class="field__control" (change)="setMode('manual', $any($event.target).value)" aria-label="Tema manual">
+          @for (t of themes() ?? []; track t.id) {
+            <option [value]="t.id" [selected]="t.id === manualThemeId()">{{ t.name }}</option>
+          }
+        </select>
+      }
+    </label>
+  </div>
+</section>
+
+<div class="layout" [class.has-editor]="editing() !== null">
+  @if (themes(); as list) {
+    <div class="p-table-wrap">
+      <table class="p-table">
+        <thead><tr><th>Tema</th><th>Fechas</th><th>Decoración</th><th>Automático</th><th>Prioridad</th></tr></thead>
+        <tbody>
+          @for (t of list; track t.id) {
+            <tr class="is-link" (click)="edit(t)" tabindex="0" (keydown.enter)="edit(t)" [class.inactive]="!t.isActive">
+              <td>
+                <strong>{{ t.name }}</strong>
+                @if (t.id === activeThemeId()) {
+                  <span class="p-badge p-badge--success">Activo hoy</span>
+                }
+              </td>
+              <td>{{ range(t) }}</td>
+              <td>{{ t.decoration === 'none' ? '—' : decorationLabel[t.decoration] }}</td>
+              <td>{{ t.autoEnabled ? 'Sí' : 'No' }}</td>
+              <td>{{ t.priority }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <app-skeleton-table [rows]="7" [columns]="5" />
+  }
+
+  @if (editing() !== null) {
+    <form class="p-card p-form editor fade-up" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <div class="p-row">
+        <h2 class="p-card__title">{{ editing() === 'new' ? 'Nuevo tema' : 'Editar tema' }}</h2>
+        <span class="p-spacer"></span>
+        <button type="button" class="p-icon-btn" (click)="editing.set(null)" aria-label="Cerrar"><app-icon name="close" [size]="16" /></button>
+      </div>
+      <div class="p-grid">
+        <div class="field">
+          <label class="field__label" for="name">Nombre</label>
+          <input id="name" class="field__control" formControlName="name" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="key">Clave</label>
+          <input id="key" class="field__control" formControlName="key" placeholder="navidad" />
+        </div>
+      </div>
+
+      <div class="dates">
+        <span class="field__label">Del</span>
+        <input class="field__control day" type="number" min="1" max="31" formControlName="startDay" aria-label="Día inicial" />
+        <select class="field__control" formControlName="startMonth" aria-label="Mes inicial">
+          @for (m of months; track m; let i = $index) {
+            <option [ngValue]="i + 1">{{ m }}</option>
+          }
+        </select>
+        <span class="field__label">al</span>
+        <input class="field__control day" type="number" min="1" max="31" formControlName="endDay" aria-label="Día final" />
+        <select class="field__control" formControlName="endMonth" aria-label="Mes final">
+          @for (m of months; track m; let i = $index) {
+            <option [ngValue]="i + 1">{{ m }}</option>
+          }
+        </select>
+      </div>
+      <p class="p-help">Puede cruzar el año (ej. 21 dic al 19 mar).</p>
+
+      <div class="p-grid">
+        <div class="field">
+          <label class="field__label" for="deco">Decoración</label>
+          <select id="deco" class="field__control" formControlName="decoration">
+            @for (d of decorations; track d.value) {
+              <option [value]="d.value">{{ d.label }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label" for="prio">Prioridad</label>
+          <input id="prio" class="field__control" type="number" min="0" max="100" formControlName="priority" />
+          <span class="field__hint">Si dos temas coinciden, gana el de mayor prioridad.</span>
+        </div>
+        <div class="field">
+          <label class="field__label" for="badge">Detalle en el navbar</label>
+          <input id="badge" class="field__control" formControlName="navbarBadge" maxlength="4" placeholder="❄" />
+        </div>
+      </div>
+
+      <label class="p-check"><input type="checkbox" formControlName="useColors" /> Cambiar colores de acento durante el tema</label>
+      @if (form.controls.useColors.value) {
+        <div class="colors">
+          <label class="color"><input type="color" formControlName="accent" /> Acento decorativo</label>
+          <label class="color"><input type="color" formControlName="primary" /> Acento de texto y botones</label>
+        </div>
+      }
+
+      <app-image-picker label="Imagen del Hero durante el tema (opcional)" folder="themes" ratio="16 / 9" [(value)]="heroImage" />
+
+      <div class="p-row">
+        <label class="p-check"><input type="checkbox" formControlName="autoEnabled" /> Automático por fecha</label>
+        <label class="p-check"><input type="checkbox" formControlName="isActive" /> Habilitado</label>
+      </div>
+
+      <div class="p-row">
+        @if (editingTheme(); as t) {
+          <button appBtn variant="ghost" type="button" class="danger" (click)="remove(t)">Eliminar</button>
+        }
+        <span class="p-spacer"></span>
+        <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.invalid">Guardar tema</button>
+      </div>
+    </form>
+  }
+</div>

@@ -1,0 +1,96 @@
+<app-page-header title="Calendario" subtitle="Toca un día para ver sus eventos, crear uno nuevo o bloquear la fecha.">
+  <a appBtn routerLink="/panel/events/new">+ Nuevo evento</a>
+</app-page-header>
+
+<div class="layout">
+  <section class="p-card cal">
+    <header class="cal__head">
+      <button type="button" class="p-icon-btn" (click)="go(-1)" aria-label="Mes anterior"><app-icon name="chevronLeft" [size]="18" /></button>
+      <h2>{{ title() }}</h2>
+      <button type="button" class="p-icon-btn" (click)="go(1)" aria-label="Mes siguiente"><app-icon name="chevronRight" [size]="18" /></button>
+      <span class="p-spacer"></span>
+      <span class="p-help">{{ monthCount() }} evento(s) este mes</span>
+      <button appBtn size="sm" variant="ghost" type="button" (click)="goToday()">Hoy</button>
+    </header>
+
+    @if (loading()) {
+      <app-skeleton-calendar />
+    } @else {
+      <div class="grid">
+        @for (w of weekdays; track w) {
+          <span class="weekday">{{ w }}</span>
+        }
+        @for (d of days(); track d.date) {
+          <button
+            type="button"
+            class="day"
+            [class.is-outside]="!d.inMonth"
+            [class.is-today]="d.isToday"
+            [class.is-past]="d.isPast"
+            [class.is-selected]="d.date === selected()"
+            [class.is-blocked]="!!d.block"
+            (click)="selected.set(d.date)"
+            [attr.aria-label]="longDate(d.date) + (d.events.length ? ', ' + d.events.length + ' evento(s)' : '') + (d.block ? ', bloqueado' : '')"
+          >
+            <span class="num">{{ d.day }}</span>
+            @for (e of d.events.slice(0, 2); track e.id) {
+              <span class="chip" [class]="'chip chip--' + e.status">{{ e.title }}</span>
+            }
+            @if (d.events.length > 2) {
+              <span class="more">+{{ d.events.length - 2 }} más</span>
+            }
+            @if (d.block) {
+              <span class="chip chip--blocked">Bloqueado</span>
+            }
+          </button>
+        }
+      </div>
+      <ul class="legend">
+        <li><span class="chip chip--confirmed">Confirmado</span></li>
+        <li><span class="chip chip--tentative">Por confirmar</span></li>
+        <li><span class="chip chip--completed">Realizado</span></li>
+        <li><span class="chip chip--blocked">Bloqueado</span></li>
+      </ul>
+    }
+  </section>
+
+  <aside class="p-card day-panel" aria-live="polite">
+    @if (selectedDay(); as d) {
+      <h2 class="day-panel__date">{{ longDate(d.date) }}</h2>
+
+      @if (d.events.length) {
+        <ul class="day-events">
+          @for (e of d.events; track e.id) {
+            <li>
+              <a [routerLink]="['/panel/events', e.id]">
+                <strong>{{ e.title }}</strong>
+                <span class="p-help">
+                  {{ shortTime(e.startTime) || 'Sin hora' }} · {{ e.service?.name ?? 'Evento' }} · {{ e.client.name }}
+                </span>
+                <span class="p-badge" [class]="'p-badge p-badge--' + e.status">{{ statusLabel[e.status] }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="p-help">Sin eventos este día.</p>
+      }
+
+      <button appBtn [block]="true" type="button" (click)="newEvent(d.date)">+ Nuevo evento en esta fecha</button>
+
+      <div class="block-box">
+        @if (d.block; as b) {
+          <p class="p-help">Día bloqueado{{ b.privateReason ? ': ' + b.privateReason : '' }}. En el sitio aparece como ocupado.</p>
+          <button appBtn size="sm" variant="outline" type="button" (click)="unblock(b)">Desbloquear día</button>
+        } @else {
+          <label class="field__label" for="reason">Bloquear sin evento (vacaciones, personal…)</label>
+          <input id="reason" class="field__control" placeholder="Motivo privado (opcional)" [ngModel]="blockReason()" (ngModelChange)="blockReason.set($event)" />
+          <button appBtn size="sm" variant="outline" type="button" (click)="block(d.date)">Bloquear día</button>
+        }
+      </div>
+    } @else {
+      <h2 class="day-panel__date">Selecciona un día</h2>
+      <p class="p-help">Verás sus eventos y podrás registrar una contratación con la fecha ya puesta.</p>
+    }
+  </aside>
+</div>

@@ -102,6 +102,10 @@ export class ContentApiService {
     );
   }
 
+  updateGallery(galleryId: string, body: { title?: string; maxImages?: number }) {
+    return this.http.patch<{ id: string; title: string; maxImages: number }>(`${this.api}/galleries/${galleryId}`, body);
+  }
+
   reorderGallery(galleryId: string, ids: string[]) {
     return this.http.put(`${this.api}/galleries/${galleryId}/order`, { ids });
   }

@@ -1,0 +1,98 @@
+:host {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.layout {
+  display: grid;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.layout.has-editor {
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 1.1fr);
+}
+
+.row {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.is-selected {
+  border-color: var(--color-primary);
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+.is-inactive {
+  opacity: 0.6;
+}
+
+.price {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  white-space: nowrap;
+}
+
+.price.is-pending {
+  font-style: italic;
+  color: var(--color-primary);
+}
+
+.editor {
+  position: sticky;
+  top: calc(var(--space-6) + 60px);
+}
+
+.align-end {
+  align-self: end;
+  padding-bottom: 0.8rem;
+}
+
+.features {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.feature {
+  display: grid;
+  grid-template-columns: auto 1.4fr 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-surface);
+}
+
+.feature.cdk-drag-preview {
+  box-shadow: var(--shadow-lg);
+}
+
+.add {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.services {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: var(--space-2);
+}
+
+.danger {
+  color: var(--color-danger);
+}
+
+@media (max-width: 1100px) {
+  .layout.has-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .editor {
+    position: static;
+  }
+}

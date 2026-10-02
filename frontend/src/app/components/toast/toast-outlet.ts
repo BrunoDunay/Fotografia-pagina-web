@@ -22,7 +22,10 @@ import { ToastService } from '../../core/services/toast.service';
       display: grid;
       gap: var(--space-2);
       width: min(380px, calc(100vw - 2 * var(--space-4)));
+      /* Los avisos no deben bloquear clics en lo que haya debajo. */
+      pointer-events: none;
     }
+    .close { pointer-events: auto; }
     .toast {
       display: flex;
       align-items: flex-start;

@@ -1,0 +1,192 @@
+@if (event(); as e) {
+  <app-page-header [title]="e.title" [subtitle]="longDate(e.eventDate)" backLink="/panel/events" backLabel="Eventos">
+    <select class="field__control status-select" (change)="changeStatus($any($event.target).value)" aria-label="Estado del evento">
+      @for (o of statusOptions; track o.value) {
+        <option [value]="o.value" [selected]="o.value === e.status">{{ o.label }}</option>
+      }
+    </select>
+    <button appBtn variant="ghost" type="button" class="danger" (click)="remove()">Eliminar</button>
+  </app-page-header>
+
+  @if (created() && ticketUrl()) {
+    <div class="created p-card">
+      <p><strong>¡Listo!</strong> La fecha quedó ocupada en el calendario público y el ticket está listo para compartir.</p>
+      <div class="p-row">
+        <button appBtn size="sm" type="button" (click)="copyLink()">Copiar enlace del ticket</button>
+        @if (shareToClient(); as wa) {
+          <a appBtn size="sm" variant="outline" [href]="wa" target="_blank" rel="noopener">Enviar al cliente por WhatsApp</a>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="layout">
+    <!-- Datos del evento -->
+    <form class="p-card p-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <h2 class="p-card__title">Datos del evento</h2>
+      <div class="client">
+        <span class="field__label">Cliente</span>
+        <a [routerLink]="['/panel/clients', e.client.id]" class="p-link">{{ e.client.name }}</a>
+        <span class="p-help">{{ e.client.phone }} {{ e.client.email ? '· ' + e.client.email : '' }}</span>
+      </div>
+      <div class="p-grid">
+        <div class="field p-span-all">
+          <label class="field__label" for="title">Nombre del evento</label>
+          <input id="title" class="field__control" formControlName="title" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="date">Fecha</label>
+          <input id="date" class="field__control" type="date" formControlName="eventDate" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="start">Hora inicio</label>
+          <input id="start" class="field__control" type="time" formControlName="startTime" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="end">Hora fin</label>
+          <input id="end" class="field__control" type="time" formControlName="endTime" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="service">Tipo de evento</label>
+          <select id="service" class="field__control" formControlName="serviceId">
+            <option value="">— Sin especificar —</option>
+            @for (s of services(); track s.id) {
+              <option [value]="s.id">{{ s.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label" for="package">Paquete</label>
+          <select id="package" class="field__control" formControlName="packageId">
+            <option value="">— Sin paquete —</option>
+            @for (p of packages(); track p.id) {
+              <option [value]="p.id">{{ p.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label" for="price">Precio total (MXN)</label>
+          <input id="price" class="field__control" type="number" min="0" step="100" formControlName="totalPrice" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="venue">Lugar</label>
+          <input id="venue" class="field__control" formControlName="venue" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="city">Ciudad</label>
+          <input id="city" class="field__control" formControlName="city" />
+        </div>
+        <div class="field p-span-all">
+          <label class="field__label" for="notes">Notas privadas</label>
+          <textarea id="notes" class="field__control" formControlName="notes"></textarea>
+        </div>
+        <label class="p-check p-span-all">
+          <input type="checkbox" formControlName="blocksAvailability" />
+          Este evento ocupa la fecha en el calendario público
+        </label>
+      </div>
+      <div class="p-row">
+        <span class="p-spacer"></span>
+        <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.pristine">Guardar cambios</button>
+      </div>
+    </form>
+
+    <div class="side">
+      <!-- Pagos -->
+      <section class="p-card">
+        <h2 class="p-card__title">Pagos <span class="p-badge" [class]="'p-badge p-badge--' + e.payment.status">{{ paymentStatusLabel[e.payment.status] }}</span></h2>
+        <dl class="totals">
+          <div><dt>Total</dt><dd>{{ money(e.payment.total) }}</dd></div>
+          <div><dt>Pagado</dt><dd>{{ money(e.payment.paid) }}</dd></div>
+          <div class="balance"><dt>Pendiente</dt><dd>{{ money(e.payment.balance) }}</dd></div>
+        </dl>
+
+        @if (e.payments.length) {
+          <ul class="payments">
+            @for (p of e.payments; track p.id) {
+              <li>
+                <div>
+                  <strong>{{ money(p.amount) }}</strong>
+                  <span class="p-help">{{ shortDate(p.paidAt) }} · {{ conceptLabel[p.concept] }} · {{ methodLabel[p.method] }}</span>
+                </div>
+                <button type="button" class="p-icon-btn p-icon-btn--danger" (click)="deletePayment(p)" aria-label="Eliminar pago">
+                  <app-icon name="close" [size]="16" />
+                </button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="p-help">Sin pagos registrados.</p>
+        }
+
+        <form class="add-payment" [formGroup]="paymentForm" (ngSubmit)="addPayment()" novalidate>
+          <p class="field__label">Registrar pago</p>
+          <div class="p-grid">
+            <input class="field__control" type="number" min="1" step="100" formControlName="amount" aria-label="Monto" placeholder="Monto" />
+            <input class="field__control" type="date" formControlName="paidAt" aria-label="Fecha del pago" />
+            <select class="field__control" formControlName="concept" aria-label="Concepto">
+              @for (o of conceptOptions; track o.value) {
+                <option [value]="o.value">{{ o.label }}</option>
+              }
+            </select>
+            <select class="field__control" formControlName="method" aria-label="Método">
+              @for (o of methodOptions; track o.value) {
+                <option [value]="o.value">{{ o.label }}</option>
+              }
+            </select>
+          </div>
+          <button appBtn size="sm" variant="outline" type="submit" [loading]="addingPayment()" [disabled]="addingPayment()">Agregar pago</button>
+        </form>
+      </section>
+
+      <!-- Ticket -->
+      @if (e.reservation) {
+        <section class="p-card">
+          <h2 class="p-card__title">Ticket del cliente</h2>
+          <div class="link-box">
+            <input class="field__control" [value]="ticketUrl()" readonly aria-label="Enlace del ticket" (focus)="$any($event.target).select()" />
+            <button type="button" class="p-icon-btn" (click)="copyLink()" aria-label="Copiar enlace">⧉</button>
+          </div>
+          <div class="p-row share">
+            @if (shareToClient(); as wa) {
+              <a class="p-link" [href]="wa" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+            }
+            <a class="p-link" [href]="ticketUrl()" target="_blank" rel="noopener">Ver ticket</a>
+            <button type="button" class="p-link regen" (click)="regenerateCode()">Generar enlace nuevo</button>
+          </div>
+
+          <form class="p-form" [formGroup]="ticketForm" (ngSubmit)="saveTicket()" novalidate>
+            <div class="field">
+              <label class="field__label" for="t-title">Título en el ticket</label>
+              <input id="t-title" class="field__control" formControlName="displayTitle" />
+            </div>
+            <div class="p-grid">
+              <div class="field">
+                <label class="field__label" for="t-mono">Monograma</label>
+                <input id="t-mono" class="field__control" formControlName="monogram" placeholder="C|S" />
+              </div>
+              <div class="field">
+                <label class="field__label" for="t-palette">Color</label>
+                <select id="t-palette" class="field__control" formControlName="ticketPalette">
+                  @for (o of paletteOptions; track o.value) {
+                    <option [value]="o.value">{{ o.label }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="t-msg">Mensaje para el cliente</label>
+              <textarea id="t-msg" class="field__control" formControlName="message" rows="3"></textarea>
+            </div>
+            <label class="p-check"><input type="checkbox" formControlName="showTime" /> Mostrar horario</label>
+            <label class="p-check"><input type="checkbox" formControlName="showVenue" /> Mostrar lugar</label>
+            <label class="p-check"><input type="checkbox" formControlName="isActive" /> Enlace activo</label>
+            <button appBtn size="sm" type="submit" [loading]="savingTicket()" [disabled]="savingTicket() || ticketForm.pristine">Guardar ticket</button>
+          </form>
+        </section>
+      }
+    </div>
+  </div>
+} @else {
+  <app-skeleton-dashboard />
+}

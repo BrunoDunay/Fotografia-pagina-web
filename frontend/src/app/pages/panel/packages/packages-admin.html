@@ -1,0 +1,103 @@
+<app-page-header title="Paquetes" subtitle="Precios y características. Un precio marcado como provisional se muestra como «Precio por confirmar».">
+  <button appBtn type="button" (click)="edit('new')">+ Nuevo paquete</button>
+</app-page-header>
+
+<div class="layout" [class.has-editor]="editing() !== null">
+  <div>
+    @if (packages(); as list) {
+      <ul class="p-list" cdkDropList (cdkDropListDropped)="drop($event)">
+        @for (p of list; track p.id) {
+          <li class="p-list-item" cdkDrag [class.is-selected]="isEditing(p)" [class.is-inactive]="!p.isActive">
+            <span class="p-drag" cdkDragHandle aria-label="Arrastrar para ordenar">⠿</span>
+            <button type="button" class="row" (click)="edit(p)">
+              <strong>{{ p.name }}</strong>
+              <span class="p-help">{{ p.features.length }} característica(s) · {{ p.serviceIds?.length ?? 0 }} servicio(s)</span>
+            </button>
+            @if (p.isFeatured) {
+              <span class="p-badge p-badge--accent">Recomendado</span>
+            }
+            @if (!p.isActive) {
+              <span class="p-badge">Inactivo</span>
+            }
+            <span class="price" [class.is-pending]="p.price === null || p.isPriceProvisional">
+              {{ p.price === null || p.isPriceProvisional ? 'Por confirmar' : money(p.price) }}
+            </span>
+          </li>
+        } @empty {
+          <li class="p-card p-empty">Aún no hay paquetes.</li>
+        }
+      </ul>
+    } @else {
+      <app-skeleton-table [rows]="5" [columns]="3" />
+    }
+  </div>
+
+  @if (editing() !== null) {
+    <form class="p-card p-form editor fade-up" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <div class="p-row">
+        <h2 class="p-card__title">{{ editing() === 'new' ? 'Nuevo paquete' : 'Editar paquete' }}</h2>
+        <span class="p-spacer"></span>
+        <button type="button" class="p-icon-btn" (click)="editing.set(null)" aria-label="Cerrar editor"><app-icon name="close" [size]="16" /></button>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="name">Nombre *</label>
+        <input id="name" class="field__control" formControlName="name" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="subtitle">Subtítulo</label>
+        <input id="subtitle" class="field__control" formControlName="subtitle" placeholder="Ej. Ideal para bodas íntimas" />
+      </div>
+      <div class="p-grid">
+        <div class="field">
+          <label class="field__label" for="price">Precio (MXN)</label>
+          <input id="price" class="field__control" type="number" min="0" step="100" formControlName="price" placeholder="Sin definir" />
+        </div>
+        <label class="p-check align-end">
+          <input type="checkbox" formControlName="isPriceProvisional" /> Precio provisional
+        </label>
+      </div>
+      <div class="p-row">
+        <label class="p-check"><input type="checkbox" formControlName="isFeatured" /> Recomendado</label>
+        <label class="p-check"><input type="checkbox" formControlName="isActive" /> Activo (visible)</label>
+      </div>
+
+      <div class="field">
+        <span class="field__label">Características</span>
+        <div formArrayName="features" cdkDropList (cdkDropListDropped)="moveFeature($event)" class="features">
+          @for (f of features.controls; track f; let i = $index) {
+            <div class="feature" [formGroupName]="i" cdkDrag>
+              <span class="p-drag" cdkDragHandle>⠿</span>
+              <input class="field__control" formControlName="label" placeholder="Ej. USB en caja de madera" aria-label="Característica" />
+              <input class="field__control value" formControlName="value" placeholder="Detalle (opcional)" aria-label="Detalle" />
+              <button type="button" class="p-icon-btn p-icon-btn--danger" (click)="features.removeAt(i); form.markAsDirty()" aria-label="Quitar">
+                <app-icon name="close" [size]="14" />
+              </button>
+            </div>
+          }
+        </div>
+        <button type="button" class="p-link add" (click)="addFeature()">+ Agregar característica</button>
+      </div>
+
+      <div class="field">
+        <span class="field__label">Se muestra en</span>
+        <div class="services">
+          @for (s of services(); track s.id) {
+            <label class="p-check">
+              <input type="checkbox" [checked]="form.controls.serviceIds.value.includes(s.id)" (change)="toggleService(s.id, $any($event.target).checked)" />
+              {{ s.name }}
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="p-row">
+        @if (editingPackage(); as pkg) {
+          <button appBtn variant="ghost" type="button" class="danger" (click)="remove(pkg)">Eliminar</button>
+        }
+        <span class="p-spacer"></span>
+        <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.invalid">Guardar paquete</button>
+      </div>
+    </form>
+  }
+</div>
