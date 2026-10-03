@@ -3,7 +3,7 @@ import { TicketStatus } from '../ticket-status';
 import { TicketView, fitSize } from '../ticket-view';
 
 /**
- * Cuna (ref. Baby shower/diseño de tela): fondo con textura de lino, cuna tipo moisés con dos globos
+ * Cuna (ref. Baby shower/diseño de tela): fondo liso con marco de línea fina, cuna tipo moisés con dos globos
  * (uno en forma de corazón), título manuscrito y la fecha en un círculo entre dos líneas.
  */
 @Component({
@@ -11,6 +11,7 @@ import { TicketView, fitSize } from '../ticket-view';
   imports: [TicketStatus],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <span class="frame" aria-hidden="true"></span>
     <svg class="art" viewBox="0 0 100 92" aria-hidden="true">
       <!-- Globos y sus hilos -->
       <path d="M52 30C51 40 53 48 55 54M70 33C66 40 62 47 58 54" fill="none" stroke-width="0.35" style="stroke: var(--t-dark)" />
@@ -76,17 +77,27 @@ import { TicketView, fitSize } from '../ticket-view';
       align-items: center;
       justify-content: space-between;
       height: 100%;
-      padding: 8cqw 8cqw 6cqw;
-      /* Textura de lino: hilos finos horizontales y verticales. */
+      position: relative;
+      padding: 10cqw 10cqw 9cqw;
+      /* Fondo liso con un halo de luz detrás de la cuna. */
       background:
-        repeating-linear-gradient(0deg, rgb(255 255 255 / 0.2) 0 0.14cqw, transparent 0.14cqw 0.5cqw),
-        repeating-linear-gradient(90deg, rgb(0 0 0 / 0.035) 0 0.14cqw, transparent 0.14cqw 0.5cqw),
-        radial-gradient(120% 80% at 50% 20%, color-mix(in srgb, var(--t-main) 80%, white), var(--t-main));
+        radial-gradient(62cqw 50cqw at 50% 42cqw, color-mix(in srgb, var(--t-paper) 85%, white), transparent 72%),
+        linear-gradient(180deg, color-mix(in srgb, var(--t-main) 72%, white), var(--t-main));
       color: var(--t-ink);
       text-align: center;
+      isolation: isolate;
     }
     p, h1 { margin: 0; }
-    .art { flex: none; width: 82cqw; height: 75cqw; filter: drop-shadow(0 1cqw 1.600cqw rgb(0 0 0 / 0.12)); }
+    /* Marco de doble línea fina (elemento real: los pseudo-elementos no salen al exportar). */
+    .frame {
+      position: absolute;
+      inset: 4cqw;
+      z-index: -1;
+      border: 0.22cqw solid color-mix(in srgb, var(--t-dark) 55%, transparent);
+      outline: 0.12cqw solid color-mix(in srgb, var(--t-dark) 40%, transparent);
+      outline-offset: -1.5cqw;
+    }
+    .art { flex: none; width: 76cqw; height: 70cqw; filter: drop-shadow(0 1cqw 1.600cqw rgb(0 0 0 / 0.12)); }
     .names { font-family: var(--font-script); font-weight: 400; line-height: 1.1; overflow-wrap: anywhere; }
     .date { display: flex; align-items: center; gap: 2.4cqw; font-family: var(--font-serif); font-size: 3.6cqw; text-transform: capitalize; }
     .date span { flex: 1; min-width: 20cqw; }

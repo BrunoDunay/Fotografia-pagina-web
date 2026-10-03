@@ -11,7 +11,6 @@ export type TicketDesign =
   | 'garden'
   | 'palms'
   | 'passport'
-  | 'beach'
   | 'boarding'
   | 'roses'
   | 'clouds'
@@ -106,7 +105,6 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
     key: 'pearls',
     label: 'Perlas',
     group: 'Bodas',
-    photo: true,
     services: [],
     palettes: [
       // main = paneles · accent = brillo de las perlas
@@ -164,18 +162,6 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
       p('terracotta', 'Terracota', '#9c4f3d', '#7a3526', '#ffffff', '#2a2523', '#d9715c'),
       p('navy', 'Azul marino', '#2c3e63', '#1b2947', '#ffffff', '#20283a', '#8ba3d0'),
       p('olive', 'Verde olivo', '#6b7045', '#4d5230', '#ffffff', '#2c2d22', '#d2a55c'),
-    ],
-  },
-  {
-    key: 'beach',
-    label: 'Playa al atardecer',
-    group: 'Playa y destino',
-    services: [],
-    palettes: [
-      // main = cielo arriba · dark = horizonte · paper = arena · accent = sol
-      p('sunset', 'Atardecer', '#f3b06f', '#d9695a', '#f6e3c8', '#5b2f22', '#fff1c9'),
-      p('day', 'De día', '#bfe6ef', '#58b7c6', '#f7ecd6', '#17505c', '#fffbe6'),
-      p('dusk', 'Anochecer', '#3a3470', '#c4688a', '#33295a', '#fdf3ee', '#ffd9b8'),
     ],
   },
   {
@@ -275,7 +261,7 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
     group: 'Baby shower',
     services: [],
     palettes: [
-      // main = fondo de tela · dark = café de la ilustración · paper = crema · accent = globo y madera
+      // main = fondo · dark = café de la ilustración · paper = crema · accent = globo y madera
       p('greige', 'Lino', '#d9d0c7', '#7a5540', '#f3ede4', '#4a3a34', '#c9a27c'),
       p('sage', 'Salvia', '#d5d8cb', '#6f7a5c', '#f1f1e8', '#3f4636', '#b9a78a'),
       p('blue', 'Azul bebé', '#cfd8df', '#5f7890', '#eef2f5', '#34444f', '#b9a58c'),

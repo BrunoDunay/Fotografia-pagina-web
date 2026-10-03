@@ -14,7 +14,6 @@ export const TICKET_DESIGNS = {
   // Playa y destino
   palms: ['olive', 'terracotta', 'teal'],
   passport: ['terracotta', 'navy', 'olive'],
-  beach: ['sunset', 'day', 'dusk'],
   boarding: ['navy', 'sand', 'terracotta'],
   // XV años
   roses: ['blush', 'champagne', 'lilac'],

@@ -16,7 +16,7 @@ interface LaceFlower {
 
 /**
  * Encaje (ref. Bodas/Cartel elegante): cartel oscuro con marco de placa, monograma entre el mes y el año,
- * nombres en manuscrita y mayúsculas, y una franja de encaje floral que da paso al papel crema.
+ * nombres centrados en mayúsculas, y una franja de encaje floral que da paso al papel crema.
  */
 @Component({
   selector: 'app-ticket-lace',
@@ -36,11 +36,11 @@ interface LaceFlower {
       </div>
 
       <h1 class="names" [style.font-size]="nameSize()">
-        @if (v().names.length === 2) {
-          <i>{{ v().names[0] }}</i>
-          <span>{{ v().names[1] }}</span>
-        } @else {
-          <span>{{ v().title }}</span>
+        @for (name of v().names; track $index) {
+          @if (!$first) {
+            <i>&amp;</i>
+          }
+          <span>{{ name }}</span>
         }
       </h1>
 
@@ -119,9 +119,8 @@ interface LaceFlower {
       letter-spacing: 0;
       text-transform: none;
     }
-    .names { display: grid; justify-items: center; font-weight: 400; line-height: 1; overflow-wrap: anywhere; }
-    .names i { margin: 0 14cqw -0.25em 0; font-family: var(--font-script); font-size: 1.15em; font-style: normal; }
-    .names span { font-family: var(--font-serif); letter-spacing: 0.14em; text-transform: uppercase; }
+    .names { display: grid; justify-items: center; gap: 0.12em; font-family: var(--font-serif); font-weight: 400; letter-spacing: 0.14em; line-height: 1.05; text-indent: 0.14em; text-transform: uppercase; overflow-wrap: anywhere; }
+    .names i { font-size: 0.6em; font-style: normal; letter-spacing: 0; text-indent: 0; }
     .text {
       display: -webkit-box;
       max-width: 56cqw;

@@ -93,8 +93,8 @@ import { TicketView, fitSize } from '../ticket-view';
     .names { font-family: var(--font-sans); font-weight: 500; letter-spacing: 0.14em; line-height: 1.2; text-transform: uppercase; color: color-mix(in srgb, var(--t-dark) 70%, var(--t-ink)); overflow-wrap: anywhere; }
     .heart { font-size: 3.4cqw; color: var(--t-dark); }
     .date { display: flex; align-items: center; gap: 3cqw; font-size: 2.5cqw; letter-spacing: 0.14em; text-transform: capitalize; }
-    .date b { display: grid; justify-items: center; padding: 0 3.4cqw; border-inline: 0.3cqw solid var(--t-main); font-family: var(--font-serif); font-size: 9cqw; font-weight: 500; line-height: 0.95; }
-    .date small { font-family: var(--font-sans); font-size: 2.3cqw; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; }
+    .date b { display: grid; justify-items: center; gap: 1.8cqw; padding: 0 3.4cqw 0.6cqw; border-inline: 0.3cqw solid var(--t-main); font-family: var(--font-serif); font-size: 9cqw; font-weight: 500; line-height: 0.8; }
+    .date small { font-family: var(--font-sans); font-size: 2.3cqw; line-height: 1.2; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; }
     .detail { font-size: 2.3cqw; letter-spacing: 0.1em; opacity: 0.85; }
     .scene { width: 78cqw; height: 34cqw; margin-block: -2cqw; filter: var(--shadow); }
     .logo { width: 24cqw; height: auto; opacity: 0.8; }

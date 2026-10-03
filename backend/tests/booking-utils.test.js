@@ -59,7 +59,7 @@ describe('hasImageSignature', () => {
 describe('normalizeTicketStyle', () => {
   it('acepta una combinación válida de diseño y color', async () => {
     const { normalizeTicketStyle } = await import('../src/config/ticket-designs.js');
-    expect(normalizeTicketStyle('beach', 'dusk')).toEqual({ ticketDesign: 'beach', ticketPalette: 'dusk' });
+    expect(normalizeTicketStyle('palms', 'teal')).toEqual({ ticketDesign: 'palms', ticketPalette: 'teal' });
   });
 
   it('si el color no pertenece al diseño, usa el primero de ese diseño', async () => {

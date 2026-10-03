@@ -6,7 +6,7 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
 const WEEKDAY = new Intl.DateTimeFormat('es-MX', { weekday: 'long', timeZone: 'UTC' });
 
 /**
- * Perlas (ref. Bodas/Joyería): nombres en mayúsculas sobre la foto en blanco y negro, hilo de perlas,
+ * Perlas (ref. Bodas/Joyería): nombres en mayúsculas, paño de seda con hilos de perlas (sin fotografía),
  * sobre con una nota sujeta con clip y la fecha entre el día anterior y el siguiente, marcada con una perla.
  */
 @Component({
@@ -25,7 +25,6 @@ const WEEKDAY = new Intl.DateTimeFormat('es-MX', { weekday: 'long', timeZone: 'U
     </svg>
 
     <header class="head">
-      <p class="mini">{{ v().monogram.join(' & ') }} · {{ v().shortDate }}</p>
       <h1 class="names" [style.font-size]="nameSize()">
         @for (name of v().names; track $index) {
           <span>{{ name }}</span>
@@ -34,14 +33,21 @@ const WEEKDAY = new Intl.DateTimeFormat('es-MX', { weekday: 'long', timeZone: 'U
       <p class="script">¡Reserva la fecha!</p>
     </header>
 
-    <section class="photo">
-      @if (v().photo; as photo) {
-        <img [src]="photo" alt="" crossorigin="anonymous" />
-      }
-    </section>
+    <!-- Paño de seda: pliegues suaves en el color del diseño -->
+    <svg class="silk" viewBox="0 0 100 36" preserveAspectRatio="none" aria-hidden="true">
+      <rect width="100" height="36" style="fill: var(--t-main)" />
+      <path d="M0 0H100V9C70 -2 34 14 0 4z" style="fill: color-mix(in srgb, var(--t-main) 55%, white)" />
+      <path d="M0 9C30 20 64 4 100 16V22C66 9 32 26 0 15z" style="fill: color-mix(in srgb, var(--t-main) 72%, white)" />
+      <path d="M0 19C34 31 66 13 100 26V30C66 18 34 35 0 24z" style="fill: color-mix(in srgb, var(--t-main) 60%, var(--t-dark))" />
+      <path d="M0 29C34 39 68 24 100 33V36H0z" style="fill: var(--t-dark)" opacity="0.55" />
+      <path d="M0 6C32 17 66 1 100 12M0 26C34 37 68 20 100 31" fill="none" stroke="#fff" stroke-width="0.2" opacity="0.5" />
+    </svg>
 
-    <!-- Hilo de perlas que cae sobre la foto -->
+    <!-- Hilos de perlas que caen sobre la seda -->
     <svg class="strand" viewBox="0 0 100 70" aria-hidden="true">
+      @for (pearl of fineStrand; track $index) {
+        <circle [attr.cx]="pearl[0]" [attr.cy]="pearl[1]" r="1.1" fill="url(#pearl-shine)" stroke="#a89a88" stroke-width="0.1" />
+      }
       @for (pearl of strand; track $index) {
         <circle [attr.cx]="pearl[0]" [attr.cy]="pearl[1]" r="1.75" fill="url(#pearl-shine)" stroke="#a89a88" stroke-width="0.12" />
       }
@@ -99,12 +105,10 @@ const WEEKDAY = new Intl.DateTimeFormat('es-MX', { weekday: 'long', timeZone: 'U
       overflow: hidden;
     }
     p, h1 { margin: 0; }
-    .head { flex: none; padding: 5cqw 8cqw 2.4cqw; background: linear-gradient(180deg, color-mix(in srgb, var(--t-paper) 60%, white), var(--t-paper)); }
-    .mini { font-size: 1.9cqw; letter-spacing: 0.36em; text-transform: uppercase; opacity: 0.7; }
-    .names { display: grid; margin-top: 1.4cqw; font-family: var(--font-serif); font-weight: 400; letter-spacing: 0.06em; line-height: 0.98; text-transform: uppercase; overflow-wrap: anywhere; }
+    .head { flex: none; padding: 7cqw 8cqw 3cqw; background: linear-gradient(180deg, color-mix(in srgb, var(--t-paper) 60%, white), var(--t-paper)); }
+    .names { display: grid; font-family: var(--font-serif); font-weight: 400; letter-spacing: 0.06em; line-height: 0.98; text-transform: uppercase; overflow-wrap: anywhere; }
     .script { margin-top: 1cqw; font-family: var(--font-script); font-size: 6.4cqw; line-height: 1.1; }
-    .photo { flex: none; height: 36cqw; background: linear-gradient(135deg, color-mix(in srgb, var(--t-main) 70%, white), var(--t-dark)); }
-    .photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; filter: grayscale(1) contrast(1.05); }
+    .silk { flex: none; display: block; width: 100%; height: 36cqw; }
     .strand { position: absolute; top: 20cqw; left: 0; z-index: 1; width: 100%; height: 70cqw; pointer-events: none; filter: drop-shadow(0 0.5cqw 0.7cqw rgb(0 0 0 / 0.35)); }
     .invite { position: relative; flex: none; display: grid; place-items: center; height: 44cqw; background: var(--t-paper); }
     .envelope {
@@ -163,6 +167,8 @@ export class TicketPearls {
 
   /** Perlas a lo largo de una curva que entra por la derecha y cae hacia la izquierda. */
   protected readonly strand = alongCurve([104, 4], [70, 62], [-4, 30], 30);
+  /** Segundo hilo, más fino, que cruza en sentido contrario. */
+  protected readonly fineStrand = alongCurve([-4, 14], [36, 50], [104, 32], 44);
 
   protected readonly nameSize = computed(() => fitSize([...this.v().names].sort((a, b) => b.length - a.length)[0], 13, 6.5, 7));
 

@@ -16,8 +16,6 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
         <img class="hero__img" [src]="photo" alt="" crossorigin="anonymous" />
       }
       <div class="hero__veil"></div>
-      <p class="top">Save the date</p>
-      <p class="top">{{ v().title }}</p>
       <span class="line" aria-hidden="true"></span>
       <p class="big">{{ v().digits.day }}</p>
       <p class="big">{{ month() }}</p>
@@ -71,7 +69,6 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
     }
     .hero__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
     .hero__veil { position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--t-dark) 52%, transparent); }
-    .top { font-family: var(--font-serif); font-size: 2.5cqw; letter-spacing: 0.22em; line-height: 1.7; text-transform: uppercase; }
     .line { width: 0.2cqw; height: 9cqw; margin: 2cqw 0; background: currentColor; opacity: 0.85; }
     .big { font-size: 15.5cqw; font-weight: 200; letter-spacing: 0.02em; line-height: 0.98; text-transform: uppercase; }
     .sub { font-family: var(--font-serif); font-size: 2.4cqw; letter-spacing: 0.28em; text-transform: uppercase; }
@@ -88,9 +85,9 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
       line-clamp: 4;
     }
     .where { font-size: 2.2cqw; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.75; }
-    .script { align-self: flex-end; font-family: var(--font-script); line-height: 1.1; }
-    .date { margin-right: 14cqw; font-size: 6.4cqw; }
-    .sign { overflow-wrap: anywhere; }
+    .script { font-family: var(--font-script); line-height: 1.1; }
+    .date { font-size: 6.4cqw; }
+    .sign { max-width: 100%; overflow-wrap: anywhere; }
     .bar { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2cqw; height: 27cqw; background: var(--t-main); color: #f6f2ec; }
     .logo { width: 20cqw; height: auto; opacity: 0.85; }
   `,

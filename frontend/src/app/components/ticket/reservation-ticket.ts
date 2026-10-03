@@ -9,7 +9,6 @@ import { TicketEnvelope } from './designs/ticket-envelope';
 import { TicketEditorial } from './designs/ticket-editorial';
 import { TicketStub } from './designs/ticket-stub';
 import { TicketBoarding } from './designs/ticket-boarding';
-import { TicketBeach } from './designs/ticket-beach';
 import { TicketCalendarCard } from './designs/ticket-calendar-card';
 import { TicketMoon } from './designs/ticket-moon';
 import { TicketBotanic } from './designs/ticket-botanic';
@@ -39,7 +38,7 @@ export type TicketData = Pick<
 >;
 
 /**
- * Ticket digital de reservación. Elige el diseño (sobre, boleto, playa…) y aplica su variación de color.
+ * Ticket digital de reservación. Elige el diseño (sobre, boleto, palmeras…) y aplica su variación de color.
  *
  * Es una tira 9:16 dimensionada con unidades de contenedor (cqw): se ve igual en cualquier
  * pantalla y al capturarla como imagen (1080×1920) para historias de Instagram/WhatsApp.
@@ -52,7 +51,6 @@ export type TicketData = Pick<
     TicketEditorial,
     TicketStub,
     TicketBoarding,
-    TicketBeach,
     TicketCalendarCard,
     TicketMoon,
     TicketBotanic,
@@ -90,9 +88,6 @@ export type TicketData = Pick<
       }
       @case ('boarding') {
         <app-ticket-boarding [v]="view()" />
-      }
-      @case ('beach') {
-        <app-ticket-beach [v]="view()" />
       }
       @case ('calendar') {
         <app-ticket-calendar-card [v]="view()" />

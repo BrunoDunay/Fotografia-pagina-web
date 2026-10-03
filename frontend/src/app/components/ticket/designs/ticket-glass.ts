@@ -46,7 +46,6 @@ import { TicketView, fitSize } from '../ticket-view';
     <!-- Pestaña clara, como la tarjeta que se desliza en la referencia -->
     <footer class="tab">
       <app-ticket-status [v]="v()" />
-      <svg class="arrow" viewBox="0 0 12 14" aria-hidden="true"><path d="M6 1v11M2 8l4 4 4-4" fill="none" stroke-width="0.9" stroke-linecap="round" style="stroke: var(--t-ink)" /></svg>
     </footer>
   `,
   styles: `
@@ -82,7 +81,7 @@ import { TicketView, fitSize } from '../ticket-view';
       justify-items: center;
       gap: 2cqw;
       width: 76cqw;
-      padding: 5cqw 4cqw 4cqw;
+      padding: 5cqw 4cqw 6cqw;
       border-radius: 2.4cqw 2.4cqw 0 0;
       background: var(--t-paper);
       color: var(--t-ink);
@@ -91,7 +90,6 @@ import { TicketView, fitSize } from '../ticket-view';
     }
     /* Lengüeta semicircular en el borde superior. */
     .tab::before { content: ''; position: absolute; top: -5cqw; left: 50%; width: 16cqw; height: 10cqw; border-radius: 50%; background: var(--t-paper); translate: -50% 0; z-index: -1; }
-    .arrow { width: 3cqw; height: 3.500cqw; }
   `,
 })
 export class TicketGlass {

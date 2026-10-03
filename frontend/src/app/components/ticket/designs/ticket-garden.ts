@@ -32,8 +32,8 @@ function hydrangea(cx: number, cy: number, radius: number, seed: number): Floret
 }
 
 /**
- * Jardín (ref. Bodas/Boda al aire libre): fotografía arriba con los nombres manuscritos sobre un
- * gran "&", borde de papel rasgado, hortensias blancas y bloque verde con la fecha.
+ * Jardín (ref. Bodas/Boda al aire libre): fotografía arriba con los nombres manuscritos como marca
+ * de agua sobre un gran "&", borde de papel rasgado, hortensias blancas y bloque verde con la fecha.
  */
 @Component({
   selector: 'app-ticket-garden',
@@ -112,20 +112,20 @@ function hydrangea(cx: number, cy: number, radius: number, seed: number): Floret
     }
     .photo__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
     .photo__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 35%, rgb(0 0 0 / 0.45)); }
-    .names { position: absolute; left: 7cqw; right: 6cqw; bottom: 9cqw; display: grid; align-items: center; text-align: left; }
-    .amp { grid-area: 1 / 1; font-family: var(--font-serif); font-size: 3.6em; line-height: 0.7; color: #fff; opacity: 0.3; }
+    .names { position: absolute; left: 4cqw; right: 3cqw; bottom: 10cqw; display: grid; align-items: center; text-align: left; }
+    .amp { grid-area: 1 / 1; font-family: var(--font-serif); font-size: 3.6em; line-height: 0.7; color: #fff; opacity: 0.2; }
     h1 {
       grid-area: 1 / 1;
       display: grid;
-      padding-left: 1.4em;
+      padding-left: 0.7em;
       font-family: var(--font-script);
       font-size: 1em;
       font-weight: 400;
-      line-height: 1.1;
-      color: #fff;
-      text-shadow: 0 0.3cqw 1.4cqw rgb(0 0 0 / 0.35);
+      line-height: 1.05;
+      /* Semitransparente, como marca de agua sobre la fotografía. */
+      color: rgb(255 255 255 / 0.55);
     }
-    h1 span:nth-child(2) { padding-left: 1em; }
+    h1 span:nth-child(2) { padding-left: 0.6em; }
     .tear { position: relative; z-index: 1; flex: none; display: block; width: 100%; height: 9cqw; margin: -5cqw 0 -3cqw; filter: drop-shadow(0 0.6cqw 0.8cqw rgb(0 0 0 / 0.25)); }
     .flowers { position: absolute; top: 57cqw; right: -9cqw; z-index: 2; width: 44cqw; height: 44cqw; filter: drop-shadow(0 1cqw 1.4cqw rgb(0 0 0 / 0.3)); }
     .block { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; min-height: 0; padding: 21cqw 9cqw 5cqw; }
@@ -152,5 +152,5 @@ export class TicketGarden {
   protected readonly defaultNote = DEFAULT_TICKET_NOTE;
   protected readonly tear = tornEdge(9, 23);
   protected readonly florets = [...hydrangea(24, 24, 15, 5), ...hydrangea(40, 36, 13, 9)];
-  protected readonly nameSize = computed(() => fitSize([...this.v().names].sort((a, b) => b.length - a.length)[0], 10.5, 6, 9));
+  protected readonly nameSize = computed(() => fitSize([...this.v().names].sort((a, b) => b.length - a.length)[0], 15.5, 8, 9));
 }
