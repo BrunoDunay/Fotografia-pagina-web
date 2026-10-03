@@ -18,7 +18,7 @@ import { TicketView, fitSize } from '../ticket-view';
           <path d="M53.500 38h5l1.500 13h-8z" />
         </svg>
 
-        <p class="eyebrow">{{ v().service ?? 'Fecha reservada' }}</p>
+        <p class="eyebrow">Save the date</p>
         <h1 class="names" [style.font-size]="nameSize()">{{ v().title }}</h1>
         <span class="rule" aria-hidden="true"></span>
         <p class="date">{{ v().date.weekday }}</p>
@@ -28,9 +28,6 @@ import { TicketView, fitSize } from '../ticket-view';
         }
         @if (v().place; as place) {
           <p class="detail">{{ place }}</p>
-        }
-        @if (v().package; as pkg) {
-          <p class="detail">Paquete {{ pkg }}</p>
         }
         @if (v().message; as message) {
           <p class="message">{{ message }}</p>

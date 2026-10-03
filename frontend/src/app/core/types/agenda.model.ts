@@ -59,6 +59,9 @@ export interface Reservation {
   ticketDesign: string;
   ticketPalette: string;
   coverMediaId: string | null;
+  /** Foto propia del ticket y la del tipo de evento (se usa si no hay propia). Solo en el detalle del evento. */
+  cover?: Media | null;
+  defaultCover?: Media | null;
   showTime: boolean;
   showVenue: boolean;
   isActive: boolean;
@@ -86,8 +89,8 @@ export interface PublicReservation {
   endTime: string | null;
   venue: string | null;
   city: string | null;
-  service: { name: string; slug: string } | null;
-  package: { name: string } | null;
+  /** Tipo de evento (slug del servicio): solo decide el ícono del día. El ticket no muestra servicio ni paquete. */
+  eventType: string | null;
   today: string;
 }
 

@@ -16,6 +16,8 @@ import { SkeletonDashboard } from '../../../components/skeletons';
 import { PageHeader } from '../shared/page-header';
 import { ConfirmService } from '../shared/confirm.service';
 import { TicketPreviewData, TicketStylePicker } from '../shared/ticket-style-picker';
+import { ImagePicker } from '../shared/image-picker';
+import { Media } from '../../../core/types/common.model';
 import {
   EVENT_STATUS_LABEL,
   PAYMENT_CONCEPT_LABEL,
@@ -35,7 +37,7 @@ function toWhatsAppDigits(phone: string | null): string | null {
 
 @Component({
   selector: 'app-event-detail-admin',
-  imports: [ReactiveFormsModule, RouterLink, Btn, Icon, SkeletonDashboard, PageHeader, TicketStylePicker],
+  imports: [ReactiveFormsModule, RouterLink, Btn, Icon, SkeletonDashboard, PageHeader, TicketStylePicker, ImagePicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './event-detail-admin.html',
   styleUrl: './event-detail-admin.css',
@@ -105,6 +107,8 @@ export class EventDetailAdmin implements OnInit {
     isActive: [true],
   });
 
+  /** Foto propia del ticket (para los diseños con fotografía). Sin ella se usa la del tipo de evento. */
+  protected readonly ticketCover = signal<Media | null>(null);
   private readonly ticketValue = toSignal(this.ticketForm.valueChanges.pipe(startWith(null)), { initialValue: null });
 
   /** Vista previa del ticket con lo que hay en el formulario (aún sin guardar). */
@@ -122,8 +126,8 @@ export class EventDetailAdmin implements OnInit {
       endTime: v.showTime ? e.endTime : null,
       venue: v.showVenue ? e.venue : null,
       city: v.showVenue ? e.city : null,
-      service: e.service ? { name: e.service.name, slug: e.service.slug } : null,
-      package: e.package ? { name: e.package.name } : null,
+      eventType: e.service?.slug ?? null,
+      cover: this.ticketCover() ?? e.reservation?.defaultCover ?? null,
     };
   });
 
@@ -171,6 +175,7 @@ export class EventDetailAdmin implements OnInit {
       notes: e.notes ?? '',
     });
     if (e.reservation) {
+      this.ticketCover.set(e.reservation.cover ?? null);
       this.ticketForm.reset({
         displayTitle: e.reservation.displayTitle,
         monogram: e.reservation.monogram ?? '',
@@ -254,6 +259,11 @@ export class EventDetailAdmin implements OnInit {
     });
   }
 
+  protected setTicketCover(cover: Media | null): void {
+    this.ticketCover.set(cover);
+    this.ticketForm.markAsDirty();
+  }
+
   /** Cambios desde el selector de diseño y color. */
   protected setTicketStyle(field: 'ticketDesign' | 'ticketPalette', value: string): void {
     this.ticketForm.controls[field].setValue(value);
@@ -265,7 +275,9 @@ export class EventDetailAdmin implements OnInit {
     if (!reservation || this.ticketForm.invalid) return;
     const v = this.ticketForm.getRawValue();
     this.savingTicket.set(true);
-    this.agenda.updateReservation(reservation.id, { ...v, monogram: v.monogram || null, message: v.message || null }).subscribe({
+    this.agenda
+      .updateReservation(reservation.id, { ...v, monogram: v.monogram || null, message: v.message || null, coverMediaId: this.ticketCover()?.id ?? null })
+      .subscribe({
       next: () => {
         this.savingTicket.set(false);
         this.toast.success('Ticket actualizado.');

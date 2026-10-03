@@ -28,16 +28,13 @@ import { TicketView, fitSize } from '../ticket-view';
 
       <div class="row row--info">
         <span class="cell weekday">{{ v().date.weekday }}</span>
-        <span class="cell service">{{ v().service ?? 'Evento' }}</span>
+        <span class="cell service">te esperamos</span>
       </div>
 
       <div class="body">
         <h1 class="names" [style.font-size]="nameSize()">{{ v().title }}</h1>
         @if (v().time || v().place) {
           <p class="detail">{{ v().time }}{{ v().time && v().place ? ' · ' : '' }}{{ v().place }}</p>
-        }
-        @if (v().package; as pkg) {
-          <p class="detail">Paquete {{ pkg }}</p>
         }
         @if (v().message; as message) {
           <p class="message">{{ message }}</p>

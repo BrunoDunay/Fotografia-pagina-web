@@ -10,7 +10,7 @@ import { TicketView, fitSize } from '../ticket-view';
   template: `
     <div class="sky">
       <span class="sun" aria-hidden="true"></span>
-      <p class="eyebrow">{{ v().service ?? 'Fecha reservada' }}</p>
+      <p class="eyebrow">Save the date</p>
       <div class="mono" aria-hidden="true">
         @for (letter of v().monogram.slice(0, 2); track $index) {
           @if (!$first) {

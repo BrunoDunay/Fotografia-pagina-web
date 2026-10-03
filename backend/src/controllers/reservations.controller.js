@@ -8,7 +8,7 @@ import { normalizeTicketStyle } from '../config/ticket-designs.js';
 
 /**
  * Público: ticket digital. Lista blanca explícita de campos:
- * NUNCA incluye pagos, precio, notas ni datos de contacto del cliente.
+ * NUNCA incluye pagos, precio, paquete contratado, notas ni datos de contacto del cliente.
  */
 export async function getPublic(req, res) {
   const reservation = await Reservation.findOne({
@@ -20,8 +20,15 @@ export async function getPublic(req, res) {
         where: { status: { [Op.ne]: 'cancelled' } },
         attributes: ['eventDate', 'startTime', 'endTime', 'venue', 'city'],
         include: [
-          { model: Service, as: 'service', attributes: ['name', 'slug'] },
-          { model: Package, as: 'package', attributes: ['name'] },
+          {
+            model: Service,
+            as: 'service',
+            attributes: ['slug'],
+            include: [
+              { model: MediaAsset, as: 'coverMedia' },
+              { model: MediaAsset, as: 'heroMedia' },
+            ],
+          },
         ],
       },
       { model: MediaAsset, as: 'coverMedia' },
@@ -38,14 +45,15 @@ export async function getPublic(req, res) {
     message: reservation.message,
     design: reservation.ticketDesign,
     palette: reservation.ticketPalette,
-    cover: toMedia(reservation.coverMedia),
+    // Foto del ticket: la que eligió el fotógrafo o, si no hay, la portada del tipo de evento.
+    cover: toMedia(reservation.coverMedia) ?? toMedia(event.service?.coverMedia) ?? toMedia(event.service?.heroMedia),
     eventDate: event.eventDate,
     startTime: reservation.showTime ? event.startTime : null,
     endTime: reservation.showTime ? event.endTime : null,
     venue: reservation.showVenue ? event.venue : null,
     city: reservation.showVenue ? event.city : null,
-    service: event.service ? { name: event.service.name, slug: event.service.slug } : null,
-    package: event.package ? { name: event.package.name } : null,
+    // Solo el tipo de evento (para el ícono del día): el ticket no muestra el servicio ni el paquete contratado.
+    eventType: event.service?.slug ?? null,
     today: todayInStudioTz(),
   });
 }

@@ -25,7 +25,7 @@ import { TicketView, fitSize } from '../ticket-view';
     </header>
 
     <h1 class="names" [style.font-size]="nameSize()">{{ v().title }}</h1>
-    <p class="detail">{{ v().service ?? 'Fecha reservada' }}{{ v().package ? ' · Paquete ' + v().package : '' }}</p>
+    <p class="detail">{{ v().date.weekday }} {{ v().date.day }} de {{ v().date.month }}</p>
 
     <div class="cal">
       <p class="cal__month">{{ v().date.month }} {{ v().date.year }}</p>

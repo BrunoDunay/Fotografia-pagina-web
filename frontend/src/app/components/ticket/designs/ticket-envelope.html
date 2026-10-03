@@ -47,12 +47,7 @@
     }
   </div>
 
-  @if (v().service; as service) {
-    <p class="service">{{ service }}</p>
-  }
-  @if (v().package; as pkg) {
-    <p class="detail detail--caps">Paquete {{ pkg }}</p>
-  }
+  <p class="service">{{ v().date.weekday }} {{ v().date.day }} de {{ v().date.month }}</p>
   @if (v().time || v().place) {
     <p class="detail">
       {{ v().time }}

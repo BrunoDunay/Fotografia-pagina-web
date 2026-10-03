@@ -4,16 +4,32 @@
  * aquí solo se valida que la combinación diseño + color exista.
  */
 export const TICKET_DESIGNS = {
+  // Bodas
   envelope: ['mocha', 'navy', 'burgundy', 'olive'],
   editorial: ['burgundy', 'black', 'olive', 'navy'],
-  ticket: ['steel', 'ink', 'burgundy', 'forest'],
-  boarding: ['navy', 'sand', 'terracotta'],
+  mono: ['black', 'espresso', 'navy'],
+  pearls: ['taupe', 'silver', 'blush'],
+  lace: ['forest', 'black', 'burgundy', 'navy'],
+  garden: ['olive', 'black', 'burgundy', 'navy'],
+  // Playa y destino
+  palms: ['olive', 'terracotta', 'teal'],
+  passport: ['terracotta', 'navy', 'olive'],
   beach: ['sunset', 'day', 'dusk'],
-  bloom: ['rose', 'lilac', 'champagne', 'sky'],
-  calendar: ['red', 'black', 'rose', 'mocha'],
-  moon: ['sage', 'sand', 'sky', 'rose'],
-  botanic: ['sand', 'sage', 'stone'],
+  boarding: ['navy', 'sand', 'terracotta'],
+  // XV años
+  roses: ['blush', 'champagne', 'lilac'],
+  clouds: ['pink', 'lilac', 'sky', 'peach'],
+  // Graduaciones
   grad: ['navy', 'black', 'burgundy', 'forest'],
+  glass: ['slate', 'black', 'burgundy', 'forest'],
+  ticket: ['steel', 'ink', 'burgundy', 'forest'],
+  // Baby shower
+  moon: ['sage', 'sand', 'sky', 'rose'],
+  cradle: ['greige', 'sage', 'blue', 'blush'],
+  // Sesiones y otros
+  botanic: ['sand', 'sage', 'stone'],
+  leaves: ['sage', 'blue', 'terracotta', 'sand'],
+  calendar: ['red', 'black', 'rose', 'mocha'],
 };
 
 export const TICKET_DESIGN_KEYS = Object.keys(TICKET_DESIGNS);

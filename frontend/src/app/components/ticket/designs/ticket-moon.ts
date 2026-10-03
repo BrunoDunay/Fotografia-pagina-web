@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { TicketMark } from '../ticket-mark';
 import { TicketStatus } from '../ticket-status';
 import { TicketView, fitSize } from '../ticket-view';
 
 /** Luna y nubes (refs. Baby shower/diseño 3D Luna y diseño de tela): capas de papel recortado, luna, nubes y globos. */
 @Component({
   selector: 'app-ticket-moon',
-  imports: [TicketStatus],
+  imports: [TicketStatus, TicketMark],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <!-- Capas de papel (arriba) -->
@@ -23,9 +24,9 @@ import { TicketView, fitSize } from '../ticket-view';
     </svg>
 
     <article class="card">
-      <p class="eyebrow">{{ v().service ?? 'Fecha reservada' }}</p>
+      <p class="eyebrow">Celebremos juntos</p>
       <h1 class="names" [style.font-size]="nameSize()">{{ v().title }}</h1>
-      <span class="heart" aria-hidden="true">♥</span>
+      <app-ticket-mark class="heart" [kind]="v().mark" />
       <div class="date">
         <span>{{ v().date.weekday }}</span>
         <b>{{ v().date.day }}<small>{{ v().date.month }}</small></b>
@@ -33,9 +34,6 @@ import { TicketView, fitSize } from '../ticket-view';
       </div>
       @if (v().time || v().place) {
         <p class="detail">{{ v().time }}{{ v().time && v().place ? ' · ' : '' }}{{ v().place }}</p>
-      }
-      @if (v().package; as pkg) {
-        <p class="detail">Paquete {{ pkg }}</p>
       }
     </article>
 
@@ -93,7 +91,7 @@ import { TicketView, fitSize } from '../ticket-view';
     }
     .eyebrow { font-size: 2.4cqw; font-weight: 500; letter-spacing: 0.36em; text-transform: uppercase; color: var(--t-dark); }
     .names { font-family: var(--font-sans); font-weight: 500; letter-spacing: 0.14em; line-height: 1.2; text-transform: uppercase; color: color-mix(in srgb, var(--t-dark) 70%, var(--t-ink)); overflow-wrap: anywhere; }
-    .heart { font-size: 3cqw; line-height: 1; color: var(--t-dark); }
+    .heart { font-size: 3.4cqw; color: var(--t-dark); }
     .date { display: flex; align-items: center; gap: 3cqw; font-size: 2.5cqw; letter-spacing: 0.14em; text-transform: capitalize; }
     .date b { display: grid; justify-items: center; padding: 0 3.4cqw; border-inline: 0.3cqw solid var(--t-main); font-family: var(--font-serif); font-size: 9cqw; font-weight: 500; line-height: 0.95; }
     .date small { font-family: var(--font-sans); font-size: 2.3cqw; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; }

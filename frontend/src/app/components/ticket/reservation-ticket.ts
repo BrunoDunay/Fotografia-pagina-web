@@ -2,17 +2,29 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { PublicReservation } from '../../core/types/agenda.model';
 import { ticketDesign, ticketPalette } from '../../core/ticket-designs';
 import { countdownTo, dateParts, ticketStage, todayInMexico } from '../../core/utils/date-mx';
+import { cloudinaryUrl } from '../../core/utils/cloudinary-url';
+import { ticketMarkFor } from './ticket-mark';
 import { TicketView } from './ticket-view';
 import { TicketEnvelope } from './designs/ticket-envelope';
 import { TicketEditorial } from './designs/ticket-editorial';
 import { TicketStub } from './designs/ticket-stub';
 import { TicketBoarding } from './designs/ticket-boarding';
 import { TicketBeach } from './designs/ticket-beach';
-import { TicketBloom } from './designs/ticket-bloom';
 import { TicketCalendarCard } from './designs/ticket-calendar-card';
 import { TicketMoon } from './designs/ticket-moon';
 import { TicketBotanic } from './designs/ticket-botanic';
 import { TicketGrad } from './designs/ticket-grad';
+import { TicketMono } from './designs/ticket-mono';
+import { TicketPearls } from './designs/ticket-pearls';
+import { TicketGarden } from './designs/ticket-garden';
+import { TicketLace } from './designs/ticket-lace';
+import { TicketPalms } from './designs/ticket-palms';
+import { TicketPassport } from './designs/ticket-passport';
+import { TicketRoses } from './designs/ticket-roses';
+import { TicketClouds } from './designs/ticket-clouds';
+import { TicketGlass } from './designs/ticket-glass';
+import { TicketLeaves } from './designs/ticket-leaves';
+import { TicketCradle } from './designs/ticket-cradle';
 
 /** ¿Es un color oscuro? (luminancia aproximada de un #rrggbb). */
 function isDark(hex: string): boolean {
@@ -23,7 +35,7 @@ function isDark(hex: string): boolean {
 /** Datos mínimos para pintar un ticket (el ticket público o la vista previa del panel). */
 export type TicketData = Pick<
   PublicReservation,
-  'title' | 'monogram' | 'message' | 'design' | 'palette' | 'eventDate' | 'startTime' | 'endTime' | 'venue' | 'city' | 'service' | 'package'
+  'title' | 'monogram' | 'message' | 'design' | 'palette' | 'cover' | 'eventDate' | 'startTime' | 'endTime' | 'venue' | 'city' | 'eventType'
 >;
 
 /**
@@ -31,7 +43,7 @@ export type TicketData = Pick<
  *
  * Es una tira 9:16 dimensionada con unidades de contenedor (cqw): se ve igual en cualquier
  * pantalla y al capturarla como imagen (1080×1920) para historias de Instagram/WhatsApp.
- * Solo muestra datos públicos (nunca pagos ni contacto).
+ * Solo muestra datos públicos: nunca pagos, contacto, ni el servicio o paquete contratado.
  */
 @Component({
   selector: 'app-reservation-ticket',
@@ -41,11 +53,21 @@ export type TicketData = Pick<
     TicketStub,
     TicketBoarding,
     TicketBeach,
-    TicketBloom,
     TicketCalendarCard,
     TicketMoon,
     TicketBotanic,
     TicketGrad,
+    TicketMono,
+    TicketPearls,
+    TicketGarden,
+    TicketLace,
+    TicketPalms,
+    TicketPassport,
+    TicketRoses,
+    TicketClouds,
+    TicketGlass,
+    TicketLeaves,
+    TicketCradle,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -72,9 +94,6 @@ export type TicketData = Pick<
       @case ('beach') {
         <app-ticket-beach [v]="view()" />
       }
-      @case ('bloom') {
-        <app-ticket-bloom [v]="view()" />
-      }
       @case ('calendar') {
         <app-ticket-calendar-card [v]="view()" />
       }
@@ -86,6 +105,39 @@ export type TicketData = Pick<
       }
       @case ('grad') {
         <app-ticket-grad [v]="view()" />
+      }
+      @case ('mono') {
+        <app-ticket-mono [v]="view()" />
+      }
+      @case ('pearls') {
+        <app-ticket-pearls [v]="view()" />
+      }
+      @case ('garden') {
+        <app-ticket-garden [v]="view()" />
+      }
+      @case ('lace') {
+        <app-ticket-lace [v]="view()" />
+      }
+      @case ('palms') {
+        <app-ticket-palms [v]="view()" />
+      }
+      @case ('passport') {
+        <app-ticket-passport [v]="view()" />
+      }
+      @case ('roses') {
+        <app-ticket-roses [v]="view()" />
+      }
+      @case ('clouds') {
+        <app-ticket-clouds [v]="view()" />
+      }
+      @case ('glass') {
+        <app-ticket-glass [v]="view()" />
+      }
+      @case ('leaves') {
+        <app-ticket-leaves [v]="view()" />
+      }
+      @case ('cradle') {
+        <app-ticket-cradle [v]="view()" />
       }
     }
   `,
@@ -121,11 +173,13 @@ export class ReservationTicket {
     const names = parts.length >= 2 ? parts.slice(0, 2) : [title];
 
     const rawMonogram = r.monogram?.trim();
+    // Siempre una letra por elemento: "C|S" → ["C","S"]; "VR" → ["V","R"]; sin monograma, las iniciales.
+    const initials = (names.length >= 2 ? names : title.split(/\s+/)).slice(0, 2).map((n) => n[0]?.toUpperCase() ?? '');
     const monogram = !rawMonogram
-      ? names.map((n) => n[0]?.toUpperCase() ?? '')
+      ? initials
       : rawMonogram.includes('|')
         ? rawMonogram.split('|').map((l) => l.trim())
-        : [rawMonogram];
+        : [...rawMonogram.replace(/\s+/g, '')].slice(0, 3);
 
     const [year, month, day] = r.eventDate.split('-');
     const first = new Date(Date.UTC(Number(year), Number(month) - 1, 1));
@@ -141,6 +195,7 @@ export class ReservationTicket {
       names,
       monogram,
       date: dateParts(r.eventDate),
+      iso: r.eventDate,
       shortDate: `${day}.${month}.${year}`,
       digits: { day, month, year: year.slice(2) },
       // Estado según el día en México (no el del visitante).
@@ -148,9 +203,9 @@ export class ReservationTicket {
       countdown: countdownTo(r.eventDate, r.startTime, this.now()),
       time,
       place: [r.venue, r.city].filter(Boolean).join(', ') || null,
-      service: r.service?.name ?? null,
-      package: r.package?.name ?? null,
       message: r.message?.trim() || null,
+      mark: ticketMarkFor(r.eventType),
+      photo: r.cover ? cloudinaryUrl(r.cover.url, { width: 1080 }) : null,
       darkPaper: isDark(this.colors().paper),
       calendar: { cells, day: Number(day) },
     };

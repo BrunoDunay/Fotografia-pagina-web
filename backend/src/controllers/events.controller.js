@@ -1,8 +1,8 @@
 import { Op } from 'sequelize';
-import { Client, Event, Package, Payment, Reservation, Service } from '../models/index.js';
+import { Client, Event, MediaAsset, Package, Payment, Reservation, Service } from '../models/index.js';
 import { notFound } from '../utils/app-error.js';
 import { createEventWithBooking, paymentSummary } from '../services/event-booking.service.js';
-import { toNumber } from '../services/serializers.js';
+import { toMedia, toNumber } from '../services/serializers.js';
 
 const summaryIncludes = [
   { model: Client, as: 'client', attributes: ['id', 'name', 'phone'] },
@@ -35,10 +35,18 @@ async function loadEventDetail(id) {
   const event = await Event.findByPk(id, {
     include: [
       { model: Client, as: 'client' },
-      { model: Service, as: 'service', attributes: ['id', 'name', 'slug'] },
+      {
+        model: Service,
+        as: 'service',
+        attributes: ['id', 'name', 'slug'],
+        include: [
+          { model: MediaAsset, as: 'coverMedia' },
+          { model: MediaAsset, as: 'heroMedia' },
+        ],
+      },
       { model: Package, as: 'package', attributes: ['id', 'name', 'price'] },
       { model: Payment, as: 'payments' },
-      { model: Reservation, as: 'reservation' },
+      { model: Reservation, as: 'reservation', include: [{ model: MediaAsset, as: 'coverMedia' }] },
     ],
     order: [[{ model: Payment, as: 'payments' }, 'paidAt', 'ASC']],
   });
@@ -52,7 +60,14 @@ async function loadEventDetail(id) {
     client: json.client,
     package: json.package ? { ...json.package, price: toNumber(json.package.price) } : null,
     payments: json.payments.map((p) => ({ ...p, amount: toNumber(p.amount) })),
-    reservation: json.reservation,
+    // cover: foto propia del ticket · defaultCover: la del tipo de evento (se usa si no hay propia).
+    reservation: json.reservation
+      ? (({ coverMedia, ...reservation }) => ({
+          ...reservation,
+          cover: toMedia(event.reservation.coverMedia),
+          defaultCover: toMedia(event.service?.coverMedia) ?? toMedia(event.service?.heroMedia),
+        }))(json.reservation)
+      : null,
     createdAt: json.createdAt,
     updatedAt: json.updatedAt,
   };

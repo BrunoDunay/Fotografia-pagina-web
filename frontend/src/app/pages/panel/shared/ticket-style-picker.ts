@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 import { ReservationTicket, TicketData } from '../../../components/ticket/reservation-ticket';
-import { TICKET_DESIGNS, ticketDesign, ticketPalette } from '../../../core/ticket-designs';
+import { TICKET_DESIGNS, TICKET_GROUPS, ticketDesign, ticketPalette } from '../../../core/ticket-designs';
 
 /** Datos del evento para la vista previa (sin diseño ni color: esos los elige este componente). */
 export type TicketPreviewData = Omit<TicketData, 'design' | 'palette'>;
@@ -16,25 +16,30 @@ export type TicketPreviewData = Omit<TicketData, 'design' | 'palette'>;
   template: `
     <div class="picker">
       <div class="options">
-        <p class="field__label" id="design-label">Diseño</p>
-        <div class="designs" role="radiogroup" aria-labelledby="design-label">
-          @for (d of designs; track d.key) {
-            <button
-              type="button"
-              class="design"
-              role="radio"
-              [attr.aria-checked]="d.key === current().key"
-              [class.is-selected]="d.key === current().key"
-              (click)="pickDesign(d.key)"
-            >
-              <span class="thumb" aria-hidden="true">
-                <app-reservation-ticket [reservation]="thumbs().get(d.key)!" [now]="now" />
-              </span>
-              <strong>{{ d.label }}</strong>
-              <small>{{ d.hint }}</small>
-            </button>
-          }
-        </div>
+        <p class="field__label">Diseño</p>
+        @for (group of groups; track group.name) {
+          <p class="group" [id]="'designs-' + $index">{{ group.name }}</p>
+          <div class="designs" role="radiogroup" [attr.aria-labelledby]="'designs-' + $index">
+            @for (d of group.designs; track d.key) {
+              <button
+                type="button"
+                class="design"
+                role="radio"
+                [attr.aria-checked]="d.key === current().key"
+                [class.is-selected]="d.key === current().key"
+                (click)="pickDesign(d.key)"
+              >
+                <span class="thumb" aria-hidden="true">
+                  <app-reservation-ticket [reservation]="thumbs().get(d.key)!" [now]="now" />
+                </span>
+                <strong>{{ d.label }}</strong>
+                @if (d.photo) {
+                  <small>Con fotografía</small>
+                }
+              </button>
+            }
+          </div>
+        }
 
         <p class="field__label" id="palette-label">Color</p>
         <div class="palettes" role="radiogroup" aria-labelledby="palette-label">
@@ -66,6 +71,7 @@ export type TicketPreviewData = Omit<TicketData, 'design' | 'palette'>;
     :host { display: block; container-type: inline-size; }
     .picker { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: var(--space-5); align-items: start; }
     .options { display: grid; gap: var(--space-3); min-width: 0; }
+    .group { margin: var(--space-2) 0 0; font-size: var(--text-sm); font-weight: 500; }
     .designs { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: var(--space-3); }
     .design {
       display: grid;
@@ -114,7 +120,8 @@ export class TicketStylePicker {
   readonly palette = model.required<string>();
   readonly data = input.required<TicketPreviewData>();
 
-  protected readonly designs = TICKET_DESIGNS;
+  /** Diseños agrupados por tipo de evento. */
+  protected readonly groups = TICKET_GROUPS.map((name) => ({ name, designs: TICKET_DESIGNS.filter((d) => d.group === name) }));
   /** La vista previa no necesita avanzar cada segundo. */
   protected readonly now = Date.now();
 

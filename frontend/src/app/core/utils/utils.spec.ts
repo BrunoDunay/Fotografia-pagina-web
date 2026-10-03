@@ -102,3 +102,16 @@ describe('dateParts', () => {
     expect(dateParts('2026-10-24')).toEqual({ weekday: 'sábado', day: 24, month: 'octubre', year: 2026 });
   });
 });
+
+describe('ícono del día en el ticket', () => {
+  it('corazón solo en eventos románticos; corona, birrete y biberón según el evento', async () => {
+    const { ticketMarkFor } = await import('../../components/ticket/ticket-mark');
+    expect(ticketMarkFor('weddings')).toBe('heart');
+    expect(ticketMarkFor('beach-weddings')).toBe('heart');
+    expect(ticketMarkFor('quinceanos')).toBe('crown');
+    expect(ticketMarkFor('graduations')).toBe('cap');
+    expect(ticketMarkFor('baby-showers')).toBe('bottle');
+    expect(ticketMarkFor('concerts')).toBe('star');
+    expect(ticketMarkFor(null)).toBe('star');
+  });
+});

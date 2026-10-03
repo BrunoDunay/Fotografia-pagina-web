@@ -9,7 +9,7 @@ import { TicketView, fitSize } from '../ticket-view';
   imports: [TicketCalendar, TicketStatus],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <p class="eyebrow">{{ v().service ?? 'Fecha reservada' }}</p>
+    <p class="eyebrow">Save the date</p>
 
     <div class="arch">
       <div class="arch__inner">
@@ -27,9 +27,6 @@ import { TicketView, fitSize } from '../ticket-view';
     <p class="detail">{{ v().date.weekday }} {{ v().date.day }} de {{ v().date.month }}</p>
     @if (v().time || v().place) {
       <p class="detail detail--soft">{{ v().time }}{{ v().time && v().place ? ' · ' : '' }}{{ v().place }}</p>
-    }
-    @if (v().package; as pkg) {
-      <p class="detail detail--soft">Paquete {{ pkg }}</p>
     }
 
     <app-ticket-calendar [v]="v()" />

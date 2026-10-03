@@ -9,6 +9,7 @@ import { TicketView } from './ticket-view';
 @Component({
   selector: 'app-ticket-status',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class.divided]': 'divided()' },
   template: `
     @switch (v().stage) {
       @case ('upcoming') {
@@ -68,11 +69,16 @@ import { TicketView } from './ticket-view';
       opacity: 0.85;
     }
     .sep { font-size: calc(7cqw * var(--s)); font-weight: 200; line-height: 1; opacity: 0.7; }
+    :host(.divided) .countdown { align-items: stretch; gap: 0; }
+    :host(.divided) .unit { padding: 0 calc(3.2cqw * var(--s)); }
+    :host(.divided) .sep { width: calc(0.2cqw * var(--s)); background: currentColor; font-size: 0; opacity: 0.35; }
     .script { font-family: var(--font-script); font-size: calc(8.5cqw * var(--s)); line-height: 1.1; }
     .script--sm { font-size: calc(6.2cqw * var(--s)); }
   `,
 })
 export class TicketStatus {
   readonly v = input.required<TicketView>();
+  /** Separa las unidades con líneas verticales en lugar de dos puntos (diseños con barra). */
+  readonly divided = input(false);
   protected readonly pad = (n: number) => String(n).padStart(2, '0');
 }

@@ -73,3 +73,19 @@ describe('normalizeTicketStyle', () => {
     expect(normalizeTicketStyle('no-existe', 'navy')).toEqual({ ticketDesign: 'envelope', ticketPalette: 'navy' });
   });
 });
+
+describe('catálogo de diseños del ticket', () => {
+  it('coincide con el catálogo del frontend (mismos diseños y colores)', async () => {
+    const { readFileSync } = await import('node:fs');
+    const { TICKET_DESIGNS } = await import('../src/config/ticket-designs.js');
+    const source = readFileSync(new URL('../../frontend/src/app/core/ticket-designs.ts', import.meta.url), 'utf8');
+    const catalog = source.slice(source.indexOf('export const TICKET_DESIGNS'), source.indexOf('export const TICKET_GROUPS'));
+
+    const frontend = {};
+    for (const block of catalog.split(/\n {2}\{\n/).slice(1)) {
+      const design = block.match(/key: '([a-z]+)'/)[1];
+      frontend[design] = [...block.matchAll(/p\('([a-z]+)'/g)].map((m) => m[1]);
+    }
+    expect(frontend).toEqual(TICKET_DESIGNS);
+  });
+});

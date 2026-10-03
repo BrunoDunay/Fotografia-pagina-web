@@ -102,7 +102,6 @@ export class EventCreate implements OnInit {
     this.formValue();
     const v = this.form.getRawValue();
     const service = this.services().find((s) => s.id === v.serviceId);
-    const pkg = this.packages().find((p) => p.id === v.packageId);
     return {
       title: v.title.trim() || 'Camila & Sebastián',
       monogram: null,
@@ -112,8 +111,8 @@ export class EventCreate implements OnInit {
       endTime: v.endTime || null,
       venue: null,
       city: null,
-      service: service ? { name: service.name, slug: service.slug } : null,
-      package: pkg ? { name: pkg.name } : null,
+      eventType: service?.slug ?? null,
+      cover: service?.cover ?? service?.hero ?? null,
     };
   });
 

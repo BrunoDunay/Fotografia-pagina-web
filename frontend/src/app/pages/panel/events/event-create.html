@@ -180,7 +180,7 @@
   <section class="p-card step">
     <h2 class="step__title"><span>5</span> Ticket del cliente</h2>
     <p class="p-help">
-      Elige el diseño y el color del ticket que recibirá tu cliente. Se sugiere uno según el tipo de evento; puedes cambiarlo después.
+      Elige el diseño y el color del ticket que recibirá tu cliente. Se sugiere uno según el tipo de evento; puedes cambiarlo después. Los diseños con fotografía usan la portada del tipo de evento, o la foto que subas después desde la ficha del evento.
     </p>
     <app-ticket-style-picker [design]="design()" (designChange)="pickDesign($event)" [(palette)]="palette" [data]="ticketPreview()" />
   </section>
