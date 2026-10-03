@@ -1,5 +1,5 @@
 .stage {
-  --stage-bg: var(--ticket-mocha-dark);
+  --stage-bg: #6f5242;
 
   position: relative;
   display: flex;
@@ -13,14 +13,6 @@
   background: radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--stage-bg) 75%, white), var(--stage-bg));
   color: #fbf8f4;
   isolation: isolate;
-}
-
-.stage--navy {
-  --stage-bg: var(--ticket-navy-dark);
-}
-
-.stage--burgundy {
-  --stage-bg: var(--ticket-burgundy-dark);
 }
 
 /* Portada de la reservación (si existe): de fondo, desenfocada y teñida. */

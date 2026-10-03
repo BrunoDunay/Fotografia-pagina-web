@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, si
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError, of } from 'rxjs';
+import { catchError, of, startWith } from 'rxjs';
 import { AgendaApiService } from '../../../core/services/api/agenda-api.service';
 import { ContentApiService } from '../../../core/services/api/content-api.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { SITE_URL } from '../../../core/config/api.config';
-import { EventDetail, EventStatus, Payment, TicketPalette } from '../../../core/types/agenda.model';
+import { EventDetail, EventStatus, Payment } from '../../../core/types/agenda.model';
 import { formatLongDate, formatMoney, todayInMexico } from '../../../core/utils/date-mx';
 import { buildWhatsAppLink } from '../../../core/utils/whatsapp-link';
 import { Btn } from '../../../components/buttons/btn';
@@ -15,9 +15,9 @@ import { Icon } from '../../../components/icon/icon';
 import { SkeletonDashboard } from '../../../components/skeletons';
 import { PageHeader } from '../shared/page-header';
 import { ConfirmService } from '../shared/confirm.service';
+import { TicketPreviewData, TicketStylePicker } from '../shared/ticket-style-picker';
 import {
   EVENT_STATUS_LABEL,
-  PALETTE_LABEL,
   PAYMENT_CONCEPT_LABEL,
   PAYMENT_METHOD_LABEL,
   PAYMENT_STATUS_LABEL,
@@ -35,7 +35,7 @@ function toWhatsAppDigits(phone: string | null): string | null {
 
 @Component({
   selector: 'app-event-detail-admin',
-  imports: [ReactiveFormsModule, RouterLink, Btn, Icon, SkeletonDashboard, PageHeader],
+  imports: [ReactiveFormsModule, RouterLink, Btn, Icon, SkeletonDashboard, PageHeader, TicketStylePicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './event-detail-admin.html',
   styleUrl: './event-detail-admin.css',
@@ -61,7 +61,6 @@ export class EventDetailAdmin implements OnInit {
   protected readonly statusOptions = entries(EVENT_STATUS_LABEL);
   protected readonly conceptOptions = entries(PAYMENT_CONCEPT_LABEL);
   protected readonly methodOptions = entries(PAYMENT_METHOD_LABEL);
-  protected readonly paletteOptions = entries(PALETTE_LABEL);
   protected readonly statusLabel = EVENT_STATUS_LABEL;
   protected readonly paymentStatusLabel = PAYMENT_STATUS_LABEL;
   protected readonly conceptLabel = PAYMENT_CONCEPT_LABEL;
@@ -99,10 +98,33 @@ export class EventDetailAdmin implements OnInit {
     displayTitle: ['', Validators.required],
     monogram: [''],
     message: [''],
-    ticketPalette: ['mocha' as TicketPalette],
+    ticketDesign: ['envelope'],
+    ticketPalette: ['mocha'],
     showTime: [true],
     showVenue: [false],
     isActive: [true],
+  });
+
+  private readonly ticketValue = toSignal(this.ticketForm.valueChanges.pipe(startWith(null)), { initialValue: null });
+
+  /** Vista previa del ticket con lo que hay en el formulario (aún sin guardar). */
+  protected readonly ticketPreview = computed<TicketPreviewData | null>(() => {
+    this.ticketValue();
+    const e = this.event();
+    if (!e) return null;
+    const v = this.ticketForm.getRawValue();
+    return {
+      title: v.displayTitle || e.title,
+      monogram: v.monogram || null,
+      message: v.message || null,
+      eventDate: e.eventDate,
+      startTime: v.showTime ? e.startTime : null,
+      endTime: v.showTime ? e.endTime : null,
+      venue: v.showVenue ? e.venue : null,
+      city: v.showVenue ? e.city : null,
+      service: e.service ? { name: e.service.name, slug: e.service.slug } : null,
+      package: e.package ? { name: e.package.name } : null,
+    };
   });
 
   protected readonly ticketUrl = computed(() => {
@@ -153,6 +175,7 @@ export class EventDetailAdmin implements OnInit {
         displayTitle: e.reservation.displayTitle,
         monogram: e.reservation.monogram ?? '',
         message: e.reservation.message ?? '',
+        ticketDesign: e.reservation.ticketDesign,
         ticketPalette: e.reservation.ticketPalette,
         showTime: e.reservation.showTime,
         showVenue: e.reservation.showVenue,
@@ -229,6 +252,12 @@ export class EventDetailAdmin implements OnInit {
       this.toast.success('Pago eliminado.');
       this.load();
     });
+  }
+
+  /** Cambios desde el selector de diseño y color. */
+  protected setTicketStyle(field: 'ticketDesign' | 'ticketPalette', value: string): void {
+    this.ticketForm.controls[field].setValue(value);
+    this.ticketForm.markAsDirty();
   }
 
   protected saveTicket(): void {

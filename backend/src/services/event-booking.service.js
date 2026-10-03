@@ -3,6 +3,7 @@ import { Client, Event, Payment, Reservation, Service, Package } from '../models
 import { AppError, notFound } from '../utils/app-error.js';
 import { generatePublicCode } from '../utils/public-code.js';
 import { toNumber } from './serializers.js';
+import { normalizeTicketStyle } from '../config/ticket-designs.js';
 
 /** Iniciales para el monograma: "Camila & Sebastián" → "C|S"; "Ana López" → "AL". */
 export function buildMonogram(title) {
@@ -81,7 +82,7 @@ export async function createEventWithBooking(data) {
         displayTitle,
         monogram: data.reservation?.monogram || buildMonogram(displayTitle),
         message: data.reservation?.message ?? null,
-        ticketPalette: data.reservation?.ticketPalette ?? 'mocha',
+        ...normalizeTicketStyle(data.reservation?.ticketDesign, data.reservation?.ticketPalette),
       },
       { transaction },
     );

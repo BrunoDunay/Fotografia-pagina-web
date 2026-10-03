@@ -9,7 +9,8 @@ import { todayInMexico } from '../../../core/utils/date-mx';
 import { SkeletonTable } from '../../../components/skeletons';
 import { PageHeader } from '../shared/page-header';
 import { Reservation, EventSummary } from '../../../core/types/agenda.model';
-import { PALETTE_LABEL, shortDate } from '../shared/labels';
+import { ticketDesign, ticketPalette } from '../../../core/ticket-designs';
+import { shortDate } from '../shared/labels';
 
 type ReservationRow = Reservation & { event: EventSummary };
 
@@ -25,14 +26,14 @@ type ReservationRow = Reservation & { event: EventSummary };
       @if (list.length) {
         <div class="p-table-wrap">
           <table class="p-table">
-            <thead><tr><th>Fecha</th><th>Ticket</th><th>Cliente</th><th>Color</th><th>Enlace</th><th>Activo</th></tr></thead>
+            <thead><tr><th>Fecha</th><th>Ticket</th><th>Cliente</th><th>Diseño</th><th>Enlace</th><th>Activo</th></tr></thead>
             <tbody>
               @for (r of list; track r.id) {
                 <tr [class.is-past]="r.event.eventDate < today">
                   <td>{{ shortDate(r.event.eventDate) }}</td>
                   <td><a class="p-link" [routerLink]="['/panel/events', r.event.id]">{{ r.displayTitle }}</a></td>
                   <td>{{ r.event.client.name }}</td>
-                  <td><span class="swatch" [class]="'swatch swatch--' + r.ticketPalette"></span> {{ palette[r.ticketPalette] }}</td>
+                  <td><span class="swatch" [style.background]="style(r).color"></span> {{ style(r).label }}</td>
                   <td>
                     <button type="button" class="p-link copy" (click)="copy(r)">Copiar</button>
                     · <a class="p-link" [href]="url(r)" target="_blank" rel="noopener">Abrir</a>
@@ -57,9 +58,6 @@ type ReservationRow = Reservation & { event: EventSummary };
     tr.is-past td { opacity: 0.6; }
     .copy { border: 0; background: none; padding: 0; }
     .swatch { display: inline-block; width: 0.9rem; height: 0.9rem; vertical-align: -2px; border-radius: 2px; }
-    .swatch--mocha { background: var(--ticket-mocha); }
-    .swatch--navy { background: var(--ticket-navy); }
-    .swatch--burgundy { background: var(--ticket-burgundy); }
   `,
 })
 export class Reservations {
@@ -69,7 +67,11 @@ export class Reservations {
   private readonly reload = signal(0);
 
   protected readonly today = todayInMexico();
-  protected readonly palette = PALETTE_LABEL;
+  /** "Sobre clásico · Moca" y su color, para la columna del ticket. */
+  protected style(r: { ticketDesign: string; ticketPalette: string }): { label: string; color: string } {
+    const palette = ticketPalette(r.ticketDesign, r.ticketPalette);
+    return { label: `${ticketDesign(r.ticketDesign).label} · ${palette.label}`, color: palette.main };
+  }
   protected readonly shortDate = shortDate;
   protected readonly rows = toSignal(
     toObservable(this.reload).pipe(switchMap(() => this.agenda.reservations().pipe(catchError(() => of([] as ReservationRow[]))))),

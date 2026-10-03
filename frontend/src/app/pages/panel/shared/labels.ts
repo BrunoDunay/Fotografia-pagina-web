@@ -1,4 +1,4 @@
-import { EventStatus, PaymentConcept, PaymentMethod, PaymentStatus, TicketPalette } from '../../../core/types/agenda.model';
+import { EventStatus, PaymentConcept, PaymentMethod, PaymentStatus } from '../../../core/types/agenda.model';
 import { ThemeDecoration } from '../../../core/types/catalog.model';
 
 /** Textos en español para los valores internos de la API. */
@@ -28,12 +28,6 @@ export const PAYMENT_METHOD_LABEL: Record<PaymentMethod, string> = {
   transferencia: 'Transferencia',
   tarjeta: 'Tarjeta',
   otro: 'Otro',
-};
-
-export const PALETTE_LABEL: Record<TicketPalette, string> = {
-  mocha: 'Moca',
-  navy: 'Azul marino',
-  burgundy: 'Vino',
 };
 
 export const DECORATION_LABEL: Record<ThemeDecoration, string> = {

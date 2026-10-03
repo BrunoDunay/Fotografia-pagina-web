@@ -50,15 +50,6 @@
   --color-skeleton: #ece5dd;
   --color-skeleton-shine: #f6f1eb;
 
-  /* ---- Ticket de reservación (paletas de ideas/Ticket_reservacion) ---- */
-  --ticket-mocha: #9a7863;
-  --ticket-mocha-dark: #6f5242;
-  --ticket-navy: #4a5672;
-  --ticket-navy-dark: #323b52;
-  --ticket-burgundy: #5c1f2b;
-  --ticket-burgundy-dark: #44151f;
-  --ticket-paper: #f6f2ec;
-
   /* ---- Tipografía ---- */
   --font-sans: 'Jost', 'Helvetica Neue', Arial, sans-serif;
   --font-serif: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;

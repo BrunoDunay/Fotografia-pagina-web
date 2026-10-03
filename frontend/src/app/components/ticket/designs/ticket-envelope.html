@@ -2,15 +2,15 @@
 <header class="envelope">
   <div class="envelope__flap-shadow" aria-hidden="true"><div class="envelope__flap"></div></div>
   <h1 class="names" [style.font-size]="nameSize()">
-    @if (names().length === 2) {
-      <span>{{ names()[0] }}</span>
+    @if (v().names.length === 2) {
+      <span>{{ v().names[0] }}</span>
       <span class="names__amp">&amp;</span>
-      <span>{{ names()[1] }}</span>
+      <span>{{ v().names[1] }}</span>
     } @else {
-      <span>{{ names()[0] }}</span>
+      <span>{{ v().names[0] }}</span>
     }
   </h1>
-  <p class="envelope__date">{{ shortDate() }}</p>
+  <p class="envelope__date">{{ v().shortDate }}</p>
 </header>
 
 <!-- Papel -->
@@ -39,7 +39,7 @@
   <p class="eyebrow">Fecha reservada</p>
 
   <div class="monogram" aria-hidden="true">
-    @for (letter of monogram(); track $index) {
+    @for (letter of v().monogram; track $index) {
       @if (!$first) {
         <span class="monogram__rule"></span>
       }
@@ -47,73 +47,38 @@
     }
   </div>
 
-  @if (reservation().service; as service) {
-    <p class="service">{{ service.name }}</p>
+  @if (v().service; as service) {
+    <p class="service">{{ service }}</p>
   }
-  @if (reservation().package; as pkg) {
-    <p class="detail detail--caps">Paquete {{ pkg.name }}</p>
+  @if (v().package; as pkg) {
+    <p class="detail detail--caps">Paquete {{ pkg }}</p>
   }
-  @if (time() || place()) {
+  @if (v().time || v().place) {
     <p class="detail">
-      {{ time() }}
-      @if (time() && place()) {
+      {{ v().time }}
+      @if (v().time && v().place) {
         ·
       }
-      {{ place() }}
+      {{ v().place }}
     </p>
   }
-  @if (reservation().message; as message) {
+  @if (v().message; as message) {
     <p class="message">{{ message }}</p>
   }
 
-  <div class="mini-cal" aria-hidden="true">
-    <p class="mini-cal__title">{{ date().month }} {{ date().year }}</p>
-    <div class="mini-cal__grid">
-      @for (w of weekdays; track $index) {
-        <span class="mini-cal__wd">{{ w }}</span>
-      }
-      @for (cell of calendar().cells; track $index) {
-        <span class="mini-cal__day" [class.is-event]="cell === calendar().day">
-          @if (cell === calendar().day) {
-            <svg viewBox="0 0 24 24"><path d="M12 20.5S3.5 15 3.5 9.2A4.4 4.4 0 0112 6.6a4.4 4.4 0 018.5 2.6C20.5 15 12 20.5 12 20.5z" /></svg>
-          }
-          {{ cell ?? '' }}
-        </span>
-      }
-    </div>
-  </div>
+  <app-ticket-calendar [v]="v()" />
 </section>
 
 <!-- Fecha y cuenta regresiva -->
 <footer class="band">
-  <p class="band__month">{{ date().month }}</p>
+  <p class="band__month">{{ v().date.month }}</p>
   <div class="band__date">
-    <span class="band__side">{{ date().weekday }}</span>
-    <span class="band__day">{{ date().day }}</span>
-    <span class="band__side">{{ date().year }}</span>
+    <span class="band__side">{{ v().date.weekday }}</span>
+    <span class="band__day">{{ v().date.day }}</span>
+    <span class="band__side">{{ v().date.year }}</span>
   </div>
 
-  @switch (stage()) {
-    @case ('upcoming') {
-      <p class="band__label">Faltan</p>
-      <div class="countdown" role="timer" [attr.aria-label]="'Faltan ' + countdown().days + ' días'">
-        <span class="countdown__unit"><strong>{{ countdown().days }}</strong><small>días</small></span>
-        <span class="countdown__sep">:</span>
-        <span class="countdown__unit"><strong>{{ pad(countdown().hours) }}</strong><small>horas</small></span>
-        <span class="countdown__sep">:</span>
-        <span class="countdown__unit"><strong>{{ pad(countdown().minutes) }}</strong><small>min</small></span>
-        <span class="countdown__sep">:</span>
-        <span class="countdown__unit"><strong>{{ pad(countdown().seconds) }}</strong><small>seg</small></span>
-      </div>
-    }
-    @case ('today') {
-      <p class="band__script">¡Hoy es el gran día!</p>
-    }
-    @case ('past') {
-      <p class="band__label">Evento realizado</p>
-      <p class="band__script band__script--sm">Gracias por dejarme ser parte</p>
-    }
-  }
+  <app-ticket-status [v]="v()" />
 
   <img class="band__logo" src="/brand/logo-light.webp" alt="Armando Ovalle Wedding Studio" width="600" height="146" />
 </footer>

@@ -179,18 +179,10 @@
   <!-- Ticket -->
   <section class="p-card step">
     <h2 class="step__title"><span>5</span> Ticket del cliente</h2>
-    <div class="field palette-field">
-      <span class="field__label">Color del ticket</span>
-      <div class="palettes">
-        @for (o of paletteOptions; track o.value) {
-          <label class="palette" [class]="'palette palette--' + o.value">
-            <input type="radio" formControlName="palette" [value]="o.value" />
-            <span class="swatch"></span>
-            {{ o.label }}
-          </label>
-        }
-      </div>
-    </div>
+    <p class="p-help">
+      Elige el diseño y el color del ticket que recibirá tu cliente. Se sugiere uno según el tipo de evento; puedes cambiarlo después.
+    </p>
+    <app-ticket-style-picker [design]="design()" (designChange)="pickDesign($event)" [(palette)]="palette" [data]="ticketPreview()" />
   </section>
 
   <div class="p-actions">

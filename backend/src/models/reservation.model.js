@@ -1,8 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/database.js';
 
-export const TICKET_PALETTES = ['mocha', 'navy', 'burgundy'];
-
 export const Reservation = sequelize.define(
   'Reservation',
   {
@@ -12,7 +10,9 @@ export const Reservation = sequelize.define(
     displayTitle: { type: DataTypes.STRING(160), allowNull: false },
     monogram: DataTypes.STRING(12),
     message: DataTypes.TEXT,
-    ticketPalette: { type: DataTypes.ENUM(...TICKET_PALETTES), allowNull: false, defaultValue: 'mocha' },
+    /** Diseño y color del ticket: combinaciones válidas en config/ticket-designs.js. */
+    ticketDesign: { type: DataTypes.STRING(40), allowNull: false, defaultValue: 'envelope' },
+    ticketPalette: { type: DataTypes.STRING(30), allowNull: false, defaultValue: 'mocha' },
     coverMediaId: DataTypes.UUID,
     showTime: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
     showVenue: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },

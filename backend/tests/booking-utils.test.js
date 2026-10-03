@@ -55,3 +55,21 @@ describe('hasImageSignature', () => {
     expect(hasImageSignature(Buffer.from('<script>alert(1)</script>'))).toBe(false);
   });
 });
+
+describe('normalizeTicketStyle', () => {
+  it('acepta una combinación válida de diseño y color', async () => {
+    const { normalizeTicketStyle } = await import('../src/config/ticket-designs.js');
+    expect(normalizeTicketStyle('beach', 'dusk')).toEqual({ ticketDesign: 'beach', ticketPalette: 'dusk' });
+  });
+
+  it('si el color no pertenece al diseño, usa el primero de ese diseño', async () => {
+    const { normalizeTicketStyle } = await import('../src/config/ticket-designs.js');
+    expect(normalizeTicketStyle('grad', 'mocha')).toEqual({ ticketDesign: 'grad', ticketPalette: 'navy' });
+  });
+
+  it('sin diseño (o desconocido) usa el sobre clásico', async () => {
+    const { normalizeTicketStyle } = await import('../src/config/ticket-designs.js');
+    expect(normalizeTicketStyle(undefined, undefined)).toEqual({ ticketDesign: 'envelope', ticketPalette: 'mocha' });
+    expect(normalizeTicketStyle('no-existe', 'navy')).toEqual({ ticketDesign: 'envelope', ticketPalette: 'navy' });
+  });
+});

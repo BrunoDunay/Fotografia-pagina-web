@@ -3,7 +3,6 @@ import { Media } from './common.model';
 export type EventStatus = 'tentative' | 'confirmed' | 'completed' | 'cancelled';
 export type PaymentConcept = 'apartado' | 'abono' | 'liquidacion' | 'otro';
 export type PaymentMethod = 'efectivo' | 'transferencia' | 'tarjeta' | 'otro';
-export type TicketPalette = 'mocha' | 'navy' | 'burgundy';
 export type PaymentStatus = 'pending' | 'partial' | 'paid';
 
 export interface PaymentSummary {
@@ -56,7 +55,9 @@ export interface Reservation {
   displayTitle: string;
   monogram: string | null;
   message: string | null;
-  ticketPalette: TicketPalette;
+  /** Diseño y variación de color del ticket (catálogo en core/ticket-designs.ts). */
+  ticketDesign: string;
+  ticketPalette: string;
   coverMediaId: string | null;
   showTime: boolean;
   showVenue: boolean;
@@ -77,7 +78,8 @@ export interface PublicReservation {
   title: string;
   monogram: string | null;
   message: string | null;
-  palette: TicketPalette;
+  design: string;
+  palette: string;
   cover: Media | null;
   eventDate: string;
   startTime: string | null;

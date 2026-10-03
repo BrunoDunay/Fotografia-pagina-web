@@ -1,34 +1,18 @@
 /*
  * Todo se mide en cqw (1% del ancho del ticket): la tira 9:16 escala como una imagen.
  * Alto total = 177.78cqw → sobre 46 + papel (resto ≈ 80) + banda 52.
+ * Los colores (--t-main, --t-dark, --t-paper, --t-ink) llegan de la variación elegida.
  */
 :host {
-  --t-main: var(--ticket-mocha);
-  --t-dark: var(--ticket-mocha-dark);
-  --t-paper: var(--ticket-paper);
-  --t-ink: #2a2421;
   --t-light: #fbf8f4;
+  --cal-accent: var(--t-main);
+  --cal-on: var(--t-light);
 
-  container-type: inline-size;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  aspect-ratio: 9 / 16;
-  overflow: hidden;
+  height: 100%;
   background: var(--t-paper);
   color: var(--t-ink);
-  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.45);
-  font-family: var(--font-sans);
-}
-
-:host(.ticket--navy) {
-  --t-main: var(--ticket-navy);
-  --t-dark: var(--ticket-navy-dark);
-}
-
-:host(.ticket--burgundy) {
-  --t-main: var(--ticket-burgundy);
-  --t-dark: var(--ticket-burgundy-dark);
 }
 
 p {
@@ -181,56 +165,6 @@ p {
   line-clamp: 2;
 }
 
-.mini-cal {
-  width: 52cqw;
-}
-
-.mini-cal__title {
-  margin-bottom: 1.6cqw;
-  font-size: 2.3cqw;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--t-main);
-}
-
-.mini-cal__grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  row-gap: 0.3cqw;
-  font-size: 2.3cqw;
-  line-height: 3.3cqw;
-}
-
-.mini-cal__wd {
-  font-size: 1.9cqw;
-  font-weight: 500;
-  color: var(--t-main);
-}
-
-.mini-cal__day {
-  position: relative;
-  font-weight: 300;
-}
-
-.mini-cal__day.is-event {
-  color: var(--t-light);
-  font-weight: 500;
-}
-
-.mini-cal__day svg {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  z-index: -1;
-  width: 6cqw;
-  height: 6cqw;
-  fill: var(--t-main);
-  translate: -50% -52%;
-}
-
-.mini-cal__day.is-event {
-  isolation: isolate;
-}
-
 /* ---------- Banda inferior ---------- */
 .band {
   flex: none;
@@ -274,59 +208,6 @@ p {
   font-size: 12cqw;
   font-style: italic;
   line-height: 0.9;
-}
-
-.band__label {
-  margin-top: 1cqw;
-  font-size: 2.6cqw;
-  font-weight: 500;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-}
-
-.countdown {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 1.6cqw;
-}
-
-.countdown__unit {
-  display: grid;
-  justify-items: center;
-  min-width: 11cqw;
-}
-
-.countdown__unit strong {
-  font-size: 8.6cqw;
-  font-weight: 300;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.countdown__unit small {
-  margin-top: 0.8cqw;
-  font-size: 1.9cqw;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.85;
-}
-
-.countdown__sep {
-  font-size: 7cqw;
-  font-weight: 200;
-  line-height: 1;
-  opacity: 0.7;
-}
-
-.band__script {
-  font-family: var(--font-script);
-  font-size: 8.5cqw;
-  line-height: 1.1;
-}
-
-.band__script--sm {
-  font-size: 6.2cqw;
 }
 
 .band__logo {

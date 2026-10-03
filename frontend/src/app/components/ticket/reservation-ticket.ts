@@ -1,13 +1,33 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { PublicReservation } from '../../core/types/agenda.model';
+import { ticketDesign, ticketPalette } from '../../core/ticket-designs';
 import { countdownTo, dateParts, ticketStage, todayInMexico } from '../../core/utils/date-mx';
+import { TicketView } from './ticket-view';
+import { TicketEnvelope } from './designs/ticket-envelope';
+import { TicketEditorial } from './designs/ticket-editorial';
+import { TicketStub } from './designs/ticket-stub';
+import { TicketBoarding } from './designs/ticket-boarding';
+import { TicketBeach } from './designs/ticket-beach';
+import { TicketBloom } from './designs/ticket-bloom';
+import { TicketCalendarCard } from './designs/ticket-calendar-card';
+import { TicketMoon } from './designs/ticket-moon';
+import { TicketBotanic } from './designs/ticket-botanic';
+import { TicketGrad } from './designs/ticket-grad';
 
-const WEEKDAYS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
-const pad = (n: number) => String(n).padStart(2, '0');
+/** ¿Es un color oscuro? (luminancia aproximada de un #rrggbb). */
+function isDark(hex: string): boolean {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return 0.299 * r + 0.587 * g + 0.114 * b < 128;
+}
+
+/** Datos mínimos para pintar un ticket (el ticket público o la vista previa del panel). */
+export type TicketData = Pick<
+  PublicReservation,
+  'title' | 'monogram' | 'message' | 'design' | 'palette' | 'eventDate' | 'startTime' | 'endTime' | 'venue' | 'city' | 'service' | 'package'
+>;
 
 /**
- * Ticket digital de reservación (refs. Ticket_reservación 01–03): sobre con los nombres,
- * monograma, mini calendario con el día marcado y la cuenta regresiva.
+ * Ticket digital de reservación. Elige el diseño (sobre, boleto, playa…) y aplica su variación de color.
  *
  * Es una tira 9:16 dimensionada con unidades de contenedor (cqw): se ve igual en cualquier
  * pantalla y al capturarla como imagen (1080×1920) para historias de Instagram/WhatsApp.
@@ -15,74 +35,124 @@ const pad = (n: number) => String(n).padStart(2, '0');
  */
 @Component({
   selector: 'app-reservation-ticket',
+  imports: [
+    TicketEnvelope,
+    TicketEditorial,
+    TicketStub,
+    TicketBoarding,
+    TicketBeach,
+    TicketBloom,
+    TicketCalendarCard,
+    TicketMoon,
+    TicketBotanic,
+    TicketGrad,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class]': "'ticket ticket--' + reservation().palette" },
-  templateUrl: './reservation-ticket.html',
-  styleUrl: './reservation-ticket.css',
+  host: {
+    '[style.--t-main]': 'colors().main',
+    '[style.--t-dark]': 'colors().dark',
+    '[style.--t-paper]': 'colors().paper',
+    '[style.--t-ink]': 'colors().ink',
+    '[style.--t-accent]': 'colors().accent',
+  },
+  template: `
+    @switch (design()) {
+      @case ('envelope') {
+        <app-ticket-envelope [v]="view()" />
+      }
+      @case ('editorial') {
+        <app-ticket-editorial [v]="view()" />
+      }
+      @case ('ticket') {
+        <app-ticket-stub [v]="view()" />
+      }
+      @case ('boarding') {
+        <app-ticket-boarding [v]="view()" />
+      }
+      @case ('beach') {
+        <app-ticket-beach [v]="view()" />
+      }
+      @case ('bloom') {
+        <app-ticket-bloom [v]="view()" />
+      }
+      @case ('calendar') {
+        <app-ticket-calendar-card [v]="view()" />
+      }
+      @case ('moon') {
+        <app-ticket-moon [v]="view()" />
+      }
+      @case ('botanic') {
+        <app-ticket-botanic [v]="view()" />
+      }
+      @case ('grad') {
+        <app-ticket-grad [v]="view()" />
+      }
+    }
+  `,
+  styles: `
+    :host {
+      container-type: inline-size;
+      display: block;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.45);
+      font-family: var(--font-sans);
+    }
+  `,
 })
 export class ReservationTicket {
-  readonly reservation = input.required<PublicReservation>();
+  readonly reservation = input.required<TicketData>();
   /** Instante actual (ms); lo actualiza la página cada segundo en el navegador. */
   readonly now = input.required<number>();
 
-  protected readonly weekdays = WEEKDAYS;
-  protected readonly pad = pad;
+  protected readonly design = computed(() => ticketDesign(this.reservation().design).key);
+  protected readonly colors = computed(() => ticketPalette(this.reservation().design, this.reservation().palette));
 
-  /** "Camila & Sebastián" → ["Camila", "Sebastián"]; un solo nombre → [nombre]. */
-  protected readonly names = computed(() => {
-    const parts = this.reservation()
-      .title.split(/\s+(?:&|y)\s+/i)
-      .map((p) => p.trim())
-      .filter(Boolean);
-    return parts.length >= 2 ? parts.slice(0, 2) : [this.reservation().title];
-  });
-
-  /** Tamaño del script según el nombre más largo, para que no se desborde del sobre. */
-  protected readonly nameSize = computed(() => {
-    const longest = Math.max(...this.names().map((n) => n.length));
-    return `${Math.min(9.5, Math.max(5.4, (9.5 * 12) / longest))}cqw`;
-  });
-
-  protected readonly monogram = computed(() => {
-    const raw = this.reservation().monogram?.trim();
-    if (!raw) return this.names().map((n) => n[0]?.toUpperCase() ?? '');
-    return raw.includes('|') ? raw.split('|').map((l) => l.trim()) : [raw];
-  });
-
-  protected readonly date = computed(() => dateParts(this.reservation().eventDate));
-
-  protected readonly shortDate = computed(() => {
-    const [y, m, d] = this.reservation().eventDate.split('-');
-    return `${d}.${m}.${y}`;
-  });
-
-  /** Estado según el día en México (no el del visitante). */
-  protected readonly stage = computed(() => ticketStage(this.reservation().eventDate, todayInMexico(new Date(this.now()))).stage);
-
-  protected readonly countdown = computed(() => {
+  protected readonly view = computed<TicketView>(() => {
     const r = this.reservation();
-    return countdownTo(r.eventDate, r.startTime, this.now());
-  });
+    const title = r.title?.trim() || 'Tu evento';
 
-  protected readonly time = computed(() => {
-    const { startTime, endTime } = this.reservation();
-    if (!startTime) return null;
-    return endTime ? `${startTime.slice(0, 5)} – ${endTime.slice(0, 5)} hrs` : `${startTime.slice(0, 5)} hrs`;
-  });
+    // "Camila & Sebastián" → ["Camila", "Sebastián"]; un solo nombre → [nombre].
+    const parts = title
+      .split(/\s+(?:&|y)\s+/i)
+      .map((part) => part.trim())
+      .filter(Boolean);
+    const names = parts.length >= 2 ? parts.slice(0, 2) : [title];
 
-  protected readonly place = computed(() => {
-    const { venue, city } = this.reservation();
-    return [venue, city].filter(Boolean).join(', ') || null;
-  });
+    const rawMonogram = r.monogram?.trim();
+    const monogram = !rawMonogram
+      ? names.map((n) => n[0]?.toUpperCase() ?? '')
+      : rawMonogram.includes('|')
+        ? rawMonogram.split('|').map((l) => l.trim())
+        : [rawMonogram];
 
-  /** Mini calendario del mes del evento (semanas de lunes a domingo). */
-  protected readonly calendar = computed(() => {
-    const [year, month, day] = this.reservation().eventDate.split('-').map(Number);
-    const first = new Date(Date.UTC(year, month - 1, 1));
-    const offset = (first.getUTCDay() + 6) % 7;
-    const total = new Date(Date.UTC(year, month, 0)).getUTCDate();
+    const [year, month, day] = r.eventDate.split('-');
+    const first = new Date(Date.UTC(Number(year), Number(month) - 1, 1));
+    const offset = (first.getUTCDay() + 6) % 7; // semanas de lunes a domingo
+    const total = new Date(Date.UTC(Number(year), Number(month), 0)).getUTCDate();
     const cells: (number | null)[] = [...Array(offset).fill(null), ...Array.from({ length: total }, (_, i) => i + 1)];
     while (cells.length % 7) cells.push(null);
-    return { cells, day };
+
+    const time = !r.startTime ? null : r.endTime ? `${r.startTime.slice(0, 5)} – ${r.endTime.slice(0, 5)} hrs` : `${r.startTime.slice(0, 5)} hrs`;
+
+    return {
+      title,
+      names,
+      monogram,
+      date: dateParts(r.eventDate),
+      shortDate: `${day}.${month}.${year}`,
+      digits: { day, month, year: year.slice(2) },
+      // Estado según el día en México (no el del visitante).
+      stage: ticketStage(r.eventDate, todayInMexico(new Date(this.now()))).stage,
+      countdown: countdownTo(r.eventDate, r.startTime, this.now()),
+      time,
+      place: [r.venue, r.city].filter(Boolean).join(', ') || null,
+      service: r.service?.name ?? null,
+      package: r.package?.name ?? null,
+      message: r.message?.trim() || null,
+      darkPaper: isDark(this.colors().paper),
+      calendar: { cells, day: Number(day) },
+    };
   });
 }

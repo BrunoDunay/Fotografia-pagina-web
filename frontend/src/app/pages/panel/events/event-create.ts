@@ -6,12 +6,14 @@ import { catchError, debounceTime, distinctUntilChanged, map, of, startWith, swi
 import { AgendaApiService } from '../../../core/services/api/agenda-api.service';
 import { ContentApiService } from '../../../core/services/api/content-api.service';
 import { ToastService } from '../../../core/services/toast.service';
-import { Client, TicketPalette } from '../../../core/types/agenda.model';
+import { Client } from '../../../core/types/agenda.model';
+import { suggestedTicketDesign, ticketDesign } from '../../../core/ticket-designs';
 import { ApiError } from '../../../core/types/common.model';
 import { todayInMexico } from '../../../core/utils/date-mx';
 import { Btn } from '../../../components/buttons/btn';
 import { PageHeader } from '../shared/page-header';
-import { EVENT_STATUS_LABEL, PALETTE_LABEL, PAYMENT_CONCEPT_LABEL, PAYMENT_METHOD_LABEL, entries } from '../shared/labels';
+import { TicketPreviewData, TicketStylePicker } from '../shared/ticket-style-picker';
+import { EVENT_STATUS_LABEL, PAYMENT_CONCEPT_LABEL, PAYMENT_METHOD_LABEL, entries } from '../shared/labels';
 
 /**
  * Flujo rápido "Hoy contraté una boda para el 24 de octubre":
@@ -20,7 +22,7 @@ import { EVENT_STATUS_LABEL, PALETTE_LABEL, PAYMENT_CONCEPT_LABEL, PAYMENT_METHO
  */
 @Component({
   selector: 'app-event-create',
-  imports: [ReactiveFormsModule, RouterLink, Btn, PageHeader],
+  imports: [ReactiveFormsModule, RouterLink, Btn, PageHeader, TicketStylePicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './event-create.html',
   styleUrl: './event-create.css',
@@ -38,7 +40,6 @@ export class EventCreate implements OnInit {
   protected readonly statusOptions = entries(EVENT_STATUS_LABEL);
   protected readonly conceptOptions = entries(PAYMENT_CONCEPT_LABEL);
   protected readonly methodOptions = entries(PAYMENT_METHOD_LABEL);
-  protected readonly paletteOptions = entries(PALETTE_LABEL);
 
   protected readonly services = toSignal(this.content.services().pipe(catchError(() => of([]))), { initialValue: [] });
   protected readonly packages = toSignal(this.content.packages().pipe(catchError(() => of([]))), { initialValue: [] });
@@ -74,7 +75,6 @@ export class EventCreate implements OnInit {
       concept: ['apartado'],
       method: ['transferencia'],
     }),
-    palette: ['mocha' as TicketPalette],
   });
 
   /** Búsqueda de clientes existentes (con espera breve para no saturar la API). */
@@ -89,6 +89,33 @@ export class EventCreate implements OnInit {
   );
 
   private readonly serviceId = toSignal(this.form.controls.serviceId.valueChanges.pipe(startWith('')), { initialValue: '' });
+
+  // ---- Ticket: diseño, color y vista previa ----
+  protected readonly design = signal('envelope');
+  protected readonly palette = signal('mocha');
+  /** Si el fotógrafo ya eligió un diseño a mano, no se vuelve a sugerir al cambiar el tipo de evento. */
+  private designPicked = false;
+  private readonly formValue = toSignal(this.form.valueChanges.pipe(startWith(null)), { initialValue: null });
+
+  /** Datos del formulario para la vista previa del ticket (con ejemplos mientras faltan). */
+  protected readonly ticketPreview = computed<TicketPreviewData>(() => {
+    this.formValue();
+    const v = this.form.getRawValue();
+    const service = this.services().find((s) => s.id === v.serviceId);
+    const pkg = this.packages().find((p) => p.id === v.packageId);
+    return {
+      title: v.title.trim() || 'Camila & Sebastián',
+      monogram: null,
+      message: null,
+      eventDate: /^\d{4}-\d{2}-\d{2}$/.test(v.eventDate) ? v.eventDate : todayInMexico(),
+      startTime: v.startTime || null,
+      endTime: v.endTime || null,
+      venue: null,
+      city: null,
+      service: service ? { name: service.name, slug: service.slug } : null,
+      package: pkg ? { name: pkg.name } : null,
+    };
+  });
 
   /** Paquetes del servicio elegido (o todos si el servicio no tiene paquetes ligados). */
   protected readonly packageOptions = computed(() => {
@@ -112,11 +139,27 @@ export class EventCreate implements OnInit {
       }
     });
 
+    // Sugerir el diseño del ticket según el tipo de evento (boda → sobre, XV → floral, graduación…).
+    this.form.controls.serviceId.valueChanges.subscribe((id) => {
+      if (this.designPicked) return;
+      const slug = this.services().find((s) => s.id === id)?.slug;
+      const suggested = suggestedTicketDesign(slug);
+      if (suggested !== this.design()) {
+        this.design.set(suggested);
+        this.palette.set(ticketDesign(suggested).palettes[0].key);
+      }
+    });
+
     // Sugerir el nombre del evento a partir del cliente nuevo.
     this.form.controls.newClient.controls.name.valueChanges.subscribe((name) => {
       const title = this.form.controls.title;
       if (!title.dirty) title.setValue(name);
     });
+  }
+
+  protected pickDesign(design: string): void {
+    this.designPicked = true;
+    this.design.set(design);
   }
 
   protected setClientMode(mode: 'existing' | 'new'): void {
@@ -166,7 +209,7 @@ export class EventCreate implements OnInit {
       blocksAvailability: v.blocksAvailability,
       notes: v.notes || null,
       initialPayment: payment,
-      reservation: { ticketPalette: v.palette },
+      reservation: { ticketDesign: this.design(), ticketPalette: this.palette() },
     };
 
     this.saving.set(true);

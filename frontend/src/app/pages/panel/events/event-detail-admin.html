@@ -160,19 +160,9 @@
               <label class="field__label" for="t-title">Título en el ticket</label>
               <input id="t-title" class="field__control" formControlName="displayTitle" />
             </div>
-            <div class="p-grid">
-              <div class="field">
-                <label class="field__label" for="t-mono">Monograma</label>
-                <input id="t-mono" class="field__control" formControlName="monogram" placeholder="C|S" />
-              </div>
-              <div class="field">
-                <label class="field__label" for="t-palette">Color</label>
-                <select id="t-palette" class="field__control" formControlName="ticketPalette">
-                  @for (o of paletteOptions; track o.value) {
-                    <option [value]="o.value">{{ o.label }}</option>
-                  }
-                </select>
-              </div>
+            <div class="field">
+              <label class="field__label" for="t-mono">Monograma</label>
+              <input id="t-mono" class="field__control" formControlName="monogram" placeholder="C|S" />
             </div>
             <div class="field">
               <label class="field__label" for="t-msg">Mensaje para el cliente</label>
@@ -181,6 +171,15 @@
             <label class="p-check"><input type="checkbox" formControlName="showTime" /> Mostrar horario</label>
             <label class="p-check"><input type="checkbox" formControlName="showVenue" /> Mostrar lugar</label>
             <label class="p-check"><input type="checkbox" formControlName="isActive" /> Enlace activo</label>
+            @if (ticketPreview(); as preview) {
+              <app-ticket-style-picker
+                [design]="ticketForm.controls.ticketDesign.value"
+                (designChange)="setTicketStyle('ticketDesign', $event)"
+                [palette]="ticketForm.controls.ticketPalette.value"
+                (paletteChange)="setTicketStyle('ticketPalette', $event)"
+                [data]="preview"
+              />
+            }
             <button appBtn size="sm" type="submit" [loading]="savingTicket()" [disabled]="savingTicket() || ticketForm.pristine">Guardar ticket</button>
           </form>
         </section>

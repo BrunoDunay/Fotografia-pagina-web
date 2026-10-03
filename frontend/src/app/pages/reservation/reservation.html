@@ -1,4 +1,4 @@
-<main class="stage" [class]="'stage stage--' + (reservation()?.palette ?? 'mocha')">
+<main class="stage" [style.--stage-bg]="stageColor()">
   @if (backdrop(); as url) {
     <div class="stage__backdrop" aria-hidden="true" [style.background-image]="'url(' + url + ')'"></div>
   }

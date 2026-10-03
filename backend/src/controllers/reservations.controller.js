@@ -4,6 +4,7 @@ import { notFound } from '../utils/app-error.js';
 import { todayInStudioTz } from '../utils/dates-mx.js';
 import { uniquePublicCode } from '../services/event-booking.service.js';
 import { toMedia } from '../services/serializers.js';
+import { normalizeTicketStyle } from '../config/ticket-designs.js';
 
 /**
  * Público: ticket digital. Lista blanca explícita de campos:
@@ -35,6 +36,7 @@ export async function getPublic(req, res) {
     title: reservation.displayTitle,
     monogram: reservation.monogram,
     message: reservation.message,
+    design: reservation.ticketDesign,
     palette: reservation.ticketPalette,
     cover: toMedia(reservation.coverMedia),
     eventDate: event.eventDate,
@@ -71,7 +73,12 @@ async function findOr404(id) {
 
 export async function update(req, res) {
   const reservation = await findOr404(req.valid.params.id);
-  await reservation.update(req.valid.body);
+  const body = { ...req.valid.body };
+  // El color debe pertenecer al diseño (cada diseño tiene sus propias variaciones).
+  if (body.ticketDesign !== undefined || body.ticketPalette !== undefined) {
+    Object.assign(body, normalizeTicketStyle(body.ticketDesign ?? reservation.ticketDesign, body.ticketPalette ?? reservation.ticketPalette));
+  }
+  await reservation.update(body);
   res.json(await findOr404(reservation.id));
 }
 

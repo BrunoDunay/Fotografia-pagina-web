@@ -21,6 +21,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { SITE_URL } from '../../core/config/api.config';
 import { PublicReservation } from '../../core/types/agenda.model';
 import { formatLongDate } from '../../core/utils/date-mx';
+import { ticketPalette } from '../../core/ticket-designs';
 import { ReservationTicket } from '../../components/ticket/reservation-ticket';
 import { Btn } from '../../components/buttons/btn';
 import { Icon } from '../../components/icon/icon';
@@ -76,6 +77,11 @@ export class ReservationPage {
   });
 
   protected readonly backdrop = computed(() => this.reservation()?.cover?.url ?? null);
+  /** Fondo de la página: el tono oscuro de la variación de color del ticket. */
+  protected readonly stageColor = computed(() => {
+    const r = this.reservation();
+    return r ? ticketPalette(r.design, r.palette).dark : null;
+  });
 
   constructor() {
     // La cuenta regresiva solo corre en el navegador (en SSR se pinta el valor del momento).

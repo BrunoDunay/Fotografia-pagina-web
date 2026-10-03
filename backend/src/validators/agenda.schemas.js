@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { isoDate, money, optionalText, pagination, requiredText, time, uuid } from './common.schemas.js';
 import { EVENT_STATUSES } from '../models/event.model.js';
 import { PAYMENT_CONCEPTS, PAYMENT_METHODS } from '../models/payment.model.js';
-import { TICKET_PALETTES } from '../models/reservation.model.js';
+import { TICKET_DESIGN_KEYS } from '../config/ticket-designs.js';
 
 const emptyToUndefined = (v) => (v === '' ? undefined : v);
 
@@ -65,7 +65,8 @@ export const eventCreateBody = z
         displayTitle: optionalText(160),
         monogram: optionalText(12),
         message: optionalText(1000),
-        ticketPalette: z.enum(TICKET_PALETTES).optional(),
+        ticketDesign: z.enum(TICKET_DESIGN_KEYS).optional(),
+        ticketPalette: z.string().trim().max(30).optional(),
       })
       .optional(),
   })
@@ -91,7 +92,8 @@ export const reservationUpdateBody = z
     displayTitle: requiredText(160, 'El título'),
     monogram: optionalText(12),
     message: optionalText(1000),
-    ticketPalette: z.enum(TICKET_PALETTES),
+    ticketDesign: z.enum(TICKET_DESIGN_KEYS),
+    ticketPalette: z.string().trim().max(30),
     coverMediaId: uuid.nullable(),
     showTime: z.boolean(),
     showVenue: z.boolean(),
