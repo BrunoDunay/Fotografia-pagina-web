@@ -143,6 +143,19 @@
   animation: bouquet-sway 7s ease-in-out infinite alternate;
 }
 
+/*
+ * Adorno sujeto al borde: su parte superior coincide con el borde inferior de la barra
+ * (--logo-gap es la distancia del logotipo a ese borde) y no se mece.
+ */
+.bouquet--edge {
+  --logo-gap: 12px;
+
+  top: calc(100% + var(--logo-gap) - 3px);
+  width: 210px;
+  margin-left: -105px;
+  animation: none;
+}
+
 @keyframes bouquet-sway {
   from {
     rotate: -1.6deg;
@@ -283,10 +296,21 @@
   .logo__img {
     height: 32px;
   }
+
+  .bouquet--edge {
+    --logo-gap: 16px;
+
+    width: 180px;
+    margin-left: -90px;
+  }
 }
 
 @media (max-width: 380px) {
   .logo__img {
     height: 26px;
+  }
+
+  .bouquet--edge {
+    --logo-gap: 19px;
   }
 }

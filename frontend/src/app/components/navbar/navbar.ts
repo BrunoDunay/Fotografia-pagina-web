@@ -57,6 +57,8 @@ export class Navbar {
 
   /** Adorno que cuelga bajo el logotipo en algunas festividades (imagen en public/decor). */
   protected readonly ornament = computed(() => ORNAMENTS[this.theme.active()?.key ?? ''] ?? null);
+  /** Independencia: el arreglo va sujeto al borde inferior de la barra (no cuelga suelto bajo el logotipo). */
+  protected readonly ornamentOnEdge = computed(() => this.theme.active()?.key === 'independence');
   /** Año Nuevo: al hacer scroll la barra se vuelve un cielo nocturno con estrellas y fuegos diminutos. */
   protected readonly night = computed(() => this.theme.active()?.key === 'new-year');
 

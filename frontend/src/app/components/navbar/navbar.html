@@ -23,7 +23,7 @@
     <img class="logo__img logo__img--light" src="/brand/logo-light-sm.webp" alt="" width="400" height="97" />
     <img class="logo__img logo__img--dark" src="/brand/logo-dark-sm.webp" alt="" width="400" height="97" />
     @if (ornament(); as src) {
-      <img class="bouquet" [src]="src" alt="" width="220" height="72" aria-hidden="true" />
+      <img class="bouquet" [class.bouquet--edge]="ornamentOnEdge()" [src]="src" alt="" width="220" height="72" aria-hidden="true" />
     }
     @if (theme.active()?.navbarBadge; as badge) {
       <span class="season-badge" aria-hidden="true">{{ badge }}</span>
