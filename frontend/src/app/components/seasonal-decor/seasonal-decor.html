@@ -1,12 +1,11 @@
 @if (ready()) {
   @if (config().garland; as garland) {
     <div class="garland" [class]="'garland garland--' + garland">
-      @for (side of [0, 1]; track side) {
-        <div class="garland__side">
-          @for (tone of flags(); track $index) {
-            <span class="flag" [class]="'flag flag--' + ((tone + side) % flagColors())" [style.animation-delay.s]="-($index + side * 3) * 0.35"></span>
-          }
-        </div>
+      <svg class="garland__string" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 0Q50 200 100 0" /></svg>
+      @for (flag of flags(); track $index) {
+        <span class="hang" [style.--t]="flag.t">
+          <span class="flag" [class]="'flag flag--' + flag.tone" [style.animation-delay.s]="-$index * 0.35"></span>
+        </span>
       }
     </div>
   }

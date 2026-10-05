@@ -315,37 +315,46 @@
 }
 
 /*
- * ---------- Papel picado: dos tramos bajo el navbar, uno a cada lado ----------
- * El centro queda libre para el adorno que cuelga del logotipo (flores, barrita tricolor).
+ * ---------- Papel picado: un solo hilo curvo de lado a lado ----------
+ * El hilo cuelga en parábola (--sag = caída al centro): así pasa por debajo del adorno
+ * que cuelga del logotipo en lugar de encimarse con él.
  */
 .garland {
+  --sag: clamp(54px, 5.4vw, 80px);
+
   position: absolute;
-  inset: calc(var(--navbar-height) + 6px) 0 auto;
-  display: flex;
-  justify-content: space-between;
+  inset: calc(var(--navbar-height) - 2px) 0 auto;
 }
 
-.garland__side {
-  display: flex;
-  justify-content: space-between;
-  gap: 1.2vw;
-  width: 36%;
-  padding-left: 1.6vw;
-  border-top: 1px solid rgb(255 255 255 / 0.5);
-  /* El hilo cae un poco hacia el centro, como colgado de la orilla. */
-  transform-origin: left top;
-  rotate: 2.2deg;
+/* El hilo: misma parábola que siguen los banderines. */
+.garland__string {
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  height: var(--sag);
+  overflow: visible;
 }
 
-.garland__side:last-child {
-  flex-direction: row-reverse;
-  padding: 0 1.6vw 0 0;
-  transform-origin: right top;
-  rotate: -2.2deg;
+.garland__string path {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.55);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Cada banderín cuelga de su punto del hilo (--t = posición de 0 a 1) e inclinado como el hilo en ese punto. */
+.hang {
+  position: absolute;
+  top: calc(var(--sag) * 4 * var(--t) * (1 - var(--t)));
+  left: calc(var(--t) * 100%);
+  width: calc(100% / 14 - 1.2vw);
+  translate: -50% 0;
+  transform-origin: top center;
+  rotate: atan2(calc(var(--sag) * 4 * (1 - 2 * var(--t))), 100vw);
 }
 
 .flag {
-  flex: 1;
+  display: block;
   height: clamp(22px, 3.2vw, 38px);
   opacity: 0.6;
   clip-path: polygon(0 0, 100% 0, 100% 82%, 87.5% 100%, 75% 82%, 62.5% 100%, 50% 82%, 37.5% 100%, 25% 82%, 12.5% 100%, 0 82%);
@@ -412,13 +421,13 @@
 }
 
 @media (max-width: 640px) {
-  .garland__side {
-    width: 31%;
-    gap: 2vw;
+  /* En celular, la mitad de los banderines y un poco más anchos. */
+  .hang:nth-of-type(even) {
+    display: none;
   }
 
-  .flag:nth-child(n + 4) {
-    display: none;
+  .hang {
+    width: calc(100% / 7 - 3vw);
   }
 }
 

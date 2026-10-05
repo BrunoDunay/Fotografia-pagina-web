@@ -64,8 +64,8 @@ function pickTone(weights: number[], r: number): number {
   return weights.length - 1;
 }
 
-/** Banderitas por cada tramo de papel picado. */
-const FLAGS = 5;
+/** Banderitas del papel picado, repartidas a lo largo del hilo. */
+const FLAGS = 14;
 
 /**
  * Decoración del tema estacional (nieve, Navidad, corazones, pétalos, hojas, confeti, verano,
@@ -105,9 +105,11 @@ export class SeasonalDecor {
     });
   });
 
-  /** Colores de las banderitas: tricolor (verde, blanco, rojo) o los seis de Día de Muertos. */
-  protected readonly flagColors = computed(() => (this.config().garland === 'muertos' ? 6 : 3));
-  protected readonly flags = computed(() => Array.from({ length: FLAGS }, (_, i) => i % this.flagColors()));
+  /** Banderitas: color (tricolor o los seis de Día de Muertos) y posición sobre el hilo (t de 0 a 1). */
+  protected readonly flags = computed(() => {
+    const colors = this.config().garland === 'muertos' ? 6 : 3;
+    return Array.from({ length: FLAGS }, (_, i) => ({ tone: i % colors, t: Math.round(((i + 0.5) / FLAGS) * 1000) / 1000 }));
+  });
 
   constructor() {
     afterNextRender(() => this.ready.set(true));
