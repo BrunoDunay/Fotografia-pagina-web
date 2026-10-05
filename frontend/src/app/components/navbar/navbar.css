@@ -159,8 +159,8 @@
 /* Aparición "floreciendo": el arreglo se abre desde su centro, se pasa apenas y se asienta; luego se mece. */
 .bouquet--bloom {
   animation:
-    bouquet-bloom 1.1s cubic-bezier(0.22, 1, 0.36, 1) both,
-    bouquet-sway 7s ease-in-out 1.1s infinite alternate;
+    bouquet-bloom 0.55s cubic-bezier(0.22, 1, 0.36, 1) both,
+    bouquet-sway 7s ease-in-out 0.55s infinite alternate;
 }
 
 @keyframes bouquet-bloom {
