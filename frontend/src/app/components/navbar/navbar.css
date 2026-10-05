@@ -195,6 +195,12 @@
     animation-duration: 14s !important;
     animation-iteration-count: infinite !important;
   }
+
+  /* El arreglo que "florece" tiene dos animaciones: la aparición sigue siendo breve y de una sola vez; solo el vaivén se alarga. */
+  .bouquet--bloom {
+    animation-duration: 0.32s, 14s !important;
+    animation-iteration-count: 1, infinite !important;
+  }
 }
 
 /* Año Nuevo: barra nocturna (cielo estrellado con fuegos diminutos) y logotipo claro. */
