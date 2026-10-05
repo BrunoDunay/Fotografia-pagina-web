@@ -18,6 +18,12 @@ import { ThemeService } from '../../core/services/theme.service';
 import { Icon } from '../icon/icon';
 import { NAV_LINKS } from './nav-links';
 
+const ORNAMENTS: Record<string, string> = {
+  'mothers-day': '/decor/mothers-bouquet.svg',
+  valentines: '/decor/valentines-roses.svg',
+  christmas: '/decor/christmas-garland.svg',
+};
+
 /**
  * Navbar de 3 zonas (ref. ideas/Navbar.jpg): enlaces · logotipo centrado · redes.
  * Sobre un Hero es transparente con logo claro; al hacer scroll se vuelve una
@@ -44,6 +50,11 @@ export class Navbar {
   protected readonly links = NAV_LINKS;
   protected readonly menuOpen = signal(false);
   private readonly scrolled = signal(false);
+
+  /** Adorno que cuelga bajo el logotipo en algunas festividades (imagen en public/decor). */
+  protected readonly ornament = computed(() => ORNAMENTS[this.theme.active()?.key ?? ''] ?? null);
+  /** Independencia: barrita tricolor al centro del borde inferior. */
+  protected readonly flagBar = computed(() => this.theme.active()?.key === 'independence');
 
   protected readonly transparent = computed(() => this.overlay() && !this.scrolled() && !this.menuOpen());
 

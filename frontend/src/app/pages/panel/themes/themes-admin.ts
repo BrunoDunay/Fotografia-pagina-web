@@ -20,6 +20,8 @@ interface AdminTheme {
   startDay: number;
   endMonth: number;
   endDay: number;
+  /** Festividad (se activa sola por fecha) o estación (solo en modo manual). */
+  autoEnabled: boolean;
   decoration: ThemeDecoration;
   heroImage: Media | null;
 }

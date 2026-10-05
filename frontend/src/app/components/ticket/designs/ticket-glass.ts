@@ -17,8 +17,8 @@ import { TicketView, fitSize } from '../ticket-view';
     <svg class="glass" viewBox="0 0 60 100" aria-hidden="true">
       <!-- líquido: tono base, fondo más profundo, luces y burbujas -->
       <path d="M16.200 16C15 34 19 50 30 58 41 50 45 34 43.800 16 39 13.500 21 13.500 16.200 16z" style="fill: var(--t-accent)" />
-      <path d="M17.600 36C19.500 46 23.500 53.500 30 58 36.500 53.500 40.500 46 42.400 36 38 40 22 40 17.600 36z" style="fill: var(--t-main)" opacity="0.2" />
-      <path d="M21.500 48.500C24 53 26.500 55.800 30 58 33.500 55.800 36 53 38.500 48.500 35 51 25 51 21.500 48.500z" style="fill: var(--t-main)" opacity="0.2" />
+      <path d="M17.600 36C19.500 46 23.500 53.500 30 58 36.500 53.500 40.500 46 42.400 36 38 40 22 40 17.600 36z" style="fill: var(--t-dark)" opacity="0.22" />
+      <path d="M21.500 48.500C24 53 26.500 55.800 30 58 33.500 55.800 36 53 38.500 48.500 35 51 25 51 21.500 48.500z" style="fill: var(--t-dark)" opacity="0.22" />
       <path d="M18.300 19C17.800 30 19.500 41 24.500 49.500 21.800 41 20.600 30 21 19.600z" fill="#fff" opacity="0.5" />
       <path d="M22.600 20.200C22.400 28 23.200 35 25.200 41.500 24.400 35 24 28 24.200 20.500z" fill="#fff" opacity="0.28" />
       <path d="M41.600 19.500C41.800 28 40.600 36 37.800 43 39.600 36 40.200 28 40 20z" fill="#fff" opacity="0.22" />
@@ -42,7 +42,7 @@ import { TicketView, fitSize } from '../ticket-view';
           <path d="M30.800 62v22M29.200 64v18" />
         </g>
       </g>
-      <text x="30" y="36" text-anchor="middle" font-size="6.400" font-weight="600" letter-spacing="0.6" style="fill: var(--t-ink); font-family: var(--font-serif)">{{ v().date.year }}</text>
+      <text x="30" y="36" text-anchor="middle" font-size="6.400" font-weight="600" letter-spacing="0.6" [style.fill]="v().darkAccent ? '#fff' : 'var(--t-ink)'" style="font-family: var(--font-serif)">{{ v().date.year }}</text>
     </svg>
 
     <div class="info">
@@ -81,7 +81,7 @@ import { TicketView, fitSize } from '../ticket-view';
     .logo { width: 30cqw; height: auto; opacity: 0.95; }
     .glass { flex: none; width: 44cqw; height: 74cqw; margin-top: 5cqw; filter: drop-shadow(0 1.4cqw 2cqw rgb(0 0 0 / 0.3)); }
     .info { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2cqw; min-height: 0; padding: 0 9cqw; }
-    .eyebrow { font-size: 2.2cqw; letter-spacing: 0.44em; text-transform: uppercase; color: color-mix(in srgb, var(--t-accent) 80%, white); }
+    .eyebrow { font-size: 2.2cqw; letter-spacing: 0.44em; text-transform: uppercase; color: color-mix(in srgb, var(--t-paper) 85%, white); }
     .names { font-family: var(--font-serif); font-weight: 500; letter-spacing: 0.1em; line-height: 1.15; text-transform: uppercase; overflow-wrap: anywhere; }
     .date { font-size: 2.6cqw; letter-spacing: 0.26em; text-transform: uppercase; }
     .where { font-size: 2.1cqw; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.8; }

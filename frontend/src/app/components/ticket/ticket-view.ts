@@ -29,6 +29,8 @@ export interface TicketView {
   photo: string | null;
   /** El "papel" de la variación es oscuro (ej. playa al anochecer): usar el logo claro. */
   darkPaper: boolean;
+  /** El color de acento de la variación es oscuro (ej. vino en la copa): lo que va encima debe ser claro. */
+  darkAccent: boolean;
   /** El color principal de la variación es muy claro: el texto que va encima debe ser oscuro. */
   lightMain: boolean;
   /** Mes del evento: celdas (null = vacío) de lunes a domingo y el día marcado. */

@@ -12,7 +12,7 @@ function paintedRose(cx: number, cy: number, radius: number, seed: number) {
 }
 
 /**
- * Pasaporte (ref. Bodas en la playa/boda en otro sitio opción 2): retícula de mapa en las esquinas, rosa de los vientos
+ * Pasaporte (ref. Bodas en la playa/boda en otro sitio opción 2): rosa de los vientos
  * sobre un mapa tenue, nombres manuscritos, avión con ruta punteada y rosas en la esquina.
  */
 @Component({
@@ -30,15 +30,6 @@ function paintedRose(cx: number, cy: number, radius: number, seed: number) {
         <path d="M58 7c10-4 22-3 31 2 1 5-2 9-8 12-5 2-11 4-16 3-4-4-7-9-7-17z" />
         <path d="M80 38c4-1 9 0 10 4-2 3-7 4-10 3-1-2-1-5 0-7z" />
       </g>
-
-      <!-- Esquinas superiores: retícula de mapa (paralelos y meridianos) muy tenue -->
-      @for (corner of [0, 100]; track corner) {
-        <g [attr.transform]="'translate(' + corner + ' 0)' + (corner ? ' scale(-1 1)' : '')" fill="none" stroke-width="0.18" opacity="0.4" style="stroke: var(--t-main)">
-          <path d="M0 12A12 12 0 0 0 12 0M0 18A18 18 0 0 0 18 0M0 24A24 24 0 0 0 24 0" />
-          <path d="M0 30A30 30 0 0 0 30 0" stroke-dasharray="0.5 1" />
-          <path d="M8.500 8.500L21.200 21.200M4.600 11.100L11.500 27.700M11.100 4.600L27.700 11.500" />
-        </g>
-      }
 
       <!-- Rosa de los vientos -->
       <g transform="translate(50 46)" style="color: var(--t-main)">

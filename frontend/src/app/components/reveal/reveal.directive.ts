@@ -19,10 +19,11 @@ export class Reveal {
     const destroyRef = inject(DestroyRef);
 
     afterNextRender(() => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       if (el.getBoundingClientRect().top < window.innerHeight) return;
 
-      const kind = this.appReveal() || 'up';
+      // Con "reducir movimiento" del sistema no hay desplazamientos: solo un fundido suave.
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const kind = reduced ? 'fade' : this.appReveal() || 'up';
       el.classList.add('reveal', `reveal--${kind}`);
       el.style.transitionDelay = `${this.revealDelay()}ms`;
 

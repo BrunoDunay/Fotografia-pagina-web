@@ -251,10 +251,10 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
     group: 'Graduaciones',
     services: [],
     palettes: [
-      // main = tarjeta · paper/accent = color de la copa y la pestaña
+      // main = tarjeta · accent = líquido de la copa · paper = pestaña del contador
       p('slate', 'Azul pizarra', '#39424f', '#252c36', '#d5dbe2', '#252c36', '#d5dbe2'),
       p('black', 'Negro y dorado', '#1f1f20', '#101011', '#dcc694', '#1f1f20', '#dcc694'),
-      p('burgundy', 'Vino', '#4a1722', '#2f0d15', '#e9d3c2', '#3a1019', '#e9d3c2'),
+      p('burgundy', 'Vino', '#3d121b', '#260a11', '#ead8cb', '#3a1019', '#8a1f33'),
       p('forest', 'Verde', '#22332a', '#15221b', '#ddd6b8', '#17251e', '#ddd6b8'),
     ],
   },

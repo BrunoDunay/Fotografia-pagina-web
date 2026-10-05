@@ -14,12 +14,12 @@
     <label class="mode" [class.is-active]="mode() === 'auto'">
       <input type="radio" name="mode" [checked]="mode() === 'auto'" (change)="setMode('auto')" />
       <strong>Automático</strong>
-      <span class="p-help">Cada tema aparece solo en sus fechas. Si dos coinciden, gana la festividad sobre la estación.</span>
+      <span class="p-help">Las festividades aparecen solas en sus fechas. Si dos coinciden, se muestra la más puntual (por ejemplo, Año Nuevo sustituye a Navidad).</span>
     </label>
     <label class="mode" [class.is-active]="mode() === 'manual'">
       <input type="radio" name="mode" [checked]="mode() === 'manual'" (change)="setMode('manual')" />
       <strong>Manual</strong>
-      <span class="p-help">Tú eliges qué tema se ve, sin importar la fecha.</span>
+      <span class="p-help">Tú eliges qué tema se ve, sin importar la fecha. Las estaciones (primavera, verano, otoño e invierno) solo se muestran así.</span>
       @if (mode() === 'manual') {
         <select class="field__control" (change)="setMode('manual', $any($event.target).value)" aria-label="Tema que se muestra">
           @for (t of themes() ?? []; track t.id) {
@@ -47,7 +47,7 @@
                   }
                 </div>
               </td>
-              <td>{{ range(t) }}</td>
+              <td>{{ t.autoEnabled ? range(t) : 'Solo en modo manual' }}</td>
               <td>{{ t.decoration === 'none' ? '—' : decorationLabel[t.decoration] }}</td>
               <td>{{ t.heroImage ? 'Propia del tema' : 'La de siempre' }}</td>
             </tr>
@@ -67,6 +67,7 @@
         <button type="button" class="p-icon-btn" (click)="editing.set(null)" aria-label="Cerrar"><app-icon name="close" [size]="16" /></button>
       </div>
 
+      @if (theme.autoEnabled) {
       <div class="dates">
         <span class="field__label">Del</span>
         <input class="field__control day" type="number" min="1" max="31" formControlName="startDay" aria-label="Día inicial" />
@@ -84,6 +85,9 @@
         </select>
       </div>
       <p class="p-help">Fechas en las que aparece este tema cuando el modo es Automático. Puede cruzar el año (ej. 27 dic al 6 ene).</p>
+      } @else {
+        <p class="p-help">Las estaciones no se activan solas: se muestran cuando eliges este tema en el modo Manual.</p>
+      }
 
       <app-image-picker
         label="Foto de portada durante este tema (opcional)"

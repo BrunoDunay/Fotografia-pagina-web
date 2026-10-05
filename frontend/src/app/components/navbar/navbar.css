@@ -127,10 +127,11 @@
   font-size: 0.8rem;
 }
 
-/* Día de la Madre: arreglo de flores que cuelga bajo el logotipo y se mece apenas. */
+/* Festividades (Día de la Madre, San Valentín, Navidad): adorno que cuelga del navbar, bajo el logotipo, y se mece apenas. */
 .bouquet {
   position: absolute;
-  top: calc(100% + 7px);
+  /* Nace dentro de la barra (la pisa unos píxeles) para que no se vea flotando. */
+  top: calc(100% - 3px);
   left: 50%;
   width: 150px;
   max-width: none;
@@ -157,6 +158,37 @@
     animation-duration: 14s !important;
     animation-iteration-count: infinite !important;
   }
+}
+
+/* Día de la Independencia: barrita tricolor al centro del borde inferior. */
+.bar {
+  position: relative;
+}
+
+.flag-bar {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  display: flex;
+  width: 132px;
+  height: 3px;
+  margin-left: -66px;
+  border-radius: 2px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.flag-bar i {
+  flex: 1;
+  background: #1f7a4d;
+}
+
+.flag-bar i:nth-child(2) {
+  background: #f6f1e7;
+}
+
+.flag-bar i:nth-child(3) {
+  background: #c4313b;
 }
 
 /* ---- Redes ---- */

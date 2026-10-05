@@ -9,12 +9,11 @@ const frond = (from: Point, control: Point, to: Point, length: number, opacity: 
   opacity,
 });
 
-const CROWN: Point = [80, 17];
 const CORNER: Point = [-6, 184];
 
 /**
- * Palmeras (ref. Bodas en la playa/Diseño palmeras): papel claro con una palmera dibujada a línea fina
- * arriba a la derecha y hojas abajo a la izquierda, monograma bajo una palmerita y los nombres en mayúsculas espaciadas.
+ * Palmeras (ref. Bodas en la playa/Diseño palmeras): papel claro con hojas de palmera a línea fina
+ * en la esquina inferior izquierda, monograma bajo una palmerita y los nombres en mayúsculas espaciadas.
  */
 @Component({
   selector: 'app-ticket-palms',
@@ -22,8 +21,6 @@ const CORNER: Point = [-6, 184];
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <svg class="art" viewBox="0 0 100 178" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <!-- Tronco: dos líneas finas -->
-      <path d="M116 68C103 53 91 37 79.400 17.600M119 65C106 51 93.500 35.500 81.400 16.600" fill="none" stroke-width="0.3" stroke-linecap="round" style="stroke: var(--t-dark)" />
       @for (f of fronds; track $index) {
         <path [attr.d]="f.d" [attr.opacity]="f.opacity" fill="none" stroke-width="0.26" stroke-linecap="round" style="stroke: var(--t-dark)" />
       }
@@ -79,7 +76,7 @@ const CORNER: Point = [-6, 184];
       align-items: center;
       justify-content: space-between;
       height: 100%;
-      padding: 33cqw 12cqw 7cqw;
+      padding: 20cqw 12cqw 7cqw;
       background: radial-gradient(120% 80% at 50% 30%, color-mix(in srgb, var(--t-paper) 55%, white), var(--t-paper));
       color: var(--t-ink);
       text-align: center;
@@ -105,13 +102,6 @@ export class TicketPalms {
   readonly v = input.required<TicketView>();
 
   protected readonly fronds = [
-    // Copa de la palmera (arriba a la derecha)
-    frond(CROWN, [60, 2], [40, 20], 10, 0.9),
-    frond(CROWN, [66, 22], [54, 44], 10, 0.75),
-    frond(CROWN, [76, 34], [72, 54], 9, 0.9),
-    frond(CROWN, [70, 0], [58, -6], 9, 0.6),
-    frond(CROWN, [96, 20], [104, 42], 10, 0.75),
-    frond(CROWN, [94, 2], [106, -4], 9, 0.6),
     // Hojas que entran por la esquina inferior izquierda
     frond(CORNER, [4, 166], [24, 158], 8, 0.85),
     frond(CORNER, [-4, 160], [10, 146], 8, 0.65),

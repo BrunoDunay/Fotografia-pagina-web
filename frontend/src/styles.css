@@ -423,11 +423,25 @@ ol {
   z-index: 1;
 }
 
+/* Con "reducir movimiento": solo fundidos (sin desplazamientos). El !important gana a la regla global que corta las animaciones. */
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
+  ::view-transition-old(root) {
+    animation: page-out 160ms ease-out both !important;
+  }
+
+  ::view-transition-new(root) {
+    animation: page-fade-in 320ms ease-out 40ms both !important;
+  }
+
+  .reveal {
+    transform: none !important;
+    transition: opacity 0.8s ease-out !important;
   }
 }
 

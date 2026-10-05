@@ -213,6 +213,7 @@ export class ReservationTicket {
       mark: ticketMarkFor(r.eventType),
       photo: r.cover ? cloudinaryUrl(r.cover.url, { width: 1080 }) : null,
       darkPaper: isDark(this.colors().paper),
+      darkAccent: isDark(this.colors().accent),
       lightMain: luminance(this.colors().main) > 215,
       calendar: { cells, day: Number(day) },
     };

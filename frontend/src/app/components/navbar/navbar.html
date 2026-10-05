@@ -19,13 +19,17 @@
   <a class="logo" routerLink="/" aria-label="Armando Ovalle Wedding Studio — inicio">
     <img class="logo__img logo__img--light" src="/brand/logo-light-sm.webp" alt="" width="400" height="97" />
     <img class="logo__img logo__img--dark" src="/brand/logo-dark-sm.webp" alt="" width="400" height="97" />
-    @if (theme.active()?.decoration === 'mothers_day') {
-      <img class="bouquet" src="/decor/mothers-bouquet.svg" alt="" width="220" height="72" aria-hidden="true" />
+    @if (ornament(); as src) {
+      <img class="bouquet" [src]="src" alt="" width="220" height="72" aria-hidden="true" />
     }
     @if (theme.active()?.navbarBadge; as badge) {
       <span class="season-badge" aria-hidden="true">{{ badge }}</span>
     }
   </a>
+
+  @if (flagBar()) {
+    <span class="flag-bar" aria-hidden="true"><i></i><i></i><i></i></span>
+  }
 
   <div class="social">
     @if (settings.contact(); as contact) {

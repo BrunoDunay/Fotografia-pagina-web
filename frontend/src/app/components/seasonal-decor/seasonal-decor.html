@@ -8,7 +8,16 @@
   }
   @if (decoration() === 'fireworks') {
     @for (b of bursts; track $index) {
-      <span class="burst" [style.left.%]="b.left" [style.top.%]="b.top" [style.--r]="b.radius + 'px'" [style.--delay]="b.delay + 's'" [style.--spark]="b.color">
+      <span
+        class="burst"
+        [class]="'burst burst--' + b.kind"
+        [style.left.%]="b.left"
+        [style.top.%]="b.top"
+        [style.--r]="b.radius + 'px'"
+        [style.--delay]="b.delay + 's'"
+        [style.--spark]="b.color"
+        [style.--spark-2]="b.color2"
+      >
         <i class="trail"></i>
         @for (a of rays; track a) {
           <i class="spark" [class.spark--short]="$odd" [style.--a]="a + 'deg'"></i>
