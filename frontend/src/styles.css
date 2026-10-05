@@ -323,6 +323,44 @@ ol {
   color: var(--color-text-muted);
 }
 
+/* ---------- Barra de desplazamiento ---------- */
+/* Delgada, en los tonos del sitio: carril marfil y tirador moca que se oscurece al pasar el cursor. */
+@supports not selector(::-webkit-scrollbar) {
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--color-primary) 55%, var(--color-background)) var(--color-surface-alt);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-alt);
+}
+
+::-webkit-scrollbar-thumb {
+  /* El borde del color del carril deja el tirador más fino que la barra. */
+  border: 3px solid var(--color-surface-alt);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-primary) 55%, var(--color-background));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--color-secondary);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-surface-alt);
+}
+
 /* ---------- Skeletons (base compartida por components/skeletons) ---------- */
 @keyframes skeleton-shine {
   from {

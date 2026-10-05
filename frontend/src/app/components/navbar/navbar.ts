@@ -17,11 +17,14 @@ import { SettingsStore } from '../../core/services/settings.store';
 import { ThemeService } from '../../core/services/theme.service';
 import { Icon } from '../icon/icon';
 import { NAV_LINKS } from './nav-links';
+import { NavSky } from './nav-sky';
 
 const ORNAMENTS: Record<string, string> = {
   'mothers-day': '/decor/mothers-bouquet.svg',
   valentines: '/decor/valentines-roses.svg',
   christmas: '/decor/christmas-garland.svg',
+  'dia-de-muertos': '/decor/muertos-flowers.svg',
+  'san-marcos': '/decor/feria-flowers.svg',
 };
 
 /**
@@ -31,7 +34,7 @@ const ORNAMENTS: Record<string, string> = {
  */
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive, Icon],
+  imports: [RouterLink, RouterLinkActive, Icon, NavSky],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
@@ -39,6 +42,7 @@ const ORNAMENTS: Record<string, string> = {
     '[class.is-overlay]': 'transparent()',
     '[class.is-solid]': '!transparent()',
     '[class.menu-open]': 'menuOpen()',
+    '[class.is-night]': 'night()',
   },
 })
 export class Navbar {
@@ -53,6 +57,8 @@ export class Navbar {
 
   /** Adorno que cuelga bajo el logotipo en algunas festividades (imagen en public/decor). */
   protected readonly ornament = computed(() => ORNAMENTS[this.theme.active()?.key ?? ''] ?? null);
+  /** Año Nuevo: al hacer scroll la barra se vuelve un cielo nocturno con estrellas y fuegos diminutos. */
+  protected readonly night = computed(() => this.theme.active()?.key === 'new-year');
   /** Independencia: barrita tricolor al centro del borde inferior. */
   protected readonly flagBar = computed(() => this.theme.active()?.key === 'independence');
 

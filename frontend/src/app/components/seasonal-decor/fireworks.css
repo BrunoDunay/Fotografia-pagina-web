@@ -1,0 +1,319 @@
+/* Fuegos artificiales (Año Nuevo y Feria de San Marcos). --cycle lo fija el componente. */
+:host {
+  position: absolute;
+  inset: 0;
+}
+
+/* Cada estallido: una estela que sube y 16 chispas que se abren despacio y se apagan. Ciclo largo para que no abrume. */
+.burst {
+  position: absolute;
+  width: 0;
+  height: 0;
+  filter: drop-shadow(0 0 4px var(--spark));
+}
+
+.burst i {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  display: block;
+  width: 2px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: var(--cycle) linear infinite;
+  animation-delay: var(--delay);
+  will-change: transform, opacity;
+}
+
+.burst .trail {
+  height: 56px;
+  background: linear-gradient(to top, transparent, var(--spark));
+  animation-name: firework-trail;
+}
+
+.burst .spark {
+  height: calc(var(--r) * 0.32);
+  background: linear-gradient(to top, transparent, var(--spark) 65%, #fff);
+  transform-origin: 1px 0;
+  animation-name: firework-spark;
+}
+
+.burst .spark--short {
+  --r-scale: 0.62;
+}
+
+/* El proyectil sube perdiendo velocidad, se detiene y se apaga; el estallido empieza una fracción de segundo después. */
+@keyframes firework-trail {
+  0%,
+  1.5% {
+    opacity: 0;
+    transform: translateY(44svh);
+  }
+  2.5% {
+    opacity: 0.85;
+    transform: translateY(33svh);
+  }
+  4% {
+    transform: translateY(20svh);
+  }
+  5.5% {
+    transform: translateY(11svh) scaleY(0.9);
+  }
+  7% {
+    transform: translateY(5svh) scaleY(0.75);
+  }
+  8.5% {
+    opacity: 0.8;
+    transform: translateY(1.6svh) scaleY(0.55);
+  }
+  10% {
+    opacity: 0.5;
+    transform: translateY(0.3svh) scaleY(0.3);
+  }
+  11%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scaleY(0.1);
+  }
+}
+
+/*
+ * La chispa sale del centro frenando poco a poco y pierde brillo conforme se aleja:
+ * llega al borde ya apagada, sin quedarse quieta. (Tiempos lineales: la curva va en los propios pasos.)
+ */
+@keyframes firework-spark {
+  0%,
+  13% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(0) scaleY(0.2);
+  }
+  13.6% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.1)) scaleY(0.6);
+  }
+  15.5% {
+    opacity: 0.95;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.42)) scaleY(1);
+  }
+  18% {
+    opacity: 0.72;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.68)) scaleY(0.95);
+  }
+  21% {
+    opacity: 0.4;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.86)) scaleY(0.8);
+  }
+  25%,
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -1)) scaleY(0.55);
+  }
+}
+
+/* Variante "anillo": puntos redondos en lugar de rayos. */
+.burst--ring .spark {
+  left: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--spark);
+  transform-origin: 2px 0;
+}
+
+.burst--ring .spark--short {
+  --r-scale: 1;
+}
+
+/* Variante de rayos largos. */
+.burst--willow .spark {
+  height: calc(var(--r) * 0.42);
+}
+
+/* Variante "cometa": sube en diagonal con una cola larga y brillante, deja destellos y se apaga sin estallar. */
+.burst--comet {
+  rotate: 20deg;
+}
+
+.burst--comet .trail {
+  left: -1.5px;
+  width: 3px;
+  height: 150px;
+  background: linear-gradient(to top, transparent, var(--spark) 55%, #fff 96%);
+  box-shadow: 0 -1px 8px 0 var(--spark);
+}
+
+.burst .glitter {
+  left: calc(var(--gx) - 2px);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px 1px var(--spark);
+  transform: translateY(var(--gy));
+  animation-name: firework-glitter;
+  animation-delay: calc(var(--delay) + var(--gd));
+}
+
+@keyframes firework-glitter {
+  0% {
+    opacity: 0;
+    scale: 0.4;
+  }
+  0.6% {
+    opacity: 1;
+    scale: 1;
+  }
+  3% {
+    opacity: 0.7;
+    scale: 0.8;
+  }
+  6.5%,
+  100% {
+    opacity: 0;
+    scale: 0.2;
+  }
+}
+
+/* Variante "doble": los rayos cortos van en un segundo color. */
+.burst--double .spark--short {
+  --spark: var(--spark-2);
+}
+
+@media (max-width: 640px) {
+  .burst:nth-child(even) {
+    display: none;
+  }
+
+  .burst {
+    scale: 0.75;
+  }
+}
+
+/* ---------- Letras "AGS": los puntos salen del centro, forman las letras, se sostienen un momento y se apagan ---------- */
+.burst .dot {
+  left: -2px;
+  top: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--spark);
+  box-shadow: 0 0 5px 1px var(--spark);
+  animation-name: firework-letters;
+}
+
+@keyframes firework-letters {
+  0%,
+  13% {
+    opacity: 0;
+    translate: 0 0;
+    scale: 0.4;
+  }
+  13.6% {
+    opacity: 1;
+  }
+  16% {
+    translate: calc(var(--x) * 0.82) calc(var(--y) * 0.82);
+    scale: 1;
+  }
+  18.5% {
+    opacity: 1;
+    translate: var(--x) var(--y);
+  }
+  25% {
+    opacity: 0.95;
+    translate: var(--x) var(--y);
+    scale: 1;
+  }
+  30%,
+  100% {
+    opacity: 0;
+    translate: var(--x) var(--y);
+    scale: 0.3;
+  }
+}
+
+/* ---------- Flor: dos coronas de pétalos que se abren desde el centro ---------- */
+.burst .petal {
+  left: calc(var(--r) * -0.15);
+  top: calc(var(--r) * -0.74);
+  width: calc(var(--r) * 0.3);
+  height: calc(var(--r) * 0.74);
+  border: 1.5px solid var(--spark);
+  border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%;
+  background: radial-gradient(ellipse at 50% 30%, color-mix(in srgb, var(--spark) 28%, transparent), transparent 70%);
+  transform-origin: 50% 100%;
+  animation-name: firework-petal;
+}
+
+.burst .petal--inner {
+  --spark: var(--spark-2);
+  --petal-scale: 0.58;
+}
+
+.burst .pistil {
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px 2px var(--spark-2);
+  animation-name: firework-pistil;
+}
+
+@keyframes firework-petal {
+  0%,
+  13% {
+    opacity: 0;
+    transform: rotate(var(--a)) scale(0.05);
+  }
+  13.6% {
+    opacity: 1;
+    transform: rotate(var(--a)) scale(calc(var(--petal-scale, 1) * 0.2));
+  }
+  16% {
+    opacity: 0.95;
+    transform: rotate(var(--a)) scale(calc(var(--petal-scale, 1) * 0.62));
+  }
+  19% {
+    opacity: 0.7;
+    transform: rotate(var(--a)) scale(calc(var(--petal-scale, 1) * 0.86));
+  }
+  22% {
+    opacity: 0.38;
+    transform: rotate(var(--a)) scale(calc(var(--petal-scale, 1) * 0.96));
+  }
+  26%,
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) scale(var(--petal-scale, 1));
+  }
+}
+
+@keyframes firework-pistil {
+  0%,
+  13% {
+    opacity: 0;
+    scale: 0.3;
+  }
+  14% {
+    opacity: 1;
+    scale: 1;
+  }
+  22%,
+  100% {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+/*
+ * Es la decoración del tema que elige el fotógrafo: con "reducir movimiento" no se apaga.
+ * !important gana a la regla global que corta las animaciones a un solo ciclo.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .burst i {
+    animation-duration: var(--cycle) !important;
+    animation-iteration-count: infinite !important;
+  }
+}

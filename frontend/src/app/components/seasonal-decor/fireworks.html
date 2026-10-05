@@ -1,0 +1,38 @@
+@for (b of bursts(); track $index) {
+  <span
+    class="burst"
+    [class]="'burst burst--' + b.kind"
+    [style.left.%]="b.left"
+    [style.top.%]="b.top"
+    [style.--r]="b.radius + 'px'"
+    [style.--delay]="b.delay + 's'"
+    [style.--spark]="b.color"
+    [style.--spark-2]="b.color2"
+  >
+    <i class="trail"></i>
+    @switch (b.kind) {
+      @case ('comet') {
+        @for (g of glitter; track $index) {
+          <i class="glitter" [style.--gy]="g.y + 'svh'" [style.--gx]="g.x + 'px'" [style.--gd]="g.at + 's'"></i>
+        }
+      }
+      @case ('letters') {
+        @for (d of letterDots; track $index) {
+          <i class="dot" [style.--x]="d.x + 'px'" [style.--y]="d.y + 'px'" [style.--spark]="d.color"></i>
+        }
+      }
+      @case ('flower') {
+        @for (a of petals; track a) {
+          <i class="petal" [style.--a]="a + 'deg'"></i>
+          <i class="petal petal--inner" [style.--a]="a + 22.5 + 'deg'"></i>
+        }
+        <i class="pistil"></i>
+      }
+      @default {
+        @for (a of rays; track a) {
+          <i class="spark" [class.spark--short]="$odd" [style.--a]="a + 'deg'"></i>
+        }
+      }
+    }
+  </span>
+}

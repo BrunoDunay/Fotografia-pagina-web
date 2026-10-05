@@ -82,6 +82,7 @@ export type ThemeDecoration =
   | 'papel_picado'
   | 'dia_de_muertos'
   | 'fireworks'
+  | 'fireworks_feria'
   | 'mothers_day';
 
 export interface ActiveTheme {

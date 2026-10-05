@@ -314,18 +314,38 @@
   }
 }
 
-/* ---------- Papel picado: guirnalda bajo el navbar ---------- */
+/*
+ * ---------- Papel picado: dos tramos bajo el navbar, uno a cada lado ----------
+ * El centro queda libre para el adorno que cuelga del logotipo (flores, barrita tricolor).
+ */
 .garland {
   position: absolute;
   inset: calc(var(--navbar-height) + 6px) 0 auto;
   display: flex;
   justify-content: space-between;
-  padding: 0 2vw;
+}
+
+.garland__side {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.2vw;
+  width: 36%;
+  padding-left: 1.6vw;
   border-top: 1px solid rgb(255 255 255 / 0.5);
+  /* El hilo cae un poco hacia el centro, como colgado de la orilla. */
+  transform-origin: left top;
+  rotate: 2.2deg;
+}
+
+.garland__side:last-child {
+  flex-direction: row-reverse;
+  padding: 0 1.6vw 0 0;
+  transform-origin: right top;
+  rotate: -2.2deg;
 }
 
 .flag {
-  width: calc((100% - 13 * 1.2vw) / 14);
+  flex: 1;
   height: clamp(22px, 3.2vw, 38px);
   opacity: 0.6;
   clip-path: polygon(0 0, 100% 0, 100% 82%, 87.5% 100%, 75% 82%, 62.5% 100%, 50% 82%, 37.5% 100%, 25% 82%, 12.5% 100%, 0 82%);
@@ -392,200 +412,13 @@
 }
 
 @media (max-width: 640px) {
-  .flag:nth-child(n + 9) {
+  .garland__side {
+    width: 31%;
+    gap: 2vw;
+  }
+
+  .flag:nth-child(n + 4) {
     display: none;
-  }
-
-  .flag {
-    width: calc((100% - 7 * 2vw) / 8);
-  }
-}
-
-/* ---------- Año Nuevo: fuegos artificiales ---------- */
-/* Cada estallido: una estela que sube y 16 chispas que se abren despacio y se apagan. Ciclo largo para que no abrume. */
-.burst {
-  --cycle: 17.6s;
-
-  position: absolute;
-  width: 0;
-  height: 0;
-  filter: drop-shadow(0 0 4px var(--spark));
-}
-
-.burst i {
-  position: absolute;
-  top: 0;
-  left: -1px;
-  display: block;
-  width: 2px;
-  border-radius: 2px;
-  opacity: 0;
-  animation: var(--cycle) linear infinite;
-  animation-delay: var(--delay);
-  will-change: transform, opacity;
-}
-
-.burst .trail {
-  height: 56px;
-  background: linear-gradient(to top, transparent, var(--spark));
-  animation-name: firework-trail;
-}
-
-.burst .spark {
-  height: calc(var(--r) * 0.32);
-  background: linear-gradient(to top, transparent, var(--spark) 65%, #fff);
-  transform-origin: 1px 0;
-  animation-name: firework-spark;
-}
-
-.burst .spark--short {
-  --r-scale: 0.62;
-}
-
-/* El proyectil sube perdiendo velocidad, se detiene y se apaga; el estallido empieza una fracción de segundo después. */
-@keyframes firework-trail {
-  0%,
-  1.5% {
-    opacity: 0;
-    transform: translateY(44svh);
-  }
-  2.5% {
-    opacity: 0.85;
-    transform: translateY(33svh);
-  }
-  4% {
-    transform: translateY(20svh);
-  }
-  5.5% {
-    transform: translateY(11svh) scaleY(0.9);
-  }
-  7% {
-    transform: translateY(5svh) scaleY(0.75);
-  }
-  8.5% {
-    opacity: 0.8;
-    transform: translateY(1.6svh) scaleY(0.55);
-  }
-  10% {
-    opacity: 0.5;
-    transform: translateY(0.3svh) scaleY(0.3);
-  }
-  11%,
-  100% {
-    opacity: 0;
-    transform: translateY(0) scaleY(0.1);
-  }
-}
-
-/*
- * La chispa sale del centro frenando poco a poco y pierde brillo conforme se aleja:
- * llega al borde ya apagada, sin quedarse quieta. (Tiempos lineales: la curva va en los propios pasos.)
- */
-@keyframes firework-spark {
-  0%,
-  13% {
-    opacity: 0;
-    transform: rotate(var(--a)) translateY(0) scaleY(0.2);
-  }
-  13.6% {
-    opacity: 1;
-    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.1)) scaleY(0.6);
-  }
-  15.5% {
-    opacity: 0.95;
-    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.42)) scaleY(1);
-  }
-  18% {
-    opacity: 0.72;
-    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.68)) scaleY(0.95);
-  }
-  21% {
-    opacity: 0.4;
-    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.86)) scaleY(0.8);
-  }
-  25%,
-  100% {
-    opacity: 0;
-    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -1)) scaleY(0.55);
-  }
-}
-
-/* Variante "anillo": puntos redondos en lugar de rayos. */
-.burst--ring .spark {
-  left: -2px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--spark);
-  transform-origin: 2px 0;
-}
-
-.burst--ring .spark--short {
-  --r-scale: 1;
-}
-
-/* Variante de rayos largos. */
-.burst--willow .spark {
-  height: calc(var(--r) * 0.42);
-}
-
-/* Variante "cometa": sube en diagonal con una cola larga y brillante, deja destellos y se apaga sin estallar. */
-.burst--comet {
-  rotate: 20deg;
-}
-
-.burst--comet .trail {
-  left: -1.5px;
-  width: 3px;
-  height: 150px;
-  background: linear-gradient(to top, transparent, var(--spark) 55%, #fff 96%);
-  box-shadow: 0 -1px 8px 0 var(--spark);
-}
-
-.burst .glitter {
-  left: calc(var(--gx) - 2px);
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 6px 1px var(--spark);
-  transform: translateY(var(--gy));
-  animation-name: firework-glitter;
-  animation-delay: calc(var(--delay) + var(--gd));
-}
-
-@keyframes firework-glitter {
-  0% {
-    opacity: 0;
-    scale: 0.4;
-  }
-  0.6% {
-    opacity: 1;
-    scale: 1;
-  }
-  3% {
-    opacity: 0.7;
-    scale: 0.8;
-  }
-  6.5%,
-  100% {
-    opacity: 0;
-    scale: 0.2;
-  }
-}
-
-/* Variante "doble": los rayos cortos van en un segundo color. */
-.burst--double .spark--short {
-  --spark: var(--spark-2);
-}
-
-@media (max-width: 640px) {
-  .burst:nth-child(even) {
-    display: none;
-  }
-
-  .burst {
-    scale: 0.75;
   }
 }
 
@@ -606,11 +439,6 @@
 
   .flag {
     animation-duration: 9s !important;
-    animation-iteration-count: infinite !important;
-  }
-
-  .burst i {
-    animation-duration: var(--cycle) !important;
     animation-iteration-count: infinite !important;
   }
 }

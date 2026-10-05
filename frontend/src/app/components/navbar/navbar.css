@@ -160,9 +160,27 @@
   }
 }
 
+/* Año Nuevo: barra nocturna (cielo estrellado con fuegos diminutos) y logotipo claro. */
+:host(.is-solid.is-night) .bar {
+  background: linear-gradient(90deg, #0b1020, #161b33 50%, #0b1020);
+  border-bottom-color: rgb(228 199 122 / 0.35);
+  color: var(--color-text-inverse);
+  box-shadow: 0 6px 24px rgba(8, 10, 22, 0.35);
+}
+
+:host(.is-night) .logo__img--light {
+  opacity: 1;
+}
+
+:host(.is-night) .logo__img--dark {
+  opacity: 0;
+}
+
 /* Día de la Independencia: barrita tricolor al centro del borde inferior. */
 .bar {
   position: relative;
+  /* Para que el cielo nocturno quede detrás del contenido y sobre el fondo de la barra. */
+  isolation: isolate;
 }
 
 .flag-bar {
@@ -176,6 +194,8 @@
   border-radius: 2px;
   overflow: hidden;
   pointer-events: none;
+  /* Contorno muy tenue: sin él, la franja blanca se pierde sobre la barra clara. */
+  box-shadow: 0 0 0 1px rgb(42 36 33 / 0.14);
 }
 
 .flag-bar i {

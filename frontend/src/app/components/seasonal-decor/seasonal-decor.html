@@ -1,35 +1,19 @@
 @if (ready()) {
   @if (config().garland; as garland) {
     <div class="garland" [class]="'garland garland--' + garland">
-      @for (tone of flags(); track $index) {
-        <span class="flag" [class]="'flag flag--' + tone" [style.animation-delay.s]="-$index * 0.35"></span>
+      @for (side of [0, 1]; track side) {
+        <div class="garland__side">
+          @for (tone of flags(); track $index) {
+            <span class="flag" [class]="'flag flag--' + ((tone + side) % flagColors())" [style.animation-delay.s]="-($index + side * 3) * 0.35"></span>
+          }
+        </div>
       }
     </div>
   }
   @if (decoration() === 'fireworks') {
-    @for (b of bursts; track $index) {
-      <span
-        class="burst"
-        [class]="'burst burst--' + b.kind"
-        [style.left.%]="b.left"
-        [style.top.%]="b.top"
-        [style.--r]="b.radius + 'px'"
-        [style.--delay]="b.delay + 's'"
-        [style.--spark]="b.color"
-        [style.--spark-2]="b.color2"
-      >
-        <i class="trail"></i>
-        @if (b.kind === 'comet') {
-          @for (g of glitter; track $index) {
-            <i class="glitter" [style.--gy]="g.y + 'svh'" [style.--gx]="g.x + 'px'" [style.--gd]="g.at + 's'"></i>
-          }
-        } @else {
-          @for (a of rays; track a) {
-            <i class="spark" [class.spark--short]="$odd" [style.--a]="a + 'deg'"></i>
-          }
-        }
-      </span>
-    }
+    <app-fireworks palette="new-year" />
+  } @else if (decoration() === 'fireworks_feria') {
+    <app-fireworks palette="feria" />
   }
   @for (p of particles(); track $index) {
     <span

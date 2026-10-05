@@ -42,6 +42,7 @@ export const DECORATION_LABEL: Record<ThemeDecoration, string> = {
   papel_picado: 'Papel picado tricolor',
   dia_de_muertos: 'Día de Muertos (calaveritas y cempasúchil)',
   fireworks: 'Fuegos artificiales',
+  fireworks_feria: 'Fuegos artificiales en verde, blanco y rojo',
   mothers_day: 'Arreglo de flores bajo el logotipo',
 };
 

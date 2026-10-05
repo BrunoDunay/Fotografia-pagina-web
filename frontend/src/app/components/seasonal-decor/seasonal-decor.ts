@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, afterNextRender, computed, input, signal } from '@angular/core';
 import { ThemeDecoration } from '../../core/types/catalog.model';
+import { Fireworks } from './fireworks';
 
 interface Particle {
   left: number;
@@ -38,38 +39,12 @@ const CONFIG: Record<Exclude<ThemeDecoration, 'none'>, DecorConfig> = {
   // Día de Muertos: flores y pétalos de cempasúchil + papel picado de calaveritas.
   dia_de_muertos: { count: 22, weights: [2, 2, 1], spin: 360, size: [0.8, 1.5], duration: [13, 22], garland: 'muertos' },
   papel_picado: { count: 0, weights: [1], spin: 0, size: [1, 1], duration: [1, 1], garland: 'tricolor' },
-  // Año Nuevo: no cae nada; son fuegos artificiales (ver BURSTS).
+  // Año Nuevo y Feria de San Marcos: no cae nada; son fuegos artificiales (componente Fireworks).
   fireworks: { count: 0, weights: [1], spin: 0, size: [1, 1], duration: [1, 1] },
+  fireworks_feria: { count: 0, weights: [1], spin: 0, size: [1, 1], duration: [1, 1] },
   // Día de la Madre: la decoración es el arreglo floral bajo el logotipo (lo pinta el navbar).
   mothers_day: { count: 0, weights: [1], spin: 0, size: [1, 1], duration: [1, 1] },
 };
-
-/**
- * Fuegos artificiales: ocho estallidos repartidos en un ciclo de 17.6 s (uno cada 2.2 s), de cuatro tipos:
- * rayos, rayos largos, anillo de puntos, doble (dos colores) y cometa (sube en diagonal dejando destellos, sin estallar).
- */
-const BURSTS = [
-  { left: 22, top: 30, radius: 112, delay: 0, color: '#f6dc9a', color2: '#ffffff', kind: 'rays' },
-  { left: 76, top: 24, radius: 132, delay: 2.2, color: '#ffffff', color2: '#f6dc9a', kind: 'willow' },
-  { left: 50, top: 42, radius: 94, delay: 4.4, color: '#f2b8a8', color2: '#ffffff', kind: 'ring' },
-  { left: 88, top: 50, radius: 86, delay: 6.6, color: '#f6dc9a', color2: '#f2b8a8', kind: 'double' },
-  { left: 14, top: 26, radius: 80, delay: 8.8, color: '#f6dc9a', color2: '#ffffff', kind: 'comet' },
-  { left: 36, top: 20, radius: 120, delay: 11, color: '#f6dc9a', color2: '#cfe3f5', kind: 'double' },
-  { left: 64, top: 52, radius: 78, delay: 13.2, color: '#ffffff', color2: '#f6dc9a', kind: 'ring' },
-  { left: 92, top: 22, radius: 104, delay: 15.4, color: '#f2b8a8', color2: '#f6dc9a', kind: 'willow' },
-];
-const RAYS = Array.from({ length: 16 }, (_, i) => i * 22.5);
-/** Destellos que deja el cometa: altura sobre su punto final (svh) y momento en que pasa por ahí (s). */
-const GLITTER = [
-  { y: 30, at: 0.5, x: -3 },
-  { y: 25, at: 0.6, x: 4 },
-  { y: 20, at: 0.72, x: -2 },
-  { y: 15.5, at: 0.85, x: 3 },
-  { y: 11.5, at: 0.98, x: -4 },
-  { y: 8, at: 1.12, x: 2 },
-  { y: 5, at: 1.28, x: -3 },
-  { y: 2.5, at: 1.45, x: 3 },
-];
 
 /** Generador pseudoaleatorio con semilla: mismas partículas en cada visita (sin "saltos"). */
 function seeded(seed: number) {
@@ -89,7 +64,8 @@ function pickTone(weights: number[], r: number): number {
   return weights.length - 1;
 }
 
-const FLAGS = 14;
+/** Banderitas por cada tramo de papel picado. */
+const FLAGS = 5;
 
 /**
  * Decoración del tema estacional (nieve, Navidad, corazones, pétalos, hojas, confeti, verano,
@@ -100,6 +76,7 @@ const FLAGS = 14;
  */
 @Component({
   selector: 'app-seasonal-decor',
+  imports: [Fireworks],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { 'aria-hidden': 'true', '[class]': "'decor decor--' + decoration()" },
   templateUrl: './seasonal-decor.html',
@@ -108,9 +85,6 @@ const FLAGS = 14;
 export class SeasonalDecor {
   readonly decoration = input.required<Exclude<ThemeDecoration, 'none'>>();
 
-  protected readonly bursts = BURSTS;
-  protected readonly rays = RAYS;
-  protected readonly glitter = GLITTER;
   protected readonly ready = signal(false);
   protected readonly config = computed(() => CONFIG[this.decoration()]);
 
@@ -131,11 +105,9 @@ export class SeasonalDecor {
     });
   });
 
-  /** Banderitas: tricolor (verde, blanco, rojo) o colores de Día de Muertos (6). */
-  protected readonly flags = computed(() => {
-    const colors = this.config().garland === 'muertos' ? 6 : 3;
-    return Array.from({ length: FLAGS }, (_, i) => i % colors);
-  });
+  /** Colores de las banderitas: tricolor (verde, blanco, rojo) o los seis de Día de Muertos. */
+  protected readonly flagColors = computed(() => (this.config().garland === 'muertos' ? 6 : 3));
+  protected readonly flags = computed(() => Array.from({ length: FLAGS }, (_, i) => i % this.flagColors()));
 
   constructor() {
     afterNextRender(() => this.ready.set(true));

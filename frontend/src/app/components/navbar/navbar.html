@@ -1,4 +1,7 @@
 <header class="bar">
+  @if (night() && !transparent()) {
+    <app-nav-sky />
+  }
   <button
     type="button"
     class="menu-toggle"
