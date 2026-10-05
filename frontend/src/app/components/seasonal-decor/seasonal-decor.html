@@ -19,8 +19,14 @@
         [style.--spark-2]="b.color2"
       >
         <i class="trail"></i>
-        @for (a of rays; track a) {
-          <i class="spark" [class.spark--short]="$odd" [style.--a]="a + 'deg'"></i>
+        @if (b.kind === 'comet') {
+          @for (g of glitter; track $index) {
+            <i class="glitter" [style.--gy]="g.y + 'svh'" [style.--gx]="g.x + 'px'" [style.--gd]="g.at + 's'"></i>
+          }
+        } @else {
+          @for (a of rays; track a) {
+            <i class="spark" [class.spark--short]="$odd" [style.--a]="a + 'deg'"></i>
+          }
         }
       </span>
     }

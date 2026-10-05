@@ -46,19 +46,30 @@ const CONFIG: Record<Exclude<ThemeDecoration, 'none'>, DecorConfig> = {
 
 /**
  * Fuegos artificiales: ocho estallidos repartidos en un ciclo de 17.6 s (uno cada 2.2 s), de cuatro tipos:
- * rayos, rayos largos, anillo de puntos y doble (dos colores).
+ * rayos, rayos largos, anillo de puntos, doble (dos colores) y cometa (sube en diagonal dejando destellos, sin estallar).
  */
 const BURSTS = [
   { left: 22, top: 30, radius: 112, delay: 0, color: '#f6dc9a', color2: '#ffffff', kind: 'rays' },
   { left: 76, top: 24, radius: 132, delay: 2.2, color: '#ffffff', color2: '#f6dc9a', kind: 'willow' },
   { left: 50, top: 42, radius: 94, delay: 4.4, color: '#f2b8a8', color2: '#ffffff', kind: 'ring' },
   { left: 88, top: 50, radius: 86, delay: 6.6, color: '#f6dc9a', color2: '#f2b8a8', kind: 'double' },
-  { left: 10, top: 54, radius: 80, delay: 8.8, color: '#cfe3f5', color2: '#ffffff', kind: 'rays' },
+  { left: 14, top: 26, radius: 80, delay: 8.8, color: '#f6dc9a', color2: '#ffffff', kind: 'comet' },
   { left: 36, top: 20, radius: 120, delay: 11, color: '#f6dc9a', color2: '#cfe3f5', kind: 'double' },
   { left: 64, top: 52, radius: 78, delay: 13.2, color: '#ffffff', color2: '#f6dc9a', kind: 'ring' },
   { left: 92, top: 22, radius: 104, delay: 15.4, color: '#f2b8a8', color2: '#f6dc9a', kind: 'willow' },
 ];
 const RAYS = Array.from({ length: 16 }, (_, i) => i * 22.5);
+/** Destellos que deja el cometa: altura sobre su punto final (svh) y momento en que pasa por ahí (s). */
+const GLITTER = [
+  { y: 30, at: 0.5, x: -3 },
+  { y: 25, at: 0.6, x: 4 },
+  { y: 20, at: 0.72, x: -2 },
+  { y: 15.5, at: 0.85, x: 3 },
+  { y: 11.5, at: 0.98, x: -4 },
+  { y: 8, at: 1.12, x: 2 },
+  { y: 5, at: 1.28, x: -3 },
+  { y: 2.5, at: 1.45, x: 3 },
+];
 
 /** Generador pseudoaleatorio con semilla: mismas partículas en cada visita (sin "saltos"). */
 function seeded(seed: number) {
@@ -99,6 +110,7 @@ export class SeasonalDecor {
 
   protected readonly bursts = BURSTS;
   protected readonly rays = RAYS;
+  protected readonly glitter = GLITTER;
   protected readonly ready = signal(false);
   protected readonly config = computed(() => CONFIG[this.decoration()]);
 

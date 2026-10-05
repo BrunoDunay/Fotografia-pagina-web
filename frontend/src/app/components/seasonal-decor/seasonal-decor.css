@@ -529,6 +529,51 @@
   height: calc(var(--r) * 0.42);
 }
 
+/* Variante "cometa": sube en diagonal con una cola larga y brillante, deja destellos y se apaga sin estallar. */
+.burst--comet {
+  rotate: 20deg;
+}
+
+.burst--comet .trail {
+  left: -1.5px;
+  width: 3px;
+  height: 150px;
+  background: linear-gradient(to top, transparent, var(--spark) 55%, #fff 96%);
+  box-shadow: 0 -1px 8px 0 var(--spark);
+}
+
+.burst .glitter {
+  left: calc(var(--gx) - 2px);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px 1px var(--spark);
+  transform: translateY(var(--gy));
+  animation-name: firework-glitter;
+  animation-delay: calc(var(--delay) + var(--gd));
+}
+
+@keyframes firework-glitter {
+  0% {
+    opacity: 0;
+    scale: 0.4;
+  }
+  0.6% {
+    opacity: 1;
+    scale: 1;
+  }
+  3% {
+    opacity: 0.7;
+    scale: 0.8;
+  }
+  6.5%,
+  100% {
+    opacity: 0;
+    scale: 0.2;
+  }
+}
+
 /* Variante "doble": los rayos cortos van en un segundo color. */
 .burst--double .spark--short {
   --spark: var(--spark-2);
