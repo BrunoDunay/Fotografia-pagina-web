@@ -14,6 +14,22 @@ export function isWithinRange(theme, month, day) {
 }
 
 /**
+ * Próximo cambio en modo automático: el primer día (a partir de mañana) en que el tema
+ * que se mostraría es otro distinto al de hoy. Devuelve { theme, date } o null si no hay ninguno en un año.
+ */
+export function nextAutoTheme(themes, today) {
+  const auto = { mode: 'auto' };
+  const current = resolveActiveTheme(themes, auto, today);
+  const start = Date.parse(`${today}T00:00:00Z`);
+  for (let offset = 1; offset <= 366; offset++) {
+    const date = new Date(start + offset * 86_400_000).toISOString().slice(0, 10);
+    const theme = resolveActiveTheme(themes, auto, date);
+    if (theme && theme.id !== current?.id) return { theme, date };
+  }
+  return null;
+}
+
+/**
  * @param {Array} themes  Temas disponibles.
  * @param {{mode: 'off'|'manual'|'auto', manualThemeId?: string|null}} settings
  * @param {string} today  Fecha YYYY-MM-DD en la zona horaria del estudio.

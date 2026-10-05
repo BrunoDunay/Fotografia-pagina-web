@@ -1,7 +1,7 @@
 import { MediaAsset, SeasonalTheme } from '../models/index.js';
 import { AppError, notFound } from '../utils/app-error.js';
 import { todayInStudioTz } from '../utils/dates-mx.js';
-import { resolveActiveTheme } from '../services/theme-resolver.js';
+import { nextAutoTheme, resolveActiveTheme } from '../services/theme-resolver.js';
 import { getSection, saveSection } from '../services/settings.service.js';
 import { toMedia } from '../services/serializers.js';
 
@@ -31,11 +31,15 @@ export async function list(_req, res) {
     SeasonalTheme.findAll({ ...withHero, order: [['startMonth', 'ASC'], ['startDay', 'ASC']] }),
     getSection('theme'),
   ]);
-  const active = resolveActiveTheme(themes, settings, todayInStudioTz());
+  const today = todayInStudioTz();
+  const active = resolveActiveTheme(themes, settings, today);
+  const next = nextAutoTheme(themes, today);
   res.json({
     mode: settings?.mode ?? 'off',
     manualThemeId: settings?.manualThemeId ?? null,
     activeThemeId: active?.id ?? null,
+    /** Siguiente tema que se mostrará en modo automático y desde qué día. */
+    nextAuto: next && { themeId: next.theme.id, date: next.date },
     themes: themes.map((t) => ({ ...t.toJSON(), heroImage: toMedia(t.heroMedia), heroMedia: undefined })),
   });
 }

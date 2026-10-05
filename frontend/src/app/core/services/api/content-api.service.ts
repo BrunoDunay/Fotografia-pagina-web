@@ -154,7 +154,7 @@ export class ContentApiService {
 
   // ---- Temas ----
   themes() {
-    return this.http.get<{ mode: 'off' | 'manual' | 'auto'; manualThemeId: string | null; activeThemeId: string | null; themes: unknown[] }>(
+    return this.http.get<{ mode: 'off' | 'manual' | 'auto'; manualThemeId: string | null; activeThemeId: string | null; nextAuto: { themeId: string; date: string } | null; themes: unknown[] }>(
       `${this.api}/themes`,
     );
   }
