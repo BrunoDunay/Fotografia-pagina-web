@@ -46,7 +46,7 @@ const CONFIG: Record<Exclude<ThemeDecoration, 'none'>, DecorConfig> = {
 
 /**
  * Fuegos artificiales: ocho estallidos repartidos en un ciclo de 17.6 s (uno cada 2.2 s), de cuatro tipos:
- * rayos, anillo de puntos, sauce (los rayos caen al apagarse) y doble (dos colores).
+ * rayos, rayos largos, anillo de puntos y doble (dos colores).
  */
 const BURSTS = [
   { left: 22, top: 30, radius: 112, delay: 0, color: '#f6dc9a', color2: '#ffffff', kind: 'rays' },

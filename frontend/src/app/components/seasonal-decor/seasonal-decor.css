@@ -442,27 +442,38 @@
   --r-scale: 0.62;
 }
 
+/* El proyectil sube perdiendo velocidad, se detiene y se apaga; el estallido empieza una fracción de segundo después. */
 @keyframes firework-trail {
   0%,
-  2.5% {
+  1.5% {
     opacity: 0;
     transform: translateY(44svh);
   }
-  4% {
+  2.5% {
     opacity: 0.85;
-    transform: translateY(30svh);
+    transform: translateY(33svh);
+  }
+  4% {
+    transform: translateY(20svh);
+  }
+  5.5% {
+    transform: translateY(11svh) scaleY(0.9);
   }
   7% {
-    transform: translateY(10svh) scaleY(0.85);
+    transform: translateY(5svh) scaleY(0.75);
   }
-  9.6% {
-    opacity: 0.85;
-    transform: translateY(1svh) scaleY(0.6);
+  8.5% {
+    opacity: 0.8;
+    transform: translateY(1.6svh) scaleY(0.55);
   }
-  10%,
+  10% {
+    opacity: 0.5;
+    transform: translateY(0.3svh) scaleY(0.3);
+  }
+  11%,
   100% {
     opacity: 0;
-    transform: translateY(0) scaleY(0);
+    transform: translateY(0) scaleY(0.1);
   }
 }
 
@@ -472,27 +483,27 @@
  */
 @keyframes firework-spark {
   0%,
-  10% {
+  13% {
     opacity: 0;
     transform: rotate(var(--a)) translateY(0) scaleY(0.2);
   }
-  10.6% {
+  13.6% {
     opacity: 1;
     transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.1)) scaleY(0.6);
   }
-  12.5% {
+  15.5% {
     opacity: 0.95;
     transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.42)) scaleY(1);
   }
-  15% {
+  18% {
     opacity: 0.72;
     transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.68)) scaleY(0.95);
   }
-  18% {
+  21% {
     opacity: 0.4;
     transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.86)) scaleY(0.8);
   }
-  22%,
+  25%,
   100% {
     opacity: 0;
     transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -1)) scaleY(0.55);
@@ -513,21 +524,9 @@
   --r-scale: 1;
 }
 
-/* Variante "sauce": los rayos caen un poco al apagarse. */
+/* Variante de rayos largos. */
 .burst--willow .spark {
   height: calc(var(--r) * 0.42);
-  animation-name: firework-spark, firework-droop;
-}
-
-@keyframes firework-droop {
-  0%,
-  13% {
-    translate: 0 0;
-  }
-  22%,
-  100% {
-    translate: 0 calc(var(--r) * 0.24);
-  }
 }
 
 /* Variante "doble": los rayos cortos van en un segundo color. */
