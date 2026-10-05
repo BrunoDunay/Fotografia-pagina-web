@@ -127,7 +127,7 @@
   font-size: 0.8rem;
 }
 
-/* Festividades (Día de la Madre, San Valentín, Navidad): adorno que cuelga del navbar, bajo el logotipo, y se mece apenas. */
+/* Festividades (Día de la Madre, San Valentín, Navidad, Día de Muertos, San Marcos, Independencia): adorno que cuelga del navbar, bajo el logotipo, y se mece apenas. */
 .bouquet {
   position: absolute;
   /* Nace dentro de la barra (la pisa unos píxeles) para que no se vea flotando. */
@@ -176,39 +176,10 @@
   opacity: 0;
 }
 
-/* Día de la Independencia: barrita tricolor al centro del borde inferior. */
 .bar {
   position: relative;
   /* Para que el cielo nocturno quede detrás del contenido y sobre el fondo de la barra. */
   isolation: isolate;
-}
-
-.flag-bar {
-  position: absolute;
-  bottom: -1px;
-  left: 50%;
-  display: flex;
-  width: 132px;
-  height: 3px;
-  margin-left: -66px;
-  border-radius: 2px;
-  overflow: hidden;
-  pointer-events: none;
-  /* Contorno muy tenue: sin él, la franja blanca se pierde sobre la barra clara. */
-  box-shadow: 0 0 0 1px rgb(42 36 33 / 0.14);
-}
-
-.flag-bar i {
-  flex: 1;
-  background: #1f7a4d;
-}
-
-.flag-bar i:nth-child(2) {
-  background: #f6f1e7;
-}
-
-.flag-bar i:nth-child(3) {
-  background: #c4313b;
 }
 
 /* ---- Redes ---- */

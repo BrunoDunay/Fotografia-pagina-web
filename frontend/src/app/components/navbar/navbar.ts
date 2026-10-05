@@ -24,7 +24,8 @@ const ORNAMENTS: Record<string, string> = {
   valentines: '/decor/valentines-roses.svg',
   christmas: '/decor/christmas-garland.svg',
   'dia-de-muertos': '/decor/muertos-flowers.svg',
-  'san-marcos': '/decor/feria-flowers.svg',
+  'san-marcos': '/decor/feria-party.svg',
+  independence: '/decor/independence-flags.svg',
 };
 
 /**
@@ -59,8 +60,6 @@ export class Navbar {
   protected readonly ornament = computed(() => ORNAMENTS[this.theme.active()?.key ?? ''] ?? null);
   /** Año Nuevo: al hacer scroll la barra se vuelve un cielo nocturno con estrellas y fuegos diminutos. */
   protected readonly night = computed(() => this.theme.active()?.key === 'new-year');
-  /** Independencia: barrita tricolor al centro del borde inferior. */
-  protected readonly flagBar = computed(() => this.theme.active()?.key === 'independence');
 
   protected readonly transparent = computed(() => this.overlay() && !this.scrolled() && !this.menuOpen());
 
