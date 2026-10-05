@@ -171,14 +171,16 @@
             <label class="p-check"><input type="checkbox" formControlName="showTime" /> Mostrar horario</label>
             <label class="p-check"><input type="checkbox" formControlName="showVenue" /> Mostrar lugar</label>
             <label class="p-check"><input type="checkbox" formControlName="isActive" /> Enlace activo</label>
+            @if (usesTicketPhoto()) {
             <app-image-picker
-              label="Foto del ticket (diseños con fotografía)"
+              label="Foto del ticket"
               hint="Opcional. Si no subes una, se usa la portada del tipo de evento."
               folder="reservations"
               ratio="4 / 3"
               [value]="ticketCover()"
               (valueChange)="setTicketCover($event)"
             />
+            }
             @if (ticketPreview(); as preview) {
               <app-ticket-style-picker
                 [design]="ticketForm.controls.ticketDesign.value"

@@ -10,6 +10,7 @@ export type TicketDesign =
   | 'lace'
   | 'garden'
   | 'palms'
+  | 'palmtree'
   | 'passport'
   | 'boarding'
   | 'roses'
@@ -45,7 +46,7 @@ export interface TicketDesignDef {
   key: TicketDesign;
   label: string;
   group: TicketGroup;
-  /** Usa la foto del ticket (la propia o la del tipo de evento). */
+  /** Usa la foto del ticket (la propia o la del tipo de evento); el panel permite elegirla. */
   photo?: boolean;
   /** Slugs de servicios para los que se sugiere este diseño. */
   services: string[];
@@ -129,7 +130,6 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
     key: 'garden',
     label: 'Jardín',
     group: 'Bodas',
-    photo: true,
     services: [],
     palettes: [
       p('olive', 'Verde olivo', '#2c3320', '#1c2114', '#ffffff', '#ffffff', '#e9efd8'),
@@ -150,6 +150,18 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
       p('olive', 'Verde olivo', '#7c7a45', '#5f6e3c', '#f7f4ee', '#7c7a45', '#8a5a3c'),
       p('terracotta', 'Terracota', '#a8623f', '#6f7c46', '#faf3ea', '#a8623f', '#7a5136'),
       p('teal', 'Verde mar', '#2f6f73', '#3f7f6a', '#f3f7f5', '#2f6f73', '#8a6a4c'),
+    ],
+  },
+  {
+    key: 'palmtree',
+    label: 'Palmera real',
+    group: 'Playa y destino',
+    services: [],
+    palettes: [
+      // main = texto · accent = monograma (la palmera es una fotografía y no cambia de color)
+      p('olive', 'Verde olivo', '#6b6a3c', '#4f5230', '#f7f4ee', '#6b6a3c', '#7a5136'),
+      p('terracotta', 'Terracota', '#a25c3b', '#7a4128', '#faf3ea', '#a25c3b', '#6b6a3c'),
+      p('ink', 'Tinta', '#2f2c27', '#1c1a17', '#f8f6f1', '#2f2c27', '#7a5136'),
     ],
   },
   {

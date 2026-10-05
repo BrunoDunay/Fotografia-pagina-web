@@ -13,6 +13,7 @@ export const TICKET_DESIGNS = {
   garden: ['olive', 'black', 'burgundy', 'navy'],
   // Playa y destino
   palms: ['olive', 'terracotta', 'teal'],
+  palmtree: ['olive', 'terracotta', 'ink'],
   passport: ['terracotta', 'navy', 'olive'],
   boarding: ['navy', 'sand', 'terracotta'],
   // XV años

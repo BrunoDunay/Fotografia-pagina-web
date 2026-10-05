@@ -18,6 +18,7 @@ import { TicketPearls } from './designs/ticket-pearls';
 import { TicketGarden } from './designs/ticket-garden';
 import { TicketLace } from './designs/ticket-lace';
 import { TicketPalms } from './designs/ticket-palms';
+import { TicketPalmPhoto } from './designs/ticket-palm-photo';
 import { TicketPassport } from './designs/ticket-passport';
 import { TicketRoses } from './designs/ticket-roses';
 import { TicketClouds } from './designs/ticket-clouds';
@@ -60,6 +61,7 @@ export type TicketData = Pick<
     TicketGarden,
     TicketLace,
     TicketPalms,
+    TicketPalmPhoto,
     TicketPassport,
     TicketRoses,
     TicketClouds,
@@ -115,6 +117,9 @@ export type TicketData = Pick<
       }
       @case ('palms') {
         <app-ticket-palms [v]="view()" />
+      }
+      @case ('palmtree') {
+        <app-ticket-palm-photo [v]="view()" />
       }
       @case ('passport') {
         <app-ticket-passport [v]="view()" />

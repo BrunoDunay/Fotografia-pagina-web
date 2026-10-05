@@ -1,39 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { seeded, tornEdge } from '../ticket-art';
+import { tornEdge } from '../ticket-art';
 import { TicketStatus } from '../ticket-status';
 import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
 
-interface Floret {
-  x: number;
-  y: number;
-  size: number;
-  rotate: number;
-  fill: string;
-}
-
-/** Racimo de hortensias: muchas florecitas de cuatro pétalos formando una bola. */
-function hydrangea(cx: number, cy: number, radius: number, seed: number): Floret[] {
-  const random = seeded(seed);
-  const tones = ['#ffffff', '#f6f7ee', '#eef1e0', '#e3ead0', '#fbfbf5'];
-  const florets: Floret[] = [];
-  for (let i = 0; i < 46; i++) {
-    const a = random() * Math.PI * 2;
-    const d = Math.sqrt(random()) * radius;
-    florets.push({
-      x: Math.round((cx + Math.cos(a) * d) * 10) / 10,
-      y: Math.round((cy + Math.sin(a) * d * 0.86) * 10) / 10,
-      size: 0.75 + random() * 0.5,
-      rotate: Math.round(random() * 90),
-      fill: tones[Math.floor(random() * tones.length)],
-    });
-  }
-  // Las de abajo primero, para que las de arriba las cubran un poco.
-  return florets.sort((a, b) => a.y - b.y);
-}
-
 /**
- * Jardín (ref. Bodas/Boda al aire libre): fotografía arriba con los nombres manuscritos como marca
- * de agua sobre un gran "&", borde de papel rasgado, hortensias blancas y bloque verde con la fecha.
+ * Jardín (ref. Bodas/Boda al aire libre): fotografía fija arriba (public/tickets/garden-cover.webp) con los nombres manuscritos como marca
+ * de agua sobre un gran "&", borde de papel rasgado, hortensias blancas reales y bloque verde con la fecha.
  */
 @Component({
   selector: 'app-ticket-garden',
@@ -41,9 +13,7 @@ function hydrangea(cx: number, cy: number, radius: number, seed: number): Floret
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="photo">
-      @if (v().photo; as photo) {
-        <img class="photo__img" [src]="photo" alt="" crossorigin="anonymous" />
-      }
+      <img class="photo__img" src="/tickets/garden-cover.webp" alt="" />
       <div class="photo__shade"></div>
       <div class="names" [style.font-size]="nameSize()">
         @if (v().names.length === 2) {
@@ -62,19 +32,12 @@ function hydrangea(cx: number, cy: number, radius: number, seed: number): Floret
       <path [attr.d]="tear" style="fill: #fbfaf6" />
     </svg>
 
-    <!-- Hortensias -->
-    <svg class="flowers" viewBox="0 0 60 60" aria-hidden="true">
-      <path d="M30 34C22 44 14 50 6 54c2-10 10-18 24-20zM32 36c4 10 12 16 22 18-2-10-8-16-22-18z" style="fill: #4f6a3a" />
-      @for (f of florets; track $index) {
-        <g [attr.transform]="'translate(' + f.x + ' ' + f.y + ') rotate(' + f.rotate + ') scale(' + f.size + ')'">
-          <ellipse cx="0" cy="-2.3" rx="2.3" ry="2.6" [attr.fill]="f.fill" stroke="#c9d2b4" stroke-width="0.18" />
-          <ellipse cx="2.3" cy="0" rx="2.6" ry="2.3" [attr.fill]="f.fill" stroke="#c9d2b4" stroke-width="0.18" />
-          <ellipse cx="0" cy="2.3" rx="2.3" ry="2.6" [attr.fill]="f.fill" stroke="#c9d2b4" stroke-width="0.18" />
-          <ellipse cx="-2.3" cy="0" rx="2.6" ry="2.3" [attr.fill]="f.fill" stroke="#c9d2b4" stroke-width="0.18" />
-          <circle r="0.7" fill="#dfe6c4" />
-        </g>
-      }
-    </svg>
+    <!-- Hortensias (fotografía recortada) -->
+    <div class="flowers" aria-hidden="true">
+      <img class="flowers__back" src="/tickets/hydrangea.webp" alt="" />
+      <img class="flowers__side" src="/tickets/hydrangea.webp" alt="" />
+      <img class="flowers__front" src="/tickets/hydrangea.webp" alt="" />
+    </div>
 
     <section class="block">
       <p class="heading">¡Reserva la fecha!</p>
@@ -110,7 +73,7 @@ function hydrangea(cx: number, cy: number, radius: number, seed: number): Floret
       overflow: hidden;
       isolation: isolate;
     }
-    .photo__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+    .photo__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: center 52%; }
     .photo__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 35%, rgb(0 0 0 / 0.45)); }
     .names { position: absolute; left: 4cqw; right: 3cqw; bottom: 10cqw; display: grid; align-items: center; text-align: left; }
     .amp { grid-area: 1 / 1; font-family: var(--font-serif); font-size: 3.6em; line-height: 0.7; color: #fff; opacity: 0.2; }
@@ -127,7 +90,11 @@ function hydrangea(cx: number, cy: number, radius: number, seed: number): Floret
     }
     h1 span:nth-child(2) { padding-left: 0.6em; }
     .tear { position: relative; z-index: 1; flex: none; display: block; width: 100%; height: 9cqw; margin: -5cqw 0 -3cqw; filter: drop-shadow(0 0.6cqw 0.8cqw rgb(0 0 0 / 0.25)); }
-    .flowers { position: absolute; top: 57cqw; right: -9cqw; z-index: 2; width: 44cqw; height: 44cqw; filter: drop-shadow(0 1cqw 1.4cqw rgb(0 0 0 / 0.3)); }
+    .flowers { position: absolute; top: 55cqw; right: -8cqw; z-index: 2; width: 52cqw; height: 46cqw; filter: drop-shadow(0 1cqw 1.6cqw rgb(0 0 0 / 0.35)); }
+    .flowers img { position: absolute; height: auto; }
+    .flowers__back { top: 0; left: 15cqw; width: 30cqw; rotate: 24deg; filter: brightness(0.9); }
+    .flowers__side { top: 15cqw; left: 0; width: 27cqw; scale: -1 1; rotate: -14deg; filter: brightness(0.95); }
+    .flowers__front { top: 11cqw; left: 17cqw; width: 35cqw; }
     .block { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; min-height: 0; padding: 21cqw 9cqw 5cqw; }
     .heading { font-family: var(--font-script); font-size: 8.4cqw; line-height: 1.1; }
     .text {
@@ -151,6 +118,5 @@ export class TicketGarden {
   readonly v = input.required<TicketView>();
   protected readonly defaultNote = DEFAULT_TICKET_NOTE;
   protected readonly tear = tornEdge(9, 23);
-  protected readonly florets = [...hydrangea(24, 24, 15, 5), ...hydrangea(40, 36, 13, 9)];
   protected readonly nameSize = computed(() => fitSize([...this.v().names].sort((a, b) => b.length - a.length)[0], 15.5, 8, 9));
 }

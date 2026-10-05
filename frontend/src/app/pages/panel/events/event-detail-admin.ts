@@ -18,6 +18,7 @@ import { ConfirmService } from '../shared/confirm.service';
 import { TicketPreviewData, TicketStylePicker } from '../shared/ticket-style-picker';
 import { ImagePicker } from '../shared/image-picker';
 import { Media } from '../../../core/types/common.model';
+import { ticketDesign } from '../../../core/ticket-designs';
 import {
   EVENT_STATUS_LABEL,
   PAYMENT_CONCEPT_LABEL,
@@ -110,6 +111,12 @@ export class EventDetailAdmin implements OnInit {
   /** Foto propia del ticket (para los diseños con fotografía). Sin ella se usa la del tipo de evento. */
   protected readonly ticketCover = signal<Media | null>(null);
   private readonly ticketValue = toSignal(this.ticketForm.valueChanges.pipe(startWith(null)), { initialValue: null });
+
+  /** Solo algunos diseños llevan una fotografía que se puede elegir. */
+  protected readonly usesTicketPhoto = computed(() => {
+    this.ticketValue();
+    return !!ticketDesign(this.ticketForm.controls.ticketDesign.value).photo;
+  });
 
   /** Vista previa del ticket con lo que hay en el formulario (aún sin guardar). */
   protected readonly ticketPreview = computed<TicketPreviewData | null>(() => {
