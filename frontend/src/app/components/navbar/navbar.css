@@ -159,8 +159,8 @@
 /* Aparición "floreciendo": el arreglo se abre desde su centro, se pasa apenas y se asienta; luego se mece. */
 .bouquet--bloom {
   animation:
-    bouquet-bloom 0.32s cubic-bezier(0.22, 1, 0.36, 1) both,
-    bouquet-sway 7s ease-in-out 0.32s infinite alternate;
+    bouquet-bloom 0.65s cubic-bezier(0.22, 1, 0.36, 1) both,
+    bouquet-sway 7s ease-in-out 0.65s infinite alternate;
 }
 
 @keyframes bouquet-bloom {
@@ -198,7 +198,7 @@
 
   /* El arreglo que "florece" tiene dos animaciones: la aparición sigue siendo breve y de una sola vez; solo el vaivén se alarga. */
   .bouquet--bloom {
-    animation-duration: 0.32s, 14s !important;
+    animation-duration: 0.65s, 14s !important;
     animation-iteration-count: 1, infinite !important;
   }
 }
