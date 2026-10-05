@@ -404,7 +404,7 @@
 /* ---------- Año Nuevo: fuegos artificiales ---------- */
 /* Cada estallido: una estela que sube y 16 chispas que se abren despacio y se apagan. Ciclo largo para que no abrume. */
 .burst {
-  --cycle: 14.4s;
+  --cycle: 17.6s;
 
   position: absolute;
   width: 0;
@@ -420,7 +420,7 @@
   width: 2px;
   border-radius: 2px;
   opacity: 0;
-  animation: var(--cycle) cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+  animation: var(--cycle) linear infinite;
   animation-delay: var(--delay);
   will-change: transform, opacity;
 }
@@ -443,14 +443,19 @@
 }
 
 @keyframes firework-trail {
-  0% {
+  0%,
+  2.5% {
     opacity: 0;
     transform: translateY(44svh);
   }
-  2% {
+  4% {
     opacity: 0.85;
+    transform: translateY(30svh);
   }
-  9% {
+  7% {
+    transform: translateY(10svh) scaleY(0.85);
+  }
+  9.6% {
     opacity: 0.85;
     transform: translateY(1svh) scaleY(0.6);
   }
@@ -461,24 +466,36 @@
   }
 }
 
-/* Se abre rápido, frena y se apaga de corrido (sin quedarse colgado). */
+/*
+ * La chispa sale del centro frenando poco a poco y pierde brillo conforme se aleja:
+ * llega al borde ya apagada, sin quedarse quieta. (Tiempos lineales: la curva va en los propios pasos.)
+ */
 @keyframes firework-spark {
   0%,
   10% {
     opacity: 0;
     transform: rotate(var(--a)) translateY(0) scaleY(0.2);
   }
-  11.5% {
+  10.6% {
     opacity: 1;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.1)) scaleY(0.6);
   }
-  19% {
+  12.5% {
     opacity: 0.95;
-    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.9)) scaleY(1);
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.42)) scaleY(1);
   }
-  27%,
+  15% {
+    opacity: 0.72;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.68)) scaleY(0.95);
+  }
+  18% {
+    opacity: 0.4;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.86)) scaleY(0.8);
+  }
+  22%,
   100% {
     opacity: 0;
-    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -1.04)) scaleY(0.35);
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -1)) scaleY(0.55);
   }
 }
 
@@ -504,12 +521,12 @@
 
 @keyframes firework-droop {
   0%,
-  17% {
+  13% {
     translate: 0 0;
   }
-  27%,
+  22%,
   100% {
-    translate: 0 calc(var(--r) * 0.22);
+    translate: 0 calc(var(--r) * 0.24);
   }
 }
 

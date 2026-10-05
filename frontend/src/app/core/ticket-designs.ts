@@ -252,10 +252,11 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
     services: [],
     palettes: [
       // main = tarjeta · accent = líquido de la copa · paper = pestaña del contador
-      p('slate', 'Azul pizarra', '#39424f', '#252c36', '#d5dbe2', '#252c36', '#d5dbe2'),
-      p('black', 'Negro y dorado', '#1f1f20', '#101011', '#dcc694', '#1f1f20', '#dcc694'),
+      // Azul: coctel azul · Negro y dorado: champaña · Vino: vino tinto · Verde: mojito
+      p('slate', 'Azul pizarra', '#39424f', '#252c36', '#d5dbe2', '#252c36', '#6fa9d2'),
+      p('black', 'Negro y dorado', '#1f1f20', '#101011', '#dcc694', '#1f1f20', '#e6bf55'),
       p('burgundy', 'Vino', '#3d121b', '#260a11', '#ead8cb', '#3a1019', '#8a1f33'),
-      p('forest', 'Verde', '#22332a', '#15221b', '#ddd6b8', '#17251e', '#ddd6b8'),
+      p('forest', 'Verde', '#22332a', '#15221b', '#ddd6b8', '#17251e', '#a9c765'),
     ],
   },
   {

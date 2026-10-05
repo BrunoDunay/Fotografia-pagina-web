@@ -45,18 +45,18 @@ const CONFIG: Record<Exclude<ThemeDecoration, 'none'>, DecorConfig> = {
 };
 
 /**
- * Fuegos artificiales: ocho estallidos repartidos en un ciclo de 14.4 s (uno cada ~1.8 s), de cuatro tipos:
+ * Fuegos artificiales: ocho estallidos repartidos en un ciclo de 17.6 s (uno cada 2.2 s), de cuatro tipos:
  * rayos, anillo de puntos, sauce (los rayos caen al apagarse) y doble (dos colores).
  */
 const BURSTS = [
   { left: 22, top: 30, radius: 112, delay: 0, color: '#f6dc9a', color2: '#ffffff', kind: 'rays' },
-  { left: 76, top: 24, radius: 132, delay: 1.8, color: '#ffffff', color2: '#f6dc9a', kind: 'willow' },
-  { left: 50, top: 42, radius: 94, delay: 3.6, color: '#f2b8a8', color2: '#ffffff', kind: 'ring' },
-  { left: 88, top: 50, radius: 86, delay: 5.4, color: '#f6dc9a', color2: '#f2b8a8', kind: 'double' },
-  { left: 10, top: 54, radius: 80, delay: 7.2, color: '#cfe3f5', color2: '#ffffff', kind: 'rays' },
-  { left: 36, top: 20, radius: 120, delay: 9, color: '#f6dc9a', color2: '#cfe3f5', kind: 'double' },
-  { left: 64, top: 52, radius: 78, delay: 10.8, color: '#ffffff', color2: '#f6dc9a', kind: 'ring' },
-  { left: 92, top: 22, radius: 104, delay: 12.6, color: '#f2b8a8', color2: '#f6dc9a', kind: 'willow' },
+  { left: 76, top: 24, radius: 132, delay: 2.2, color: '#ffffff', color2: '#f6dc9a', kind: 'willow' },
+  { left: 50, top: 42, radius: 94, delay: 4.4, color: '#f2b8a8', color2: '#ffffff', kind: 'ring' },
+  { left: 88, top: 50, radius: 86, delay: 6.6, color: '#f6dc9a', color2: '#f2b8a8', kind: 'double' },
+  { left: 10, top: 54, radius: 80, delay: 8.8, color: '#cfe3f5', color2: '#ffffff', kind: 'rays' },
+  { left: 36, top: 20, radius: 120, delay: 11, color: '#f6dc9a', color2: '#cfe3f5', kind: 'double' },
+  { left: 64, top: 52, radius: 78, delay: 13.2, color: '#ffffff', color2: '#f6dc9a', kind: 'ring' },
+  { left: 92, top: 22, radius: 104, delay: 15.4, color: '#f2b8a8', color2: '#f6dc9a', kind: 'willow' },
 ];
 const RAYS = Array.from({ length: 16 }, (_, i) => i * 22.5);
 
