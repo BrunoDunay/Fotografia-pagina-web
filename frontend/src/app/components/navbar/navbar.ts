@@ -24,7 +24,6 @@ const ORNAMENTS: Record<string, string> = {
   valentines: '/decor/valentines-roses.svg',
   christmas: '/decor/christmas-garland.svg',
   'dia-de-muertos': '/decor/muertos-flowers.svg',
-  'san-marcos': '/decor/feria-party.svg',
   independence: '/decor/independence-flags.svg',
 };
 

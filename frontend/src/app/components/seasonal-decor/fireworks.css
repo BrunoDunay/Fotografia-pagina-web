@@ -189,7 +189,11 @@
   }
 }
 
-/* ---------- Letras "AGS": los puntos salen del centro, forman las letras, se sostienen un momento y se apagan ---------- */
+/*
+ * ---------- Letras "AGS" ----------
+ * Igual que las chispas: la palabra nace en el centro, crece frenando poco a poco
+ * y pierde brillo conforme sus puntos se alejan, sin quedarse quieta.
+ */
 .burst .dot {
   left: -2px;
   top: -2px;
@@ -210,25 +214,27 @@
   }
   13.6% {
     opacity: 1;
+    translate: calc(var(--x) * 0.16) calc(var(--y) * 0.16);
+    scale: 0.6;
   }
   16% {
-    translate: calc(var(--x) * 0.82) calc(var(--y) * 0.82);
-    scale: 1;
-  }
-  18.5% {
     opacity: 1;
-    translate: var(--x) var(--y);
-  }
-  25% {
-    opacity: 0.95;
-    translate: var(--x) var(--y);
+    translate: calc(var(--x) * 0.7) calc(var(--y) * 0.7);
     scale: 1;
   }
-  30%,
+  19% {
+    opacity: 0.85;
+    translate: calc(var(--x) * 1.12) calc(var(--y) * 1.12);
+  }
+  22.5% {
+    opacity: 0.5;
+    translate: calc(var(--x) * 1.42) calc(var(--y) * 1.42);
+  }
+  27%,
   100% {
     opacity: 0;
-    translate: var(--x) var(--y);
-    scale: 0.3;
+    translate: calc(var(--x) * 1.65) calc(var(--y) * 1.65);
+    scale: 0.8;
   }
 }
 

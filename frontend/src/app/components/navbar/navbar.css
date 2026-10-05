@@ -127,7 +127,7 @@
   font-size: 0.8rem;
 }
 
-/* Festividades (Día de la Madre, San Valentín, Navidad, Día de Muertos, San Marcos, Independencia): adorno que cuelga del navbar, bajo el logotipo, y se mece apenas. */
+/* Festividades (Día de la Madre, San Valentín, Navidad, Día de Muertos, Independencia): adorno que cuelga del navbar, bajo el logotipo, y se mece apenas. */
 .bouquet {
   position: absolute;
   /* Nace dentro de la barra (la pisa unos píxeles) para que no se vea flotando. */
