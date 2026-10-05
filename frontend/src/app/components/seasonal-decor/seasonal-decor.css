@@ -315,9 +315,8 @@
 }
 
 /*
- * ---------- Papel picado: un solo hilo curvo de lado a lado ----------
- * El hilo cuelga en parábola (--sag = caída al centro): así pasa por debajo del adorno
- * que cuelga del logotipo en lugar de encimarse con él.
+ * ---------- Papel picado: un solo hilo de lado a lado ----------
+ * --sag es la caída del hilo al centro (0 = recto); los banderines siguen esa misma curva.
  */
 .garland {
   --sag: clamp(54px, 5.4vw, 80px);
@@ -380,9 +379,25 @@
   background: #b8323a;
 }
 
-/* Día de Muertos: calaveritas recortadas, en los colores tradicionales */
+/* Día de Muertos: calaveritas recortadas, en los colores tradicionales; hilo recto y banderines pequeños. */
+.garland--muertos {
+  --sag: 0px;
+
+  top: calc(var(--navbar-height) + 6px);
+  /* Hilo recto: se dibuja con el borde (la curva SVG no tiene alto cuando la caída es 0). */
+  border-top: 1px solid rgb(255 255 255 / 0.55);
+}
+
+.garland--muertos .garland__string {
+  display: none;
+}
+
+.garland--muertos .hang {
+  width: calc(100% / 14 - 3.2vw);
+}
+
 .garland--muertos .flag {
-  height: clamp(28px, 4vw, 46px);
+  height: clamp(20px, 2.7vw, 32px);
   opacity: 0.72;
   mask: url('/decor/calaverita.svg') center / 100% 100% no-repeat;
 }
@@ -428,6 +443,14 @@
 
   .hang {
     width: calc(100% / 7 - 3vw);
+  }
+
+  .garland--muertos .hang {
+    width: calc(100% / 7 - 6.5vw);
+  }
+
+  .garland--muertos .flag {
+    height: 22px;
   }
 }
 

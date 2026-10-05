@@ -37,7 +37,7 @@ const CONFIG: Record<Exclude<ThemeDecoration, 'none'>, DecorConfig> = {
   hearts: { count: 26, weights: [2, 2, 1, 1], spin: 40, size: [0.7, 1.4], duration: [12, 20] },
   sunshine: { count: 18, weights: [1, 1, 1], spin: 0, size: [0.7, 1.6], duration: [14, 24], rise: true },
   // Día de Muertos: flores y pétalos de cempasúchil + papel picado de calaveritas.
-  dia_de_muertos: { count: 22, weights: [2, 2, 1], spin: 360, size: [0.8, 1.5], duration: [13, 22], garland: 'muertos' },
+  dia_de_muertos: { count: 20, weights: [2, 2, 1], spin: 360, size: [0.5, 0.95], duration: [13, 22], garland: 'muertos' },
   papel_picado: { count: 0, weights: [1], spin: 0, size: [1, 1], duration: [1, 1], garland: 'tricolor' },
   // Año Nuevo y Feria de San Marcos: no cae nada; son fuegos artificiales (componente Fireworks).
   fireworks: { count: 0, weights: [1], spin: 0, size: [1, 1], duration: [1, 1] },

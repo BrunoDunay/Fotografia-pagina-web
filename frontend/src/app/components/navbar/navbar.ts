@@ -57,6 +57,12 @@ export class Navbar {
 
   /** Adorno que cuelga bajo el logotipo en algunas festividades (imagen en public/decor). */
   protected readonly ornament = computed(() => ORNAMENTS[this.theme.active()?.key ?? ''] ?? null);
+  /**
+   * Día de Muertos: sobre la foto de portada ya está el papel picado, así que el arreglo floral
+   * solo aparece (floreciendo) cuando la barra se vuelve sólida al hacer scroll.
+   */
+  protected readonly ornamentVisible = computed(() => this.theme.active()?.key !== 'dia-de-muertos' || !this.transparent());
+  protected readonly ornamentBlooms = computed(() => this.theme.active()?.key === 'dia-de-muertos');
   /** Independencia: el arreglo va sujeto al borde inferior de la barra (no cuelga suelto bajo el logotipo). */
   protected readonly ornamentOnEdge = computed(() => this.theme.active()?.key === 'independence');
   /** Año Nuevo: al hacer scroll la barra se vuelve un cielo nocturno con estrellas y fuegos diminutos. */
