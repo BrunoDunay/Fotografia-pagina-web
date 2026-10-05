@@ -15,9 +15,6 @@
       <input type="radio" name="mode" [checked]="mode() === 'auto'" (change)="setMode('auto')" />
       <strong>Automático</strong>
       <span class="p-help">Las festividades aparecen solas en sus fechas. Si dos coinciden, se muestra la más puntual (por ejemplo, Año Nuevo sustituye a Navidad).</span>
-      @if (nextAuto(); as next) {
-        <span class="next-line"><span class="next-arrow" aria-hidden="true">→</span> Siguiente: <strong>{{ nextAutoName() }}</strong>, desde el {{ shortDay(next.date) }}</span>
-      }
     </label>
     <label class="mode" [class.is-active]="mode() === 'manual'">
       <input type="radio" name="mode" [checked]="mode() === 'manual'" (change)="setMode('manual')" />

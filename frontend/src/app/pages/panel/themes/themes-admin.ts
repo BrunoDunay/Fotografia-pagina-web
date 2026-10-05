@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ContentApiService } from '../../../core/services/api/content-api.service';
 import { ThemeService } from '../../../core/services/theme.service';
@@ -56,7 +56,6 @@ export class ThemesAdmin {
   protected readonly activeThemeId = signal<string | null>(null);
   /** Siguiente tema que se mostrará en modo automático y desde qué día. */
   protected readonly nextAuto = signal<{ themeId: string; date: string } | null>(null);
-  protected readonly nextAutoName = computed(() => this.themes()?.find((t) => t.id === this.nextAuto()?.themeId)?.name ?? null);
   protected readonly editing = signal<AdminTheme | null>(null);
   protected readonly heroImage = signal<Media | null>(null);
   protected readonly saving = signal(false);

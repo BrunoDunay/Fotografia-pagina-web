@@ -68,15 +68,6 @@ tr.is-next td:first-child {
   box-shadow: inset 3px 0 0 var(--color-accent);
 }
 
-.next-line {
-  margin-top: var(--space-2);
-  font-size: var(--text-sm);
-}
-
-.next-arrow {
-  color: var(--color-primary);
-}
-
 .editor {
   position: sticky;
   top: calc(var(--space-6) + 60px);
