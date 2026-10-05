@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideClientHydration, withEventReplay, withHttpTransferCacheOptions } from '@angular/platform-browser';
 
@@ -14,6 +14,8 @@ export const appConfig: ApplicationConfig = {
       routes,
       withComponentInputBinding(),
       withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
+      // Fundido suave entre páginas (los navegadores sin View Transitions navegan igual, sin animación).
+      withViewTransitions({ skipInitialTransition: true }),
     ),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor])),
     // Las respuestas GET hechas en SSR se reutilizan en el navegador (sin doble petición).

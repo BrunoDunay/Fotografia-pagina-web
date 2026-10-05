@@ -76,8 +76,7 @@ export const settings = {
     whatsapp: '524499995998',
     email: 'Ovalle.photo00@gmail.com',
     instagram: { handle: 'armandoovalle.ws', url: 'https://www.instagram.com/armandoovalle.ws/' },
-    // PROVISIONAL: falta la URL exacta de la página de Facebook.
-    facebook: { name: 'Armando Ovalle Wedding Studio', url: null },
+    facebook: { name: 'Armando Ovalle Wedding Studio', url: 'https://www.facebook.com/profile.php?id=100067234990368' },
   },
 
   whatsapp: {
@@ -319,17 +318,22 @@ export const faqs = [
   },
 ];
 
-/** Temas estacionales sugeridos (editables). Las festividades tienen más prioridad que las estaciones. */
+/**
+ * Temas estacionales. Desde el panel solo se cambian sus fechas y su foto de portada.
+ * Las festividades tienen más prioridad que las estaciones.
+ */
 export const themes = [
-  { key: 'christmas', name: 'Navidad', startMonth: 12, startDay: 1, endMonth: 12, endDay: 31, autoEnabled: true, priority: 50, decoration: 'christmas', navbarBadge: '❄' },
-  { key: 'valentines', name: 'San Valentín', startMonth: 2, startDay: 1, endMonth: 2, endDay: 14, autoEnabled: true, priority: 50, decoration: 'hearts', navbarBadge: null },
-  { key: 'dia-de-muertos', name: 'Día de Muertos', startMonth: 10, startDay: 25, endMonth: 11, endDay: 2, autoEnabled: true, priority: 50, decoration: 'dia_de_muertos', navbarBadge: null, tokenOverrides: { '--color-accent': '#E8912D' } },
-  { key: 'independence', name: 'Día de la Independencia', startMonth: 9, startDay: 1, endMonth: 9, endDay: 16, autoEnabled: true, priority: 50, decoration: 'papel_picado', navbarBadge: null },
-  { key: 'san-marcos', name: 'Feria de San Marcos', startMonth: 4, startDay: 15, endMonth: 5, endDay: 10, autoEnabled: true, priority: 50, decoration: 'confetti', navbarBadge: null },
-  { key: 'spring', name: 'Primavera', startMonth: 3, startDay: 20, endMonth: 6, endDay: 20, autoEnabled: false, priority: 10, decoration: 'petals', navbarBadge: null },
-  { key: 'summer', name: 'Verano', startMonth: 6, startDay: 21, endMonth: 9, endDay: 21, autoEnabled: false, priority: 10, decoration: 'sunshine', navbarBadge: null },
-  { key: 'autumn', name: 'Otoño', startMonth: 9, startDay: 22, endMonth: 12, endDay: 20, autoEnabled: false, priority: 10, decoration: 'leaves', navbarBadge: null, tokenOverrides: { '--color-accent': '#C9935A' } },
-  { key: 'winter', name: 'Invierno', startMonth: 12, startDay: 21, endMonth: 3, endDay: 19, autoEnabled: false, priority: 10, decoration: 'snow', navbarBadge: null },
+  { key: 'new-year', name: 'Año Nuevo', startMonth: 12, startDay: 27, endMonth: 1, endDay: 6, autoEnabled: true, priority: 60, decoration: 'fireworks', navbarBadge: null, tokenOverrides: { '--color-accent': '#E4C77A', '--color-primary': '#6E5A2E' } },
+  { key: 'mothers-day', name: 'Día de la Madre', startMonth: 5, startDay: 1, endMonth: 5, endDay: 10, autoEnabled: true, priority: 60, decoration: 'mothers_day', navbarBadge: null, tokenOverrides: { '--color-accent': '#E8AFC0', '--color-primary': '#A2566B' } },
+  { key: 'christmas', name: 'Navidad', startMonth: 12, startDay: 1, endMonth: 12, endDay: 31, autoEnabled: true, priority: 50, decoration: 'christmas', navbarBadge: '❄', tokenOverrides: { '--color-accent': '#C8A45A', '--color-primary': '#7A2E2E' } },
+  { key: 'valentines', name: 'San Valentín', startMonth: 2, startDay: 1, endMonth: 2, endDay: 14, autoEnabled: true, priority: 50, decoration: 'hearts', navbarBadge: null, tokenOverrides: { '--color-accent': '#E3A3AE', '--color-primary': '#A04E5E' } },
+  { key: 'dia-de-muertos', name: 'Día de Muertos', startMonth: 10, startDay: 25, endMonth: 11, endDay: 2, autoEnabled: true, priority: 50, decoration: 'dia_de_muertos', navbarBadge: null, tokenOverrides: { '--color-accent': '#E8912D', '--color-primary': '#8A4B1F' } },
+  { key: 'independence', name: 'Día de la Independencia', startMonth: 9, startDay: 1, endMonth: 9, endDay: 16, autoEnabled: true, priority: 50, decoration: 'papel_picado', navbarBadge: null, tokenOverrides: { '--color-accent': '#C9A24D', '--color-primary': '#2F6B4A' } },
+  { key: 'san-marcos', name: 'Feria de San Marcos', startMonth: 4, startDay: 15, endMonth: 5, endDay: 10, autoEnabled: true, priority: 50, decoration: 'confetti', navbarBadge: null, tokenOverrides: { '--color-accent': '#E0A63C', '--color-primary': '#9A5B2E' } },
+  { key: 'spring', name: 'Primavera', startMonth: 3, startDay: 20, endMonth: 6, endDay: 20, autoEnabled: true, priority: 10, decoration: 'petals', navbarBadge: null, tokenOverrides: { '--color-accent': '#E6B8B0' } },
+  { key: 'summer', name: 'Verano', startMonth: 6, startDay: 21, endMonth: 9, endDay: 21, autoEnabled: true, priority: 10, decoration: 'sunshine', navbarBadge: null, tokenOverrides: { '--color-accent': '#EBC36B' } },
+  { key: 'autumn', name: 'Otoño', startMonth: 9, startDay: 22, endMonth: 12, endDay: 20, autoEnabled: true, priority: 10, decoration: 'leaves', navbarBadge: null, tokenOverrides: { '--color-accent': '#C9935A' } },
+  { key: 'winter', name: 'Invierno', startMonth: 12, startDay: 21, endMonth: 3, endDay: 19, autoEnabled: true, priority: 10, decoration: 'snow', navbarBadge: null, tokenOverrides: { '--color-accent': '#BFD0DC' } },
 ];
 
 const PENDING = '[Texto provisional — pendiente de sustituir por la versión revisada del contrato real.]';

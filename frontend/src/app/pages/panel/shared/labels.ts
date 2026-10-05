@@ -41,6 +41,8 @@ export const DECORATION_LABEL: Record<ThemeDecoration, string> = {
   confetti: 'Confeti de colores',
   papel_picado: 'Papel picado tricolor',
   dia_de_muertos: 'Día de Muertos (calaveritas y cempasúchil)',
+  fireworks: 'Fuegos artificiales',
+  mothers_day: 'Arreglo de flores bajo el logotipo',
 };
 
 export const entries = <K extends string>(record: Record<K, string>) =>

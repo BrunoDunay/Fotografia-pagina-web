@@ -10,6 +10,7 @@ describe('rutas privadas sin sesión → 401', () => {
   const privateRoutes = [
     ['get', '/api/events'],
     ['post', '/api/events'],
+    ['post', '/api/events/00000000-0000-0000-0000-000000000000/send-confirmation'],
     ['get', '/api/clients'],
     ['get', '/api/payments'],
     ['get', '/api/dashboard'],

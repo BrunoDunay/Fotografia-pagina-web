@@ -40,25 +40,11 @@ export async function list(_req, res) {
   });
 }
 
-export async function create(req, res) {
-  res.status(201).json(await SeasonalTheme.create(req.valid.body));
-}
-
+/** Solo fechas y foto de portada: el nombre, la decoración y los colores de cada tema son fijos. */
 export async function update(req, res) {
   const theme = await SeasonalTheme.findByPk(req.valid.params.id);
   if (!theme) throw notFound('El tema');
   res.json(await theme.update(req.valid.body));
-}
-
-export async function remove(req, res) {
-  const theme = await SeasonalTheme.findByPk(req.valid.params.id);
-  if (!theme) throw notFound('El tema');
-  const settings = await getSection('theme');
-  if (settings?.mode === 'manual' && settings.manualThemeId === theme.id) {
-    await saveSection('theme', { mode: 'off', manualThemeId: null });
-  }
-  await theme.destroy();
-  res.status(204).end();
 }
 
 export async function setMode(req, res) {

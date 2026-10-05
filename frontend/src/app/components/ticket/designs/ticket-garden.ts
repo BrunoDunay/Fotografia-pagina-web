@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { tornEdge } from '../ticket-art';
+import { deckleEdge } from '../ticket-art';
 import { TicketStatus } from '../ticket-status';
 import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
 
 /**
  * Jardín (ref. Bodas/Boda al aire libre): fotografía fija arriba (public/tickets/garden-cover.webp) con los nombres manuscritos como marca
- * de agua sobre un gran "&", borde de papel rasgado, hortensias blancas reales y bloque verde con la fecha.
+ * de agua sobre un gran "&", canto fino de papel, hortensias blancas reales y bloque verde con la fecha.
  */
 @Component({
   selector: 'app-ticket-garden',
@@ -27,9 +27,9 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
       </div>
     </section>
 
-    <!-- Borde de papel rasgado -->
-    <svg class="tear" viewBox="0 0 100 9" preserveAspectRatio="none" aria-hidden="true">
-      <path [attr.d]="tear" style="fill: #fbfaf6" />
+    <!-- Canto de papel de barba: una tira fina entre la foto y el bloque -->
+    <svg class="tear" viewBox="0 0 100 4" preserveAspectRatio="none" aria-hidden="true">
+      <path [attr.d]="tear" style="fill: #f6f3ec" />
     </svg>
 
     <!-- Hortensias (fotografía recortada) -->
@@ -76,7 +76,7 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
     .photo__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: center 52%; }
     .photo__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 35%, rgb(0 0 0 / 0.45)); }
     .names { position: absolute; left: 4cqw; right: 3cqw; bottom: 10cqw; display: grid; align-items: center; text-align: left; }
-    .amp { grid-area: 1 / 1; font-family: var(--font-serif); font-size: 3.6em; line-height: 0.7; color: #fff; opacity: 0.2; }
+    .amp { grid-area: 1 / 1; font-family: var(--font-serif); font-size: 3.6em; line-height: 0.7; color: #fff; opacity: 0.32; }
     h1 {
       grid-area: 1 / 1;
       display: grid;
@@ -85,11 +85,12 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
       font-size: 1em;
       font-weight: 400;
       line-height: 1.05;
-      /* Semitransparente, como marca de agua sobre la fotografía. */
-      color: rgb(255 255 255 / 0.55);
+      /* Ligeramente translúcido, como marca de agua sobre la fotografía. */
+      color: rgb(255 255 255 / 0.86);
+      text-shadow: 0 0.3cqw 1.6cqw rgb(0 0 0 / 0.3);
     }
     h1 span:nth-child(2) { padding-left: 0.6em; }
-    .tear { position: relative; z-index: 1; flex: none; display: block; width: 100%; height: 9cqw; margin: -5cqw 0 -3cqw; filter: drop-shadow(0 0.6cqw 0.8cqw rgb(0 0 0 / 0.25)); }
+    .tear { position: relative; z-index: 1; flex: none; display: block; width: 100%; height: 4cqw; margin: -2.2cqw 0 -1.4cqw; filter: drop-shadow(0 0.3cqw 0.5cqw rgb(0 0 0 / 0.22)); }
     .flowers { position: absolute; top: 55cqw; right: -8cqw; z-index: 2; width: 52cqw; height: 46cqw; filter: drop-shadow(0 1cqw 1.6cqw rgb(0 0 0 / 0.35)); }
     .flowers img { position: absolute; height: auto; }
     .flowers__back { top: 0; left: 15cqw; width: 30cqw; rotate: 24deg; filter: brightness(0.9); }
@@ -117,6 +118,6 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
 export class TicketGarden {
   readonly v = input.required<TicketView>();
   protected readonly defaultNote = DEFAULT_TICKET_NOTE;
-  protected readonly tear = tornEdge(9, 23);
+  protected readonly tear = deckleEdge(4, 23);
   protected readonly nameSize = computed(() => fitSize([...this.v().names].sort((a, b) => b.length - a.length)[0], 15.5, 8, 9));
 }

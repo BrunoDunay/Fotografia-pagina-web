@@ -21,9 +21,9 @@
           <input id="name" class="field__control" formControlName="name" [attr.aria-invalid]="form.controls.name.invalid && form.controls.name.touched" />
         </div>
         <div class="field">
-          <label class="field__label" for="slug">Dirección (slug)</label>
+          <label class="field__label" for="slug">Dirección de la página</label>
           <input id="slug" class="field__control" formControlName="slug" placeholder="se genera del nombre" />
-          <span class="field__hint">/events/{{ form.controls.slug.value || '…' }}</span>
+          <span class="field__hint">Así termina el enlace de este servicio: /events/{{ form.controls.slug.value || '…' }}</span>
           @if (form.controls.slug.hasError('pattern')) {
             <span class="field__error">Solo minúsculas, números y guiones.</span>
           }
@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="field">
-        <label class="field__label" for="short">Descripción corta (cards y listados)</label>
+        <label class="field__label" for="short">Descripción corta (se ve en las tarjetas de servicios)</label>
         <input id="short" class="field__control" formControlName="shortDescription" maxlength="300" />
       </div>
       <div class="field">
@@ -42,18 +42,18 @@
         <span class="field__hint">Deja una línea en blanco para separar párrafos.</span>
       </div>
       <label class="p-check"><input type="checkbox" formControlName="isVisible" /> Visible en el sitio</label>
-      <label class="p-check"><input type="checkbox" formControlName="isProvisional" /> Textos provisionales (aparece en el dashboard)</label>
+      <label class="p-check"><input type="checkbox" formControlName="isProvisional" /> Textos provisionales (aparece como pendiente en el Resumen)</label>
     </section>
 
-    <!-- Hero y portada -->
+    <!-- Fotos principales -->
     <section class="p-card p-form" [hidden]="tab() !== 'hero'">
       <div class="p-grid p-grid--2">
-        <app-image-picker label="Imagen del Hero" folder="services" ratio="16 / 9" [(value)]="heroImage" hint="Si no hay, se usa la portada." />
-        <app-image-picker label="Portada (card en la Home)" folder="services" ratio="3 / 4" [(value)]="coverImage" />
+        <app-image-picker label="Foto de encabezado" folder="services" ratio="16 / 9" [(value)]="heroImage" hint="La foto grande que se ve al entrar a la página del servicio. Si no hay, se usa la foto de la tarjeta." />
+        <app-image-picker label="Foto de la tarjeta" folder="services" ratio="3 / 4" [(value)]="coverImage" hint="La que representa al servicio en la página de inicio y en la lista de servicios. También se puede elegir con la estrella en la galería." />
       </div>
       <div class="p-grid">
         <div class="field">
-          <label class="field__label" for="htitle">Título del Hero</label>
+          <label class="field__label" for="htitle">Título sobre la foto de encabezado</label>
           <input id="htitle" class="field__control" formControlName="heroTitle" placeholder="Ej. Bodas" />
         </div>
         <div class="field">
@@ -85,7 +85,10 @@
 
     <!-- Paquetes -->
     <section class="p-card p-form" [hidden]="tab() !== 'packages'">
-      <p class="p-help">Paquetes que se muestran en la página de este servicio. Sin paquetes, la página invita a pedir una cotización.</p>
+      <p class="p-help">
+        Los paquetes que marques se mostrarán en la sección de paquetes de <strong>{{ form.controls.name.value || 'este servicio' }}</strong>
+        y serán los que puedas elegir al registrar un evento de este tipo. Sin paquetes, la página invita a pedir una cotización.
+      </p>
       <ul class="pkg-list">
         @for (p of allPackages(); track p.id) {
           <li>
@@ -104,7 +107,7 @@
 
     <!-- SEO -->
     <section class="p-card p-form" [hidden]="tab() !== 'seo'">
-      <p class="p-help">Cómo aparece esta página en Google y al compartirla. Vacío = se genera automáticamente.</p>
+      <p class="p-help">Cómo aparece esta página en los resultados de Google y al compartir su enlace. Vacío = se genera automáticamente.</p>
       <div class="field">
         <label class="field__label" for="seot">Título</label>
         <input id="seot" class="field__control" formControlName="seoTitle" maxlength="160" />

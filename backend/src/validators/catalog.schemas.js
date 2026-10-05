@@ -107,8 +107,12 @@ const themeFields = {
   navbarBadge: optionalText(60),
   isActive: z.boolean().optional(),
 };
+/** Semilla / pruebas: un tema completo. */
 export const themeCreateBody = z.object(themeFields);
-export const themeUpdateBody = z.object(themeFields).partial();
+/** Desde el panel solo se cambian las fechas y la foto de portada del tema. */
+export const themeUpdateBody = z
+  .object({ startMonth: month, startDay: day, endMonth: month, endDay: day, heroMediaId: uuid.nullable() })
+  .partial();
 export const themeModeBody = z.object({ mode: z.enum(['off', 'manual', 'auto']), manualThemeId: uuid.nullable().optional() });
 
 // ---------- Legales ----------

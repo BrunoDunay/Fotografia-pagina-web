@@ -51,11 +51,11 @@ export class ServiceEdit implements OnInit {
 
   protected readonly tabs = computed<{ value: Tab; label: string }[]>(() => [
     { value: 'info', label: 'Información' },
-    { value: 'hero', label: 'Hero y portada' },
+    { value: 'hero', label: 'Fotos principales' },
     { value: 'video', label: 'Video' },
     { value: 'packages', label: 'Paquetes' },
     ...(this.isNew() ? [] : [{ value: 'gallery' as Tab, label: 'Galería' }]),
-    { value: 'seo', label: 'SEO' },
+    { value: 'seo', label: 'Google y redes' },
   ]);
 
   protected readonly form = this.fb.group({

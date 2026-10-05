@@ -59,7 +59,7 @@ export async function getBySlug(req, res) {
 
   res.json({
     ...toServiceDetail(service),
-    packages: packages.map(toPackage),
+    packages: packages.map((pkg) => toPackage(pkg, { forPublic: true })),
     faqs: faqs.map(({ id, question, answer }) => ({ id, question, answer })),
     gallery: { imageCount, preview },
   });

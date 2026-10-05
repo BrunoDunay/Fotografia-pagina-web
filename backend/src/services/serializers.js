@@ -13,13 +13,14 @@ export function toMedia(asset) {
 
 export const toNumber = (value) => (value === null || value === undefined ? null : Number(value));
 
-export function toPackage(pkg) {
+/** `forPublic`: no envía el precio de los paquetes que el fotógrafo marcó como no visibles. */
+export function toPackage(pkg, { forPublic = false } = {}) {
   const json = pkg.toJSON ? pkg.toJSON() : pkg;
   return {
     id: json.id,
     name: json.name,
     subtitle: json.subtitle,
-    price: toNumber(json.price),
+    price: forPublic && json.isPriceProvisional ? null : toNumber(json.price),
     currency: json.currency,
     isPriceProvisional: json.isPriceProvisional,
     isFeatured: json.isFeatured,

@@ -18,6 +18,8 @@ const uploader = multer({
 
 export const uploadSingleImage = uploader.single('image');
 export const uploadManyImages = uploader.array('images', MAX_FILES_PER_REQUEST);
+/** Imagen del ticket (PNG/JPG generado en el panel) que acompaña al correo de confirmación. */
+export const uploadTicketImage = uploader.single('ticket');
 
 /** Verifica la firma binaria real del archivo (no basta con confiar en el mimetype). */
 export function hasImageSignature(buffer) {

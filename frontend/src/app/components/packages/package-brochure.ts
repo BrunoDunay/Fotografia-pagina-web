@@ -8,7 +8,7 @@ import { Media } from '../../core/types/common.model';
 /**
  * Paquetes con estética de folleto impreso (ref. ideas/Home/Paquetes.jpg):
  * marco de línea fina, columnas separadas por divisores verticales, tira de fotos debajo.
- * Un precio provisional o vacío se muestra como "Precio por confirmar" (nunca se inventa).
+ * Un precio oculto o vacío se muestra como una invitación a cotizar (nunca se inventa).
  */
 @Component({
   selector: 'app-package-brochure',
@@ -31,6 +31,6 @@ export class PackageBrochure {
   protected readonly studio = computed(() => this.settings.brand()?.photographerName ?? 'Armando Ovalle');
 
   protected priceLabel(pkg: StudioPackage): string {
-    return pkg.price === null || pkg.isPriceProvisional ? 'Precio por confirmar' : formatMoney(pkg.price, pkg.currency);
+    return pkg.price === null || pkg.isPriceProvisional ? 'Cotiza tu fecha' : formatMoney(pkg.price, pkg.currency);
   }
 }

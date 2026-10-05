@@ -20,6 +20,7 @@ export const Event = sequelize.define(
     status: { type: DataTypes.ENUM(...EVENT_STATUSES), allowNull: false, defaultValue: 'confirmed' },
     blocksAvailability: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
     notes: DataTypes.TEXT,
+    confirmationSentAt: DataTypes.DATE,
   },
   { tableName: 'events' },
 );

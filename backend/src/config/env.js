@@ -22,6 +22,13 @@ const schema = z.object({
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),
   CLOUDINARY_FOLDER: z.string().default('aows'),
+  // Correo saliente (confirmaciones de evento). Opcional: sin estos datos no se envían correos.
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().int().positive().default(587),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  /** Remitente visible, ej. "Armando Ovalle Wedding Studio <correo@dominio.com>". Por defecto, SMTP_USER. */
+  MAIL_FROM: z.string().optional(),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -52,4 +59,5 @@ export const env = {
   cloudinaryEnabled: Boolean(
     parsed.data.CLOUDINARY_CLOUD_NAME && parsed.data.CLOUDINARY_API_KEY && parsed.data.CLOUDINARY_API_SECRET,
   ),
+  mailEnabled: Boolean(parsed.data.SMTP_HOST && parsed.data.SMTP_USER && parsed.data.SMTP_PASS),
 };

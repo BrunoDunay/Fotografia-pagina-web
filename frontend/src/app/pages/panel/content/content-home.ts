@@ -13,9 +13,10 @@ import { SettingsSaver, orNull } from './settings-saver';
   template: `
     <form class="p-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
       <section class="p-card p-form" formGroupName="hero">
-        <h2 class="p-card__title">Hero principal</h2>
+        <h2 class="p-card__title">Portada del sitio</h2>
+        <p class="p-help">Lo primero que se ve al entrar a la página: la foto a pantalla completa con el título encima.</p>
         <div class="p-grid p-grid--2">
-          <app-image-picker label="Imagen del Hero" folder="site" ratio="16 / 9" [(value)]="heroImage"
+          <app-image-picker label="Foto de portada" folder="site" ratio="16 / 9" [(value)]="heroImage"
             hint="Horizontal, de alta calidad. Se recorta para llenar la pantalla." />
           <div class="p-form">
             <div class="field">
@@ -34,6 +35,7 @@ import { SettingsSaver, orNull } from './settings-saver';
               <div class="field">
                 <label class="field__label" for="h-link">Enlace del botón</label>
                 <input id="h-link" class="field__control" formControlName="ctaLink" placeholder="/availability" />
+                <span class="field__hint">A dónde lleva el botón. Ej.: /availability (disponibilidad) o /contact (contacto).</span>
               </div>
             </div>
           </div>
@@ -41,7 +43,8 @@ import { SettingsSaver, orNull } from './settings-saver';
       </section>
 
       <section class="p-card p-form" formGroupName="valueProposition">
-        <h2 class="p-card__title">Propuesta de valor</h2>
+        <h2 class="p-card__title">Frase de presentación</h2>
+        <p class="p-help">El texto que aparece justo debajo de la portada, donde cuentas qué te distingue.</p>
         <div class="field">
           <label class="field__label" for="v-title">Frase principal</label>
           <input id="v-title" class="field__control" formControlName="title" />
@@ -50,17 +53,17 @@ import { SettingsSaver, orNull } from './settings-saver';
           <label class="field__label" for="v-text">Texto</label>
           <textarea id="v-text" class="field__control" formControlName="text"></textarea>
         </div>
-        <label class="p-check"><input type="checkbox" formControlName="isProvisional" /> Marcar como texto provisional (aparece en el dashboard)</label>
+        <label class="p-check"><input type="checkbox" formControlName="isProvisional" /> Marcar como texto provisional (aparece como pendiente en el Resumen)</label>
       </section>
 
       <section class="p-card p-form" formGroupName="aboutTeaser">
-        <h2 class="p-card__title">Sobre mí (resumen en la Home)</h2>
+        <h2 class="p-card__title">Sobre mí (versión corta de la página de inicio)</h2>
         <div class="p-grid p-grid--2">
           <app-image-picker label="Foto" folder="about" ratio="4 / 3" [(value)]="aboutImage" />
           <div class="p-form">
             <div class="p-grid">
               <div class="field">
-                <label class="field__label" for="a-eyebrow">Etiqueta superior</label>
+                <label class="field__label" for="a-eyebrow">Texto pequeño arriba del título</label>
                 <input id="a-eyebrow" class="field__control" formControlName="eyebrow" />
               </div>
               <div class="field">
@@ -85,7 +88,7 @@ import { SettingsSaver, orNull } from './settings-saver';
       </section>
 
       <div class="p-actions">
-        <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.invalid">Guardar Home</button>
+        <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.invalid">Guardar página de inicio</button>
       </div>
     </form>
   `,

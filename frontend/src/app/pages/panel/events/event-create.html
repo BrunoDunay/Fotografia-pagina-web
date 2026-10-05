@@ -127,9 +127,16 @@
         <select id="e-package" class="field__control" formControlName="packageId">
           <option value="">— Sin paquete / a la medida —</option>
           @for (p of packageOptions(); track p.id) {
-            <option [value]="p.id">{{ p.name }}{{ p.price && !p.isPriceProvisional ? ' · $' + p.price : '' }}</option>
+            <option [value]="p.id">{{ p.name }}{{ p.price ? ' · $' + p.price : '' }}</option>
           }
         </select>
+        @if (!selectedService()) {
+          <span class="field__hint">Elige primero el tipo de evento para ver sus paquetes.</span>
+        } @else if (!packageOptions().length) {
+          <span class="field__hint">{{ selectedService()!.name }} no tiene paquetes; el precio se define a la medida.</span>
+        } @else {
+          <span class="field__hint">Paquetes de {{ selectedService()!.name }}.</span>
+        }
       </div>
       <div class="field">
         <label class="field__label" for="e-price">Precio total (MXN)</label>
@@ -180,9 +187,16 @@
   <section class="p-card step">
     <h2 class="step__title"><span>5</span> Ticket del cliente</h2>
     <p class="p-help">
-      Elige el diseño y el color del ticket que recibirá tu cliente. Se sugiere uno según el tipo de evento; puedes cambiarlo después. Los diseños con fotografía usan la portada del tipo de evento, o la foto que subas después desde la ficha del evento.
+      Elige el diseño y el color del ticket que recibirá tu cliente. Se sugiere uno según el tipo de evento; puedes cambiarlo después.
     </p>
     <app-ticket-style-picker [design]="design()" (designChange)="pickDesign($event)" [(palette)]="palette" [data]="ticketPreview()" />
+    <label class="p-check">
+      <input type="checkbox" formControlName="sendConfirmation" />
+      Al guardar, enviar al cliente el correo de confirmación con el resumen del evento y su ticket
+    </label>
+    @if (form.controls.sendConfirmation.value && !clientEmail()) {
+      <span class="field__hint">Captura el correo del cliente para poder enviarlo; sin correo, el evento se guarda igual.</span>
+    }
   </section>
 
   <div class="p-actions">

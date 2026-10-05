@@ -44,9 +44,9 @@ type StatGroup = FormGroup<{ value: FormControl<string>; label: FormControl<stri
       <section class="p-card p-form">
         <h2 class="p-card__title">Fotografías (hasta 3)</h2>
         <div class="p-grid">
-          <app-image-picker label="1 · Hero de la página" folder="about" ratio="16 / 9" [(value)]="image1" />
-          <app-image-picker label="2 · Collage (atrás)" folder="about" ratio="4 / 3" [(value)]="image2" />
-          <app-image-picker label="3 · Collage (frente)" folder="about" ratio="3 / 4" [(value)]="image3" />
+          <app-image-picker label="1 · Foto de encabezado" folder="about" ratio="16 / 9" [(value)]="image1" />
+          <app-image-picker label="2 · Foto de fondo del par" folder="about" ratio="4 / 3" [(value)]="image2" />
+          <app-image-picker label="3 · Foto al frente del par" folder="about" ratio="3 / 4" [(value)]="image3" />
         </div>
       </section>
 
@@ -94,7 +94,7 @@ type StatGroup = FormGroup<{ value: FormControl<string>; label: FormControl<stri
         </div>
       </section>
 
-      <label class="p-check"><input type="checkbox" formControlName="isProvisional" /> Marcar textos como provisionales (aparece en el dashboard)</label>
+      <label class="p-check"><input type="checkbox" formControlName="isProvisional" /> Marcar textos como provisionales (aparece como pendiente en el Resumen)</label>
 
       <div class="p-actions">
         <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.invalid">Guardar "Sobre mí"</button>

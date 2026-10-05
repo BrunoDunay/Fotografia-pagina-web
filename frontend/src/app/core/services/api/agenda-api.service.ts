@@ -54,6 +54,13 @@ export class AgendaApiService {
     return this.http.post<EventDetail>(`${this.api}/events`, body);
   }
 
+  /** Envía al cliente el correo de confirmación; `ticket` es la imagen del ticket digital (opcional). */
+  sendConfirmation(id: string, ticket: Blob | null) {
+    const form = new FormData();
+    if (ticket) form.append('ticket', ticket, 'ticket-digital.jpg');
+    return this.http.post<{ sentTo: string; confirmationSentAt: string }>(`${this.api}/events/${id}/send-confirmation`, form);
+  }
+
   updateEvent(id: string, body: unknown) {
     return this.http.put<EventDetail>(`${this.api}/events/${id}`, body);
   }

@@ -63,11 +63,18 @@
 .col span {
   opacity: 0.8;
   overflow-wrap: anywhere;
-  transition: opacity var(--duration-fast);
+}
+
+.col a {
+  justify-self: start;
+  background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0 1px;
+  transition: opacity var(--duration-fast), background-size 0.45s var(--ease-out), color var(--duration);
 }
 
 .col a:hover {
   opacity: 1;
+  color: var(--color-accent);
+  background-size: 100% 1px;
 }
 
 .col .more {
@@ -94,8 +101,13 @@
   gap: var(--space-5);
 }
 
+.legal a {
+  background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0 1px;
+  transition: background-size 0.45s var(--ease-out);
+}
+
 .legal a:hover {
-  text-decoration: underline;
+  background-size: 100% 1px;
 }
 
 @media (max-width: 900px) {

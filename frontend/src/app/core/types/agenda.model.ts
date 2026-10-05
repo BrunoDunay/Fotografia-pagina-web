@@ -73,6 +73,10 @@ export interface EventDetail extends Omit<EventSummary, 'reservation' | 'client'
   client: Client;
   payments: Payment[];
   reservation: Reservation | null;
+  /** Último envío del correo de confirmación al cliente (null = no se ha enviado). */
+  confirmationSentAt: string | null;
+  /** El servidor tiene configurado el correo saliente. */
+  mailEnabled: boolean;
 }
 
 /** Ticket público: nunca trae pagos ni datos de contacto. */

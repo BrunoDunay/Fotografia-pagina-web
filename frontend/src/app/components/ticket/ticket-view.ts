@@ -25,10 +25,12 @@ export interface TicketView {
   message: string | null;
   /** Ícono del día según el tipo de evento (corazón, corona, birrete, biberón, estrella). */
   mark: TicketMarkKind;
-  /** Foto del ticket (URL optimizada) para los diseños con fotografía; null si no hay. */
+  /** Foto propia de la reservación (URL optimizada); hoy ningún diseño la usa. */
   photo: string | null;
   /** El "papel" de la variación es oscuro (ej. playa al anochecer): usar el logo claro. */
   darkPaper: boolean;
+  /** El color principal de la variación es muy claro: el texto que va encima debe ser oscuro. */
+  lightMain: boolean;
   /** Mes del evento: celdas (null = vacío) de lunes a domingo y el día marcado. */
   calendar: { cells: (number | null)[]; day: number };
 }

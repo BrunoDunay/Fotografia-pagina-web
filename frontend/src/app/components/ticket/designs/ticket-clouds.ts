@@ -13,7 +13,7 @@ import { TicketView, fitSize } from '../ticket-view';
   imports: [TicketCalendar, TicketStatus],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="sky">
+    <section class="sky" [class.is-light]="v().lightMain">
       <svg class="sparkles" viewBox="0 0 100 110" preserveAspectRatio="none" aria-hidden="true">
         @for (s of sparkles; track $index) {
           <circle [attr.cx]="s.x" [attr.cy]="s.y" [attr.r]="s.r" fill="#fff" [attr.opacity]="s.o" />
@@ -84,6 +84,10 @@ import { TicketView, fitSize } from '../ticket-view';
       overflow: hidden;
       isolation: isolate;
     }
+    /* Variación clara (casi blanca): el texto del cielo va en el color de tinta. */
+    .sky.is-light { color: var(--t-ink); }
+    .sky.is-light h1 { text-shadow: none; }
+    .sky.is-light .mono i { background: var(--t-ink); }
     .sparkles { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; }
     .mono { position: absolute; top: 5cqw; left: 6cqw; font-size: 56cqw; font-weight: 200; line-height: 0.82; }
     .mono span { display: block; }

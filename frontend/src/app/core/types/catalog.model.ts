@@ -80,7 +80,9 @@ export type ThemeDecoration =
   | 'leaves'
   | 'confetti'
   | 'papel_picado'
-  | 'dia_de_muertos';
+  | 'dia_de_muertos'
+  | 'fireworks'
+  | 'mothers_day';
 
 export interface ActiveTheme {
   key: string;

@@ -7,6 +7,7 @@ import * as reservations from '../controllers/reservations.controller.js';
 import { getDashboard } from '../controllers/dashboard.controller.js';
 import { requireAuth } from '../middlewares/require-auth.js';
 import { validate } from '../middlewares/validate.js';
+import { uploadTicketImage } from '../middlewares/upload.js';
 import { idParams } from '../validators/common.schemas.js';
 import * as s from '../validators/agenda.schemas.js';
 
@@ -24,6 +25,7 @@ export const eventsRoutes = Router()
   .post('/', validate({ body: s.eventCreateBody }), events.create)
   .put('/:id', validate({ params: idParams, body: s.eventUpdateBody }), events.update)
   .patch('/:id/status', validate({ params: idParams, body: s.eventStatusBody }), events.setStatus)
+  .post('/:id/send-confirmation', uploadTicketImage, validate({ params: idParams }), events.sendConfirmation)
   .delete('/:id', validate({ params: idParams }), events.remove);
 
 export const clientsRoutes = Router()

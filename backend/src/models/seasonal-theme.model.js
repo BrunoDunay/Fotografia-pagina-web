@@ -12,6 +12,8 @@ export const THEME_DECORATIONS = [
   'confetti',
   'papel_picado',
   'dia_de_muertos',
+  'fireworks',
+  'mothers_day',
 ];
 
 export const SeasonalTheme = sequelize.define(

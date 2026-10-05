@@ -19,6 +19,7 @@ import { TicketGarden } from './designs/ticket-garden';
 import { TicketLace } from './designs/ticket-lace';
 import { TicketPalms } from './designs/ticket-palms';
 import { TicketPalmPhoto } from './designs/ticket-palm-photo';
+import { TicketDoves } from './designs/ticket-doves';
 import { TicketPassport } from './designs/ticket-passport';
 import { TicketRoses } from './designs/ticket-roses';
 import { TicketClouds } from './designs/ticket-clouds';
@@ -26,11 +27,12 @@ import { TicketGlass } from './designs/ticket-glass';
 import { TicketLeaves } from './designs/ticket-leaves';
 import { TicketCradle } from './designs/ticket-cradle';
 
-/** ¿Es un color oscuro? (luminancia aproximada de un #rrggbb). */
-function isDark(hex: string): boolean {
+/** Luminancia aproximada (0–255) de un #rrggbb. */
+function luminance(hex: string): number {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-  return 0.299 * r + 0.587 * g + 0.114 * b < 128;
+  return 0.299 * r + 0.587 * g + 0.114 * b;
 }
+const isDark = (hex: string) => luminance(hex) < 128;
 
 /** Datos mínimos para pintar un ticket (el ticket público o la vista previa del panel). */
 export type TicketData = Pick<
@@ -62,6 +64,7 @@ export type TicketData = Pick<
     TicketLace,
     TicketPalms,
     TicketPalmPhoto,
+    TicketDoves,
     TicketPassport,
     TicketRoses,
     TicketClouds,
@@ -114,6 +117,9 @@ export type TicketData = Pick<
       }
       @case ('lace') {
         <app-ticket-lace [v]="view()" />
+      }
+      @case ('doves') {
+        <app-ticket-doves [v]="view()" />
       }
       @case ('palms') {
         <app-ticket-palms [v]="view()" />
@@ -207,6 +213,7 @@ export class ReservationTicket {
       mark: ticketMarkFor(r.eventType),
       photo: r.cover ? cloudinaryUrl(r.cover.url, { width: 1080 }) : null,
       darkPaper: isDark(this.colors().paper),
+      lightMain: luminance(this.colors().main) > 215,
       calendar: { cells, day: Number(day) },
     };
   });

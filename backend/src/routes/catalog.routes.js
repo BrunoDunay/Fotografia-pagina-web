@@ -67,9 +67,7 @@ export const themesRoutes = Router()
   .get('/active', themes.getActive)
   .get('/', requireAuth, themes.list)
   .put('/mode', requireAuth, validate({ body: s.themeModeBody }), themes.setMode)
-  .post('/', requireAuth, validate({ body: s.themeCreateBody }), themes.create)
-  .put('/:id', requireAuth, validate({ params: idParams, body: s.themeUpdateBody }), themes.update)
-  .delete('/:id', requireAuth, validate({ params: idParams }), themes.remove);
+  .put('/:id', requireAuth, validate({ params: idParams, body: s.themeUpdateBody }), themes.update);
 
 export const legalRoutes = Router()
   .get('/', requireAuth, legal.list)

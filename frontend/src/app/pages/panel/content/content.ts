@@ -44,10 +44,10 @@ type Tab = 'home' | 'about' | 'contact' | 'brand';
 })
 export class Content {
   protected readonly tabs: { value: Tab; label: string }[] = [
-    { value: 'home', label: 'Home' },
+    { value: 'home', label: 'Página de inicio' },
     { value: 'about', label: 'Sobre mí' },
     { value: 'contact', label: 'Contacto y WhatsApp' },
-    { value: 'brand', label: 'Marca y SEO' },
+    { value: 'brand', label: 'Marca, Google y redes' },
   ];
   protected readonly tab = signal<Tab>('home');
   protected readonly settings = toSignal(inject(ContentApiService).settings().pipe(catchError(() => of(null as AllSettings | null))));

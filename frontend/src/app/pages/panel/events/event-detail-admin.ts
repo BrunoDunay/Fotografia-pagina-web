@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, computed, inject, input, signal, viewChild } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError, of, startWith } from 'rxjs';
+import { catchError, firstValueFrom, of, startWith } from 'rxjs';
 import { AgendaApiService } from '../../../core/services/api/agenda-api.service';
 import { ContentApiService } from '../../../core/services/api/content-api.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -16,9 +16,8 @@ import { SkeletonDashboard } from '../../../components/skeletons';
 import { PageHeader } from '../shared/page-header';
 import { ConfirmService } from '../shared/confirm.service';
 import { TicketPreviewData, TicketStylePicker } from '../shared/ticket-style-picker';
-import { ImagePicker } from '../shared/image-picker';
+import { ReservationTicket, TicketData } from '../../../components/ticket/reservation-ticket';
 import { Media } from '../../../core/types/common.model';
-import { ticketDesign } from '../../../core/ticket-designs';
 import {
   EVENT_STATUS_LABEL,
   PAYMENT_CONCEPT_LABEL,
@@ -38,7 +37,7 @@ function toWhatsAppDigits(phone: string | null): string | null {
 
 @Component({
   selector: 'app-event-detail-admin',
-  imports: [ReactiveFormsModule, RouterLink, Btn, Icon, SkeletonDashboard, PageHeader, TicketStylePicker, ImagePicker],
+  imports: [ReactiveFormsModule, RouterLink, Btn, Icon, SkeletonDashboard, PageHeader, TicketStylePicker, ReservationTicket],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './event-detail-admin.html',
   styleUrl: './event-detail-admin.css',
@@ -47,6 +46,8 @@ export class EventDetailAdmin implements OnInit {
   readonly id = input.required<string>();
   /** ?created=1 tras el flujo rápido. */
   readonly created = input<string | undefined>();
+  /** ?confirm=1: al crear el evento se pidió enviar el correo de confirmación. */
+  readonly confirmEmail = input<string | undefined>(undefined, { alias: 'confirm' });
 
   private readonly agenda = inject(AgendaApiService);
   private readonly content = inject(ContentApiService);
@@ -60,6 +61,10 @@ export class EventDetailAdmin implements OnInit {
   protected readonly saving = signal(false);
   protected readonly savingTicket = signal(false);
   protected readonly addingPayment = signal(false);
+  protected readonly sendingMail = signal(false);
+  /** Ticket fuera de pantalla que se convierte en la imagen adjunta del correo. */
+  private readonly mailTicket = viewChild('mailTicket', { read: ElementRef });
+  protected readonly mailNow = signal(Date.now());
 
   protected readonly statusOptions = entries(EVENT_STATUS_LABEL);
   protected readonly conceptOptions = entries(PAYMENT_CONCEPT_LABEL);
@@ -89,6 +94,22 @@ export class EventDetailAdmin implements OnInit {
     notes: [''],
   });
 
+  private readonly formServiceId = toSignal(this.form.controls.serviceId.valueChanges.pipe(startWith('')), { initialValue: '' });
+
+  /** Tipo de evento elegido en el formulario. */
+  protected readonly selectedService = computed(() => {
+    this.formServiceId();
+    return this.services().find((s) => s.id === this.form.controls.serviceId.value) ?? null;
+  });
+
+  /** Solo los paquetes del tipo de evento elegido (más el que el evento ya tenía guardado, para no perderlo). */
+  protected readonly packageOptions = computed(() => {
+    const service = this.selectedService();
+    const saved = this.event()?.package?.id;
+    const sameService = !!service && this.event()?.service?.id === service.id;
+    return this.packages().filter((p) => (!!service && p.isActive && service.packageIds.includes(p.id)) || (sameService && p.id === saved));
+  });
+
   protected readonly paymentForm = this.fb.group({
     amount: [null as number | null, [Validators.required, Validators.min(1)]],
     paidAt: [todayInMexico(), Validators.required],
@@ -112,12 +133,6 @@ export class EventDetailAdmin implements OnInit {
   protected readonly ticketCover = signal<Media | null>(null);
   private readonly ticketValue = toSignal(this.ticketForm.valueChanges.pipe(startWith(null)), { initialValue: null });
 
-  /** Solo algunos diseños llevan una fotografía que se puede elegir. */
-  protected readonly usesTicketPhoto = computed(() => {
-    this.ticketValue();
-    return !!ticketDesign(this.ticketForm.controls.ticketDesign.value).photo;
-  });
-
   /** Vista previa del ticket con lo que hay en el formulario (aún sin guardar). */
   protected readonly ticketPreview = computed<TicketPreviewData | null>(() => {
     this.ticketValue();
@@ -138,6 +153,19 @@ export class EventDetailAdmin implements OnInit {
     };
   });
 
+  /** El ticket tal como está guardado (diseño y color incluidos), para adjuntarlo al correo. */
+  protected readonly mailTicketData = computed<TicketData | null>(() => {
+    const preview = this.ticketPreview();
+    if (!preview) return null;
+    const { ticketDesign, ticketPalette } = this.ticketForm.getRawValue();
+    return { ...preview, design: ticketDesign, palette: ticketPalette };
+  });
+
+  /** "5 oct 2026, 14:32" en la hora de México. */
+  protected sentLabel(iso: string): string {
+    return new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Mexico_City' }).format(new Date(iso));
+  }
+
   protected readonly ticketUrl = computed(() => {
     const code = this.event()?.reservation?.publicCode;
     return code ? `${this.siteUrl}/reservation/${code}` : null;
@@ -157,6 +185,11 @@ export class EventDetailAdmin implements OnInit {
 
   ngOnInit(): void {
     this.load();
+    // Al cambiar el tipo de evento, se quita el paquete si no pertenece al nuevo tipo.
+    this.form.controls.serviceId.valueChanges.subscribe(() => {
+      const current = this.form.controls.packageId.value;
+      if (current && !this.packageOptions().some((p) => p.id === current)) this.form.controls.packageId.setValue('');
+    });
   }
 
   private load(): void {
@@ -166,8 +199,50 @@ export class EventDetailAdmin implements OnInit {
     });
   }
 
+  /**
+   * Envía al cliente el correo de confirmación (resumen de lo contratado + ticket digital adjunto).
+   * La imagen del ticket se genera aquí, a partir del ticket que se ve en el navegador.
+   */
+  protected async sendConfirmation(): Promise<void> {
+    const e = this.event();
+    if (!e || this.sendingMail()) return;
+    this.sendingMail.set(true);
+    try {
+      const ticket = await this.renderTicketImage();
+      const res = await firstValueFrom(this.agenda.sendConfirmation(e.id, ticket));
+      this.event.update((current) => (current ? { ...current, confirmationSentAt: res.confirmationSentAt } : current));
+      this.toast.success(`Correo de confirmación enviado a ${res.sentTo}.`);
+    } catch {
+      // El interceptor ya mostró el motivo (correo sin configurar, cliente sin correo…).
+    } finally {
+      this.sendingMail.set(false);
+    }
+  }
+
+  /** JPG 1080×1920 del ticket (ligero para correo); si no se puede generar, el correo se envía solo con el enlace. */
+  private async renderTicketImage(): Promise<Blob | null> {
+    const element = this.mailTicket()?.nativeElement as HTMLElement | undefined;
+    if (!element) return null;
+    try {
+      this.mailNow.set(Date.now());
+      const { toCanvas } = await import('html-to-image');
+      await document.fonts.ready;
+      const canvas = await toCanvas(element, { pixelRatio: 1, canvasWidth: 1080, canvasHeight: 1920, style: { boxShadow: 'none' } });
+      return await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+    } catch {
+      return null;
+    }
+  }
+
   private setEvent(e: EventDetail): void {
+    const firstLoad = !this.event();
     this.event.set(e);
+    // Tras crear el evento con "enviar confirmación": se manda en cuanto el ticket está pintado.
+    if (firstLoad && this.confirmEmail()) {
+      if (!e.client.email) this.toast.error('El evento se guardó, pero el cliente no tiene correo: no se envió la confirmación.');
+      else if (!e.mailEnabled) this.toast.error('El evento se guardó, pero el correo saliente aún no está configurado: no se envió la confirmación.');
+      else setTimeout(() => void this.sendConfirmation(), 900);
+    }
     this.form.reset({
       title: e.title,
       eventDate: e.eventDate,
@@ -264,11 +339,6 @@ export class EventDetailAdmin implements OnInit {
       this.toast.success('Pago eliminado.');
       this.load();
     });
-  }
-
-  protected setTicketCover(cover: Media | null): void {
-    this.ticketCover.set(cover);
-    this.ticketForm.markAsDirty();
   }
 
   /** Cambios desde el selector de diseño y color. */

@@ -125,6 +125,8 @@ export async function setCover(req, res) {
   const image = await GalleryImage.findOne({ where: { id: req.valid.body.imageId, galleryId: gallery.id } });
   if (!image) throw notFound('La imagen');
   await gallery.update({ coverMediaId: image.mediaId });
+  // La portada que ve el público (tarjeta del servicio en el inicio y en "Servicios") es la del servicio.
+  if (gallery.serviceId) await Service.update({ coverMediaId: image.mediaId }, { where: { id: gallery.serviceId } });
   res.json({ message: 'Portada actualizada.' });
 }
 

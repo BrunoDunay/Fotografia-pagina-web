@@ -45,21 +45,23 @@ export type BtnVariant = 'solid' | 'outline' | 'ghost' | 'light' | 'danger';
       text-align: center;
       white-space: nowrap;
       transition: background-color var(--duration) var(--ease-out), color var(--duration) var(--ease-out),
-        border-color var(--duration) var(--ease-out), transform var(--duration-fast);
+        border-color var(--duration) var(--ease-out), box-shadow 0.45s var(--ease-out),
+        transform var(--duration) var(--ease-out);
     }
-    :host:active { transform: translateY(1px); }
+    :host(:active) { transform: translateY(1px); }
     :host([disabled]), :host([aria-disabled='true']) { opacity: 0.5; pointer-events: none; }
     :host(.btn--sm) { min-height: 2.2rem; padding: 0.4rem 1rem; }
     :host(.btn--block) { display: flex; width: 100%; }
 
     :host(.btn--solid) { background: var(--color-secondary); color: var(--color-text-inverse); }
-    :host(.btn--solid:hover) { background: var(--color-secondary-hover); }
-    :host(.btn--outline) { border-color: var(--color-primary); color: var(--color-primary); background: transparent; }
-    :host(.btn--outline:hover) { background: var(--color-primary); color: var(--color-text-inverse); }
+    :host(.btn--solid:hover) { background: var(--color-secondary-hover); box-shadow: 0 10px 24px -12px rgba(42, 36, 33, 0.55); transform: translateY(-1px); }
+    /* Contorno: el color sube desde abajo como una cortina. */
+    :host(.btn--outline) { border-color: var(--color-primary); color: var(--color-primary); background: transparent; box-shadow: inset 0 0 0 0 var(--color-primary); }
+    :host(.btn--outline:hover) { color: var(--color-text-inverse); box-shadow: inset 0 -3.4rem 0 0 var(--color-primary); }
     :host(.btn--ghost) { background: transparent; color: var(--color-text); padding-inline: var(--space-3); }
     :host(.btn--ghost:hover) { color: var(--color-primary); }
-    :host(.btn--light) { border-color: currentColor; color: var(--color-text-inverse); background: transparent; }
-    :host(.btn--light:hover) { background: var(--color-text-inverse); color: var(--color-text); }
+    :host(.btn--light) { border-color: var(--color-text-inverse); color: var(--color-text-inverse); background: transparent; box-shadow: inset 0 0 0 0 var(--color-text-inverse); }
+    :host(.btn--light:hover) { color: var(--color-text); box-shadow: inset 0 -3.4rem 0 0 var(--color-text-inverse); }
     :host(.btn--danger) { background: var(--color-danger); color: var(--color-text-inverse); }
 
     .spinner {

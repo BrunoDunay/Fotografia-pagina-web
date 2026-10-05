@@ -33,10 +33,10 @@
 @if (home()?.aboutTeaser; as about) {
   <section class="about">
     <div class="container about__grid">
-      <div class="about__media" appReveal>
+      <div class="about__media" appReveal="left">
         <app-photo [media]="about.image" ratio="4 / 3" sizes="(max-width: 900px) 100vw, 60vw" />
       </div>
-      <div class="about__text" appReveal [revealDelay]="150">
+      <div class="about__text" appReveal="right" [revealDelay]="150">
         @if (about.eyebrow) {
           <p class="eyebrow">{{ about.eyebrow }}</p>
         }
@@ -84,17 +84,17 @@
   <section class="packages section">
     <div class="container">
       <app-section-title title="Paquetes de boda" eyebrow="Inversión" />
-      <div appReveal>
+      <div appReveal="zoom">
         <app-package-brochure [packages]="packages()!" heading="Bodas" [photos]="weddings()?.gallery?.preview ?? []" />
       </div>
-      <p class="packages__note">
+      <p class="packages__note" appReveal="fade">
         Cada evento es distinto: los paquetes pueden ajustarse. Para eventos fuera de Aguascalientes o de México se prepara una
         cotización personalizada.
       </p>
       <p class="packages__links">
-        <a routerLink="/events/quinceanos">Ver paquetes de XV años</a>
+        <a class="link-draw" routerLink="/events/quinceanos">Ver paquetes de XV años</a>
         <span aria-hidden="true">·</span>
-        <a routerLink="/events">Todos los servicios</a>
+        <a class="link-draw" routerLink="/events">Todos los servicios</a>
       </p>
     </div>
   </section>
@@ -107,8 +107,8 @@
 @if (faqs()?.length) {
   <section class="section container container--narrow">
     <app-section-title title="Preguntas frecuentes" eyebrow="FAQ" layout="center" />
-    <app-faq-list [faqs]="faqs()!.slice(0, 5)" [openFirst]="true" />
-    <div class="faq__more">
+    <app-faq-list [faqs]="faqs()!.slice(0, 5)" [openFirst]="true" appReveal />
+    <div class="faq__more" appReveal="fade" [revealDelay]="120">
       <a appBtn variant="outline" routerLink="/faq">Ver todas las preguntas</a>
     </div>
   </section>
@@ -117,7 +117,7 @@
 <!-- 8. Contacto -->
 <section class="contact section">
   <div class="container contact__grid">
-    <div>
+    <div appReveal="left">
       <p class="eyebrow eyebrow--dash">Contacto</p>
       <h2 class="contact__title">Hablemos de tu evento</h2>
       <p class="text-muted contact__text">
@@ -127,6 +127,6 @@
         <a appBtn [href]="wa" target="_blank" rel="noopener"><app-icon name="whatsapp" [size]="18" /> Escribir por WhatsApp</a>
       }
     </div>
-    <app-contact-details />
+    <app-contact-details appReveal="right" [revealDelay]="150" />
   </div>
 </section>

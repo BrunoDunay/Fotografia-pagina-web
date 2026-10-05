@@ -1,4 +1,4 @@
-<app-page-header title="Paquetes" subtitle="Precios y características. Un precio marcado como provisional se muestra como «Precio por confirmar».">
+<app-page-header title="Paquetes" subtitle="Precios y características. Mientras un precio esté oculto, el público ve una invitación a pedir su cotización.">
   <button appBtn type="button" (click)="edit('new')">+ Nuevo paquete</button>
 </app-page-header>
 
@@ -20,7 +20,7 @@
               <span class="p-badge">Inactivo</span>
             }
             <span class="price" [class.is-pending]="p.price === null || p.isPriceProvisional">
-              {{ p.price === null || p.isPriceProvisional ? 'Por confirmar' : money(p.price) }}
+              {{ p.price === null ? 'Sin precio' : p.isPriceProvisional ? money(p.price) + ' · no visible' : money(p.price) }}
             </span>
           </li>
         } @empty {
@@ -54,7 +54,7 @@
           <input id="price" class="field__control" type="number" min="0" step="100" formControlName="price" placeholder="Sin definir" />
         </div>
         <label class="p-check align-end">
-          <input type="checkbox" formControlName="isPriceProvisional" /> Precio provisional
+          <input type="checkbox" formControlName="isPriceProvisional" /> Ocultar el precio al público
         </label>
       </div>
       <div class="p-row">

@@ -64,6 +64,7 @@ Todo el texto comercial vive en la base de datos y se edita desde el panel. Lo q
 - `NODE_ENV=production` y `DATABASE_URL` de la base en la nube (`DATABASE_SSL=true` si el proveedor lo pide).
 - `JWT_SECRET` nuevo y largo (48+ caracteres aleatorios) y las credenciales de Cloudinary.
 - `CORS_ORIGINS` y `PUBLIC_SITE_URL` con el dominio real (sin localhost). Al arrancar, el backend avisa si algo quedó mal.
+- Correo de confirmación de eventos (opcional): `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` y `MAIL_FROM`. Con Gmail se usa una "contraseña de aplicación" (ver `backend/.env.example`). Sin estos datos, el botón de enviar confirmación queda deshabilitado.
 - `npm start`: aplica las migraciones pendientes y crea la cuenta inicial si no existe.
 
 **Frontend**:

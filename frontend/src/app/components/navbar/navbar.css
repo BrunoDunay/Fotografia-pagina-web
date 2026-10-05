@@ -4,6 +4,14 @@
   z-index: var(--z-navbar);
   padding: calc(var(--space-3) + env(safe-area-inset-top, 0px)) var(--space-3) 0;
   pointer-events: none;
+  transition: padding var(--duration) var(--ease-out);
+  /* Se mantiene fijo durante las transiciones entre páginas. */
+  view-transition-name: navbar;
+}
+
+/* Al hacer scroll (o en páginas sin foto de portada) la barra queda pegada al borde superior, de lado a lado. */
+:host(.is-solid) {
+  padding: 0;
 }
 
 .bar {
@@ -20,7 +28,9 @@
   transition:
     background-color var(--duration) var(--ease-out),
     box-shadow var(--duration) var(--ease-out),
-    color var(--duration) var(--ease-out);
+    color var(--duration) var(--ease-out),
+    border-radius var(--duration) var(--ease-out),
+    max-width var(--duration) var(--ease-out);
 }
 
 /* ---- Transparente sobre el Hero ---- */
@@ -29,11 +39,17 @@
   color: var(--color-text-inverse);
 }
 
-/* ---- Píldora flotante (ref. Navbar.jpg) ---- */
+/* ---- Barra sólida, unida al borde superior ---- */
 :host(.is-solid) .bar {
-  background: color-mix(in srgb, var(--color-background) 92%, transparent);
+  max-width: none;
+  padding-top: env(safe-area-inset-top, 0px);
+  height: calc(64px + env(safe-area-inset-top, 0px));
+  padding-inline: max(var(--space-6), calc((100% - var(--container-wide)) / 2 + var(--space-6)));
+  border-radius: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+  background: color-mix(in srgb, var(--color-background) 94%, transparent);
   color: var(--color-text);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 24px rgba(42, 36, 33, 0.06);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -69,6 +85,10 @@
   opacity: 1;
 }
 
+.logo:hover .logo__img {
+  transform: scale(1.03);
+}
+
 .links a:hover::after,
 .links a.is-active::after {
   transform: scaleX(1);
@@ -85,7 +105,7 @@
   grid-area: 1 / 1;
   width: auto;
   height: 40px;
-  transition: opacity var(--duration) var(--ease-out);
+  transition: opacity var(--duration) var(--ease-out), transform var(--duration-slow) var(--ease-out);
 }
 
 .logo__img--light {
@@ -105,6 +125,38 @@
   top: -6px;
   right: -18px;
   font-size: 0.8rem;
+}
+
+/* Día de la Madre: arreglo de flores que cuelga bajo el logotipo y se mece apenas. */
+.bouquet {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 50%;
+  width: 150px;
+  max-width: none;
+  height: auto;
+  margin-left: -75px;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.18));
+  transform-origin: top center;
+  animation: bouquet-sway 7s ease-in-out infinite alternate;
+}
+
+@keyframes bouquet-sway {
+  from {
+    rotate: -1.6deg;
+  }
+  to {
+    rotate: 1.6deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Es la decoración del tema elegido: no se apaga, solo se mece más despacio. */
+  .bouquet {
+    animation-duration: 14s !important;
+    animation-iteration-count: infinite !important;
+  }
 }
 
 /* ---- Redes ---- */
@@ -186,9 +238,10 @@
 
 /* ---- Responsive ---- */
 @media (max-width: 1080px) {
-  .bar {
+  .bar,
+  :host(.is-solid) .bar {
     gap: var(--space-3);
-    padding: 0 var(--space-4);
+    padding-inline: var(--space-4);
   }
 
   .links {

@@ -33,9 +33,6 @@ export type TicketPreviewData = Omit<TicketData, 'design' | 'palette'>;
                   <app-reservation-ticket [reservation]="thumbs().get(d.key)!" [now]="now" />
                 </span>
                 <strong>{{ d.label }}</strong>
-                @if (d.photo) {
-                  <small>Con fotografía</small>
-                }
               </button>
             }
           </div>

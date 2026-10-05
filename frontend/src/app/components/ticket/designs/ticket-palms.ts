@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { palmFrond } from '../ticket-art';
+import { palmFrondLines } from '../ticket-art';
 import { TicketStatus } from '../ticket-status';
 import { TicketView, fitSize } from '../ticket-view';
 
 type Point = [number, number];
 const frond = (from: Point, control: Point, to: Point, length: number, opacity: number) => ({
-  ...palmFrond(from, control, to, { leaflets: 30, length, droop: 0.4 }),
+  d: palmFrondLines(from, control, to, { leaflets: 17, length, droop: 0.32 }),
   opacity,
 });
 
@@ -13,8 +13,8 @@ const CROWN: Point = [80, 17];
 const CORNER: Point = [-6, 184];
 
 /**
- * Palmeras (ref. Bodas en la playa/Diseño palmeras): papel claro con una palmera arriba a la derecha
- * y hojas abajo a la izquierda, monograma bajo una palmerita y los nombres en mayúsculas espaciadas.
+ * Palmeras (ref. Bodas en la playa/Diseño palmeras): papel claro con una palmera dibujada a línea fina
+ * arriba a la derecha y hojas abajo a la izquierda, monograma bajo una palmerita y los nombres en mayúsculas espaciadas.
  */
 @Component({
   selector: 'app-ticket-palms',
@@ -22,21 +22,16 @@ const CORNER: Point = [-6, 184];
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <svg class="art" viewBox="0 0 100 178" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <!-- Tronco -->
-      <path d="M118 66C104 52 92 36 80 17" fill="none" stroke-width="3.4" stroke-linecap="round" style="stroke: var(--t-accent)" />
-      <path d="M118 66C104 52 92 36 80 17" fill="none" stroke-width="3.4" stroke-dasharray="0.5 2.6" style="stroke: rgb(0 0 0 / 0.18)" />
+      <!-- Tronco: dos líneas finas -->
+      <path d="M116 68C103 53 91 37 79.400 17.600M119 65C106 51 93.500 35.500 81.400 16.600" fill="none" stroke-width="0.3" stroke-linecap="round" style="stroke: var(--t-dark)" />
       @for (f of fronds; track $index) {
-        <path [attr.d]="f.leaflets" [attr.opacity]="f.opacity" style="fill: var(--t-dark)" />
-        <path [attr.d]="f.rachis" fill="none" stroke-width="0.35" style="stroke: var(--t-dark)" />
+        <path [attr.d]="f.d" [attr.opacity]="f.opacity" fill="none" stroke-width="0.26" stroke-linecap="round" style="stroke: var(--t-dark)" />
       }
-      <circle cx="82" cy="19" r="1.5" style="fill: var(--t-accent)" />
-      <circle cx="79" cy="20.500" r="1.3" style="fill: var(--t-accent)" />
     </svg>
 
     <header class="crest">
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 23c-.4-5-.2-8.500.6-11.500" fill="none" stroke-width="1.1" stroke-linecap="round" style="stroke: var(--t-accent)" />
-        <path d="M12.600 11.500C10 8.500 6.500 8 3 9.500c3-3.500 7-3.500 9.600 2zM12.600 11.500c-.5-4-3-6.500-6.600-7.500 4.500-.5 7 2.500 6.600 7.500zM12.600 11.500c1-4 4-6 7.400-6-3-2.500-7-.5-7.400 6zM12.600 11.500c3-2 6-1.500 8.400 1-2-4-6-4.500-8.400-1zM12.600 11.500c2.500 1 4 3.500 4.400 6.500 1-4-1-6.500-4.400-6.500z" style="fill: var(--t-accent)" />
+        <path d="M12 23c-.4-5-.2-8.500.6-11.500M12.600 11.500C10 8.200 6.500 7.800 3 9.500M12.600 11.500c-.6-3.800-2.800-6.300-6.200-7.300M12.600 11.500c.9-3.900 3.600-5.900 7-6M12.600 11.500c2.900-1.700 5.800-1.300 8.200 1M12.600 11.500c2.400 1.100 3.800 3.300 4.200 6.200" fill="none" stroke-width="0.6" stroke-linecap="round" style="stroke: var(--t-accent)" />
       </svg>
       <p class="mono">
         @for (letter of v().monogram.slice(0, 2); track $index) {
@@ -111,17 +106,17 @@ export class TicketPalms {
 
   protected readonly fronds = [
     // Copa de la palmera (arriba a la derecha)
-    frond(CROWN, [60, 2], [40, 20], 9, 0.85),
-    frond(CROWN, [66, 22], [54, 44], 9, 0.7),
-    frond(CROWN, [76, 34], [72, 54], 8.5, 0.9),
-    frond(CROWN, [70, 0], [58, -6], 8, 0.6),
-    frond(CROWN, [96, 20], [104, 42], 9, 0.75),
-    frond(CROWN, [94, 2], [106, -4], 8, 0.65),
+    frond(CROWN, [60, 2], [40, 20], 10, 0.9),
+    frond(CROWN, [66, 22], [54, 44], 10, 0.75),
+    frond(CROWN, [76, 34], [72, 54], 9, 0.9),
+    frond(CROWN, [70, 0], [58, -6], 9, 0.6),
+    frond(CROWN, [96, 20], [104, 42], 10, 0.75),
+    frond(CROWN, [94, 2], [106, -4], 9, 0.6),
     // Hojas que entran por la esquina inferior izquierda
-    frond(CORNER, [4, 166], [24, 158], 7, 0.8),
-    frond(CORNER, [-4, 160], [10, 146], 7, 0.65),
-    frond(CORNER, [12, 176], [32, 174], 6.500, 0.9),
-    frond(CORNER, [-8, 160], [0, 140], 6.500, 0.55),
+    frond(CORNER, [4, 166], [24, 158], 8, 0.85),
+    frond(CORNER, [-4, 160], [10, 146], 8, 0.65),
+    frond(CORNER, [12, 176], [32, 174], 7.500, 0.9),
+    frond(CORNER, [-8, 160], [0, 140], 7.500, 0.55),
   ];
 
   protected readonly nameSize = computed(() => fitSize([...this.v().names].sort((a, b) => b.length - a.length)[0], 7.6, 4.2, 8));

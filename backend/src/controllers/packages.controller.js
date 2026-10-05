@@ -23,12 +23,12 @@ export async function listPublic(req, res) {
     include.push({ model: Service, as: 'services', where: { slug, isVisible: true }, attributes: [], through: { attributes: [] } });
   }
   const packages = await Package.findAll({ where, include, order: [['sortOrder', 'ASC']] });
-  res.json(packages.map(toPackage));
+  res.json(packages.map((pkg) => toPackage(pkg, { forPublic: true })));
 }
 
 export async function listAdmin(_req, res) {
   const packages = await Package.findAll({ include: includes, order: [['sortOrder', 'ASC']] });
-  res.json(packages.map(toPackage));
+  res.json(packages.map((pkg) => toPackage(pkg)));
 }
 
 async function replaceFeatures(packageId, features, transaction) {

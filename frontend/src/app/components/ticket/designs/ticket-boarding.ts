@@ -27,8 +27,6 @@ import { TicketView, fitSize } from '../ticket-view';
       <dl class="fields">
         <div><dt>Fecha</dt><dd>{{ v().shortDate }}</dd></div>
         <div><dt>Día</dt><dd class="cap">{{ v().date.weekday }}</dd></div>
-        <div><dt>Vuelo</dt><dd>{{ flight() }}</dd></div>
-        <div><dt>Clase</dt><dd>Primera clase</dd></div>
         @if (v().place; as place) {
           <div class="wide"><dt>Destino</dt><dd>{{ place }}</dd></div>
         }
@@ -163,7 +161,5 @@ import { TicketView, fitSize } from '../ticket-view';
 })
 export class TicketBoarding {
   readonly v = input.required<TicketView>();
-  /** Número de vuelo de adorno: iniciales + fecha (ej. LM 2106). */
-  protected readonly flight = computed(() => `${this.v().monogram.join('')} ${this.v().digits.day}${this.v().digits.month}`);
   protected readonly nameSize = computed(() => fitSize([...this.v().names].sort((a, b) => b.length - a.length)[0], 8.4, 4.4, 10));
 }

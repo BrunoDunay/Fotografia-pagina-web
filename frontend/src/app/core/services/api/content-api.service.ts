@@ -163,17 +163,10 @@ export class ContentApiService {
     return this.http.put(`${this.api}/themes/mode`, { mode, manualThemeId });
   }
 
-  createTheme(body: unknown) {
-    return this.http.post(`${this.api}/themes`, body);
-  }
-
   updateTheme(id: string, body: unknown) {
     return this.http.put(`${this.api}/themes/${id}`, body);
   }
 
-  deleteTheme(id: string) {
-    return this.http.delete<void>(`${this.api}/themes/${id}`);
-  }
 
   // ---- Legales ----
   legalDocuments() {

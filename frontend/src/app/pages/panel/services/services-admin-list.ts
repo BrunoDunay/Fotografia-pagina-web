@@ -28,7 +28,7 @@ type ServiceRow = AdminService & { imageCount?: number };
             <app-photo class="thumb" [media]="s.cover" ratio="3 / 4" sizes="48px" [maxWidth]="120" />
             <div class="info">
               <a [routerLink]="['/panel/services', s.id]"><strong>{{ s.name }}</strong></a>
-              <span class="p-help">/events/{{ s.slug }} · {{ s.imageCount ?? 0 }} foto(s) · {{ s.packageIds.length }} paquete(s)</span>
+              <span class="p-help">{{ s.imageCount ?? 0 }} foto(s) · {{ s.packageIds.length }} paquete(s)</span>
             </div>
             @if (s.isProvisional) {
               <span class="p-badge p-badge--warning">Textos provisionales</span>

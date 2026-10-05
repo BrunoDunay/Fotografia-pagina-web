@@ -400,6 +400,100 @@
   }
 }
 
+/* ---------- Año Nuevo: fuegos artificiales ---------- */
+/* Cada estallido: una estela que sube y 16 chispas que se abren despacio y se apagan. Ciclo largo para que no abrume. */
+.burst {
+  --cycle: 12s;
+
+  position: absolute;
+  width: 0;
+  height: 0;
+  filter: drop-shadow(0 0 4px var(--spark));
+}
+
+.burst i {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  display: block;
+  width: 2px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: var(--cycle) cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+  animation-delay: var(--delay);
+  will-change: transform, opacity;
+}
+
+.burst .trail {
+  height: 56px;
+  background: linear-gradient(to top, transparent, var(--spark));
+  animation-name: firework-trail;
+}
+
+.burst .spark {
+  height: calc(var(--r) * 0.32);
+  background: linear-gradient(to top, transparent, var(--spark) 65%, #fff);
+  transform-origin: 1px 0;
+  animation-name: firework-spark;
+}
+
+.burst .spark--short {
+  --r-scale: 0.62;
+}
+
+@keyframes firework-trail {
+  0% {
+    opacity: 0;
+    transform: translateY(44svh);
+  }
+  2% {
+    opacity: 0.85;
+  }
+  9% {
+    opacity: 0.85;
+    transform: translateY(1svh) scaleY(0.6);
+  }
+  10%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scaleY(0);
+  }
+}
+
+@keyframes firework-spark {
+  0%,
+  10% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(0) scaleY(0.2);
+  }
+  11% {
+    opacity: 1;
+  }
+  26% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -0.86)) scaleY(1);
+  }
+  36% {
+    opacity: 0.5;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -1)) scaleY(0.5);
+  }
+  44%,
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * var(--r-scale, 1) * -1.05)) scaleY(0.1);
+  }
+}
+
+@media (max-width: 640px) {
+  .burst:nth-child(n + 4) {
+    display: none;
+  }
+
+  .burst {
+    scale: 0.75;
+  }
+}
+
 /*
  * ---------- Movimiento reducido ----------
  * La decoración es parte del tema que elige el fotógrafo, así que no se apaga:
@@ -417,6 +511,11 @@
 
   .flag {
     animation-duration: 9s !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  .burst i {
+    animation-duration: 18s !important;
     animation-iteration-count: infinite !important;
   }
 }

@@ -12,7 +12,7 @@ function paintedRose(cx: number, cy: number, radius: number, seed: number) {
 }
 
 /**
- * Pasaporte (ref. Bodas en la playa/boda en otro sitio opción 2): título "PASAPORTE", rosa de los vientos
+ * Pasaporte (ref. Bodas en la playa/boda en otro sitio opción 2): retícula de mapa en las esquinas, rosa de los vientos
  * sobre un mapa tenue, nombres manuscritos, avión con ruta punteada y rosas en la esquina.
  */
 @Component({
@@ -22,7 +22,7 @@ function paintedRose(cx: number, cy: number, radius: number, seed: number) {
   template: `
     <svg class="art" viewBox="0 0 100 178" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <!-- Mapa del mundo, muy tenue -->
-      <g fill="#f3ede3" transform="translate(-2 30) scale(1.04)">
+      <g fill="#f3ede3" transform="translate(-2 20) scale(1.04)">
         <path d="M6 10c7-4 16-5 23-2 2 3-1 7-5 9-2 4-5 7-8 9-2-3-6-7-8-10-2-2-3-4-2-6z" />
         <path d="M22 30c3-1 7 1 8 5 0 5-2 10-5 15-2-4-4-9-4-14 0-3 0-4 1-6z" />
         <path d="M44 9c4-2 9-2 12 0-1 4-5 6-9 7-2-2-3-4-3-7z" />
@@ -31,8 +31,17 @@ function paintedRose(cx: number, cy: number, radius: number, seed: number) {
         <path d="M80 38c4-1 9 0 10 4-2 3-7 4-10 3-1-2-1-5 0-7z" />
       </g>
 
+      <!-- Esquinas superiores: retícula de mapa (paralelos y meridianos) muy tenue -->
+      @for (corner of [0, 100]; track corner) {
+        <g [attr.transform]="'translate(' + corner + ' 0)' + (corner ? ' scale(-1 1)' : '')" fill="none" stroke-width="0.18" opacity="0.4" style="stroke: var(--t-main)">
+          <path d="M0 12A12 12 0 0 0 12 0M0 18A18 18 0 0 0 18 0M0 24A24 24 0 0 0 24 0" />
+          <path d="M0 30A30 30 0 0 0 30 0" stroke-dasharray="0.5 1" />
+          <path d="M8.500 8.500L21.200 21.200M4.600 11.100L11.500 27.700M11.100 4.600L27.700 11.500" />
+        </g>
+      }
+
       <!-- Rosa de los vientos -->
-      <g transform="translate(50 56)" style="color: var(--t-main)">
+      <g transform="translate(50 46)" style="color: var(--t-main)">
         <circle r="15.500" fill="none" stroke="currentColor" stroke-width="0.35" />
         <circle r="13" fill="none" stroke="currentColor" stroke-width="0.9" stroke-dasharray="0.4 1.25" />
         @for (angle of [22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5]; track angle) {
@@ -71,11 +80,6 @@ function paintedRose(cx: number, cy: number, radius: number, seed: number) {
       }
     </svg>
 
-    <header>
-      <p class="title">Pasaporte</p>
-      <p class="sub">a nuestro gran día</p>
-    </header>
-
     <h1 class="names" [style.font-size]="nameSize()">
       @for (name of v().names; track $index) {
         <span>{{ name }}{{ $first && v().names.length === 2 ? ' y' : '' }}</span>
@@ -111,10 +115,8 @@ function paintedRose(cx: number, cy: number, radius: number, seed: number) {
     }
     p, h1 { margin: 0; }
     .art { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; }
-    .title { font-family: var(--font-serif); font-size: 9.4cqw; letter-spacing: 0.26em; line-height: 1.1; text-indent: 0.26em; text-transform: uppercase; }
-    .sub { margin-top: 1cqw; font-family: var(--font-serif); font-size: 2.9cqw; letter-spacing: 0.3em; text-transform: uppercase; }
     /* Los nombres van bajo la rosa de los vientos (que ocupa hasta ~78cqw). */
-    .names { display: grid; justify-items: center; margin-top: 62cqw; font-family: var(--font-script); font-weight: 400; line-height: 1.02; overflow-wrap: anywhere; }
+    .names { display: grid; justify-items: center; margin-top: 76cqw; font-family: var(--font-script); font-weight: 400; line-height: 1.02; overflow-wrap: anywhere; }
     .names span:nth-child(2) { margin-left: -0.4em; }
     .info { display: grid; gap: 1.2cqw; margin-top: 4cqw; font-family: var(--font-serif); font-size: 2.5cqw; letter-spacing: 0.24em; line-height: 1.5; text-transform: uppercase; }
     app-ticket-status { margin-top: 5cqw; }

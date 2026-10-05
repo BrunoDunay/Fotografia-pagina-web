@@ -9,6 +9,17 @@
   color: var(--color-text-inverse);
 }
 
+/* La foto de portada se aleja muy despacio al cargar. */
+.hero app-photo {
+  animation: hero-settle 9s var(--ease-out) both;
+}
+
+@keyframes hero-settle {
+  from {
+    transform: scale(1.07);
+  }
+}
+
 .hero__shade {
   position: absolute;
   inset: 0;

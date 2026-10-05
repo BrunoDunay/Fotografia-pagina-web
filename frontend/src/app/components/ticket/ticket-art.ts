@@ -107,6 +107,47 @@ export function tornEdge(height: number, seed = 11): string {
   return `${top}${bottom}z`;
 }
 
+/** Borde de papel de barba: tira fina de ancho 100 y alto `height` con los cantos apenas irregulares. */
+export function deckleEdge(height: number, seed = 11): string {
+  const random = seeded(seed);
+  const wave = (x: number, phase: number) => Math.sin(x * 0.31 + phase) * 0.1 + Math.sin(x * 0.83 + phase * 2) * 0.05;
+  let top = `M0 ${r2(height * 0.3)}`;
+  for (let x = 0; x <= 100; x += 0.7) top += `L${r2(x)} ${r2(height * (0.24 + wave(x, 1) + random() * 0.12))}`;
+  let bottom = '';
+  for (let x = 100; x >= 0; x -= 0.7) bottom += `L${r2(x)} ${r2(height * (0.72 + wave(x, 4) + random() * 0.12))}`;
+  return `${top}${bottom}z`;
+}
+
+/**
+ * Hoja de palmera a línea: el raquis y un trazo fino por folíolo (sin relleno).
+ * Devuelve un único path para dibujar con stroke.
+ */
+export function palmFrondLines(
+  from: [number, number],
+  control: [number, number],
+  to: [number, number],
+  options: { leaflets?: number; length?: number; droop?: number } = {},
+): string {
+  const { leaflets = 18, length = 12, droop = 0.3 } = options;
+  let d = `M${from[0]} ${from[1]}Q${control[0]} ${control[1]} ${to[0]} ${to[1]}`;
+  for (let i = 1; i <= leaflets; i++) {
+    const t = i / (leaflets + 1);
+    const [x, y] = quad(t, from, control, to);
+    const [x2, y2] = quad(Math.min(t + 0.02, 1), from, control, to);
+    const angle = Math.atan2(y2 - y, x2 - x);
+    const len = length * (0.3 + 0.7 * Math.sin(Math.PI * Math.min(1, t * 1.1)));
+    for (const side of [-1, 1]) {
+      const a = angle + side * (Math.PI / 2 - 0.7);
+      const tipX = x + Math.cos(a) * len;
+      const tipY = y + Math.sin(a) * len + droop * len * 0.5;
+      const midX = x + Math.cos(a) * len * 0.55 + Math.cos(angle) * len * 0.12;
+      const midY = y + Math.sin(a) * len * 0.55 + Math.sin(angle) * len * 0.12;
+      d += `M${r2(x)} ${r2(y)}Q${r2(midX)} ${r2(midY)} ${r2(tipX)} ${r2(tipY)}`;
+    }
+  }
+  return d;
+}
+
 /** Puntos repartidos sobre una curva cuadrática (hilo de perlas, guirnaldas…). */
 export function alongCurve(from: [number, number], control: [number, number], to: [number, number], count: number): [number, number][] {
   return Array.from({ length: count }, (_, i) => {

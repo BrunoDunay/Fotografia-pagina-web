@@ -60,13 +60,13 @@ function softRose(cx: number, cy: number, radius: number, seed: number) {
 
       <app-ticket-calendar [v]="v()" />
       <app-ticket-status [v]="v()" />
-      <img class="logo" src="/brand/logo-dark.webp" alt="Armando Ovalle Wedding Studio" width="600" height="146" />
+      <img class="logo" [src]="v().darkPaper ? '/brand/logo-light.webp' : '/brand/logo-dark.webp'" alt="Armando Ovalle Wedding Studio" width="600" height="146" />
     </article>
   `,
   styles: `
     :host {
       --cal-accent: var(--t-dark);
-      --cal-on: #fff;
+      --cal-on: var(--t-paper);
       --cal-scale: 0.78;
       --status-scale: 0.68;
       --status-font: var(--font-serif);
@@ -88,9 +88,9 @@ function softRose(cx: number, cy: number, radius: number, seed: number) {
       justify-content: space-between;
       height: 100%;
       padding: 19cqw 7cqw 4cqw;
-      border: 0.25cqw solid color-mix(in srgb, var(--t-accent) 35%, white);
+      border: 0.25cqw solid color-mix(in srgb, var(--t-accent) 40%, var(--t-paper));
       border-radius: 5cqw;
-      background: linear-gradient(170deg, color-mix(in srgb, var(--t-paper) 40%, white), var(--t-paper));
+      background: linear-gradient(170deg, color-mix(in srgb, var(--t-paper) 88%, white), var(--t-paper));
       box-shadow: 0 1.5cqw 5cqw color-mix(in srgb, var(--t-dark) 30%, transparent);
       overflow: hidden;
       isolation: isolate;

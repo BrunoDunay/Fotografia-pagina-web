@@ -19,7 +19,7 @@ type AdminFaq = Faq & { service: { id: string; name: string } | null };
   imports: [ReactiveFormsModule, CdkDropList, CdkDrag, CdkDragHandle, Btn, Icon, SkeletonTable, PageHeader],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-page-header title="Preguntas frecuentes" subtitle="Arrastra para ordenar. Las generales aparecen en la Home y en /faq; las de un servicio, en su página.">
+    <app-page-header title="Preguntas frecuentes" subtitle="Arrastra para ordenar. Las generales aparecen en la página de inicio y en la de Preguntas frecuentes; las de un servicio, en su página.">
       <button appBtn type="button" (click)="edit('new')">+ Nueva pregunta</button>
     </app-page-header>
 
@@ -37,7 +37,7 @@ type AdminFaq = Faq & { service: { id: string; name: string } | null };
           <div class="field">
             <label class="field__label" for="s">Dónde se muestra</label>
             <select id="s" class="field__control" formControlName="serviceId">
-              <option value="">Generales (Home y /faq)</option>
+              <option value="">Generales (inicio y Preguntas frecuentes)</option>
               @for (s of services(); track s.id) {
                 <option [value]="s.id">Solo en: {{ s.name }}</option>
               }

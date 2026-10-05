@@ -15,11 +15,22 @@ import { TicketView, fitSize } from '../ticket-view';
 
     <!-- Copa: líquido de color y contorno a línea blanca -->
     <svg class="glass" viewBox="0 0 60 100" aria-hidden="true">
-      <!-- líquido -->
+      <!-- líquido: tono base, fondo más profundo, luces y burbujas -->
       <path d="M16.200 16C15 34 19 50 30 58 41 50 45 34 43.800 16 39 13.500 21 13.500 16.200 16z" style="fill: var(--t-accent)" />
-      <ellipse cx="30" cy="15.800" rx="13.800" ry="2.600" style="fill: color-mix(in srgb, var(--t-accent) 70%, white)" />
+      <path d="M17.600 36C19.500 46 23.500 53.500 30 58 36.500 53.500 40.500 46 42.400 36 38 40 22 40 17.600 36z" style="fill: var(--t-main)" opacity="0.2" />
+      <path d="M21.500 48.500C24 53 26.500 55.800 30 58 33.500 55.800 36 53 38.500 48.500 35 51 25 51 21.500 48.500z" style="fill: var(--t-main)" opacity="0.2" />
+      <path d="M18.300 19C17.800 30 19.500 41 24.500 49.500 21.800 41 20.600 30 21 19.600z" fill="#fff" opacity="0.5" />
+      <path d="M22.600 20.200C22.400 28 23.200 35 25.200 41.500 24.400 35 24 28 24.200 20.500z" fill="#fff" opacity="0.28" />
+      <path d="M41.600 19.500C41.800 28 40.600 36 37.800 43 39.600 36 40.200 28 40 20z" fill="#fff" opacity="0.22" />
+      <ellipse cx="30" cy="15.800" rx="13.800" ry="2.600" style="fill: color-mix(in srgb, var(--t-accent) 62%, white)" />
+      <ellipse cx="27" cy="15.300" rx="7" ry="1.100" fill="#fff" opacity="0.45" />
+      <g fill="#fff">
+        <circle cx="29" cy="50" r="0.450" opacity="0.7" /><circle cx="31.500" cy="45" r="0.350" opacity="0.6" /><circle cx="28.200" cy="41" r="0.500" opacity="0.55" />
+        <circle cx="32.400" cy="37.500" r="0.300" opacity="0.6" /><circle cx="27.600" cy="30" r="0.350" opacity="0.5" /><circle cx="33" cy="28" r="0.450" opacity="0.5" />
+        <circle cx="30.200" cy="24.500" r="0.300" opacity="0.6" /><circle cx="35.200" cy="33" r="0.280" opacity="0.5" /><circle cx="26" cy="22" r="0.280" opacity="0.6" />
+      </g>
       <!-- contorno del cáliz, tallo y base -->
-      <g fill="none" stroke="#fff" stroke-linecap="round" stroke-width="0.7">
+      <g fill="none" stroke="#fff" stroke-linecap="round" stroke-width="0.55">
         <path d="M17 6C13 30 17 50 30 59 43 50 47 30 43 6" />
         <ellipse cx="30" cy="6" rx="13" ry="2.400" />
         <path d="M29 59.500C29 70 28.500 82 28 90M31 59.500C31 70 31.500 82 32 90" />
@@ -70,7 +81,7 @@ import { TicketView, fitSize } from '../ticket-view';
     .logo { width: 30cqw; height: auto; opacity: 0.95; }
     .glass { flex: none; width: 44cqw; height: 74cqw; margin-top: 5cqw; filter: drop-shadow(0 1.4cqw 2cqw rgb(0 0 0 / 0.3)); }
     .info { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2cqw; min-height: 0; padding: 0 9cqw; }
-    .eyebrow { font-size: 2.2cqw; letter-spacing: 0.44em; text-transform: uppercase; color: var(--t-accent); }
+    .eyebrow { font-size: 2.2cqw; letter-spacing: 0.44em; text-transform: uppercase; color: color-mix(in srgb, var(--t-accent) 80%, white); }
     .names { font-family: var(--font-serif); font-weight: 500; letter-spacing: 0.1em; line-height: 1.15; text-transform: uppercase; overflow-wrap: anywhere; }
     .date { font-size: 2.6cqw; letter-spacing: 0.26em; text-transform: uppercase; }
     .where { font-size: 2.1cqw; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.8; }
@@ -83,13 +94,13 @@ import { TicketView, fitSize } from '../ticket-view';
       width: 76cqw;
       padding: 5cqw 4cqw 6cqw;
       border-radius: 2.4cqw 2.4cqw 0 0;
-      background: var(--t-paper);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--t-paper) 82%, white), var(--t-paper));
       color: var(--t-ink);
       box-shadow: 0 -1cqw 3cqw rgb(0 0 0 / 0.25);
       isolation: isolate;
     }
     /* Lengüeta semicircular en el borde superior. */
-    .tab::before { content: ''; position: absolute; top: -5cqw; left: 50%; width: 16cqw; height: 10cqw; border-radius: 50%; background: var(--t-paper); translate: -50% 0; z-index: -1; }
+    .tab::before { content: ''; position: absolute; top: -5cqw; left: 50%; width: 16cqw; height: 10cqw; border-radius: 50%; background: color-mix(in srgb, var(--t-paper) 82%, white); translate: -50% 0; z-index: -1; }
   `,
 })
 export class TicketGlass {

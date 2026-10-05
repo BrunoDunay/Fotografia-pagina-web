@@ -59,10 +59,17 @@
           <label class="field__label" for="package">Paquete</label>
           <select id="package" class="field__control" formControlName="packageId">
             <option value="">— Sin paquete —</option>
-            @for (p of packages(); track p.id) {
+            @for (p of packageOptions(); track p.id) {
               <option [value]="p.id">{{ p.name }}</option>
             }
           </select>
+          @if (!selectedService()) {
+            <span class="field__hint">Elige primero el tipo de evento para ver sus paquetes.</span>
+          } @else if (!packageOptions().length) {
+            <span class="field__hint">{{ selectedService()!.name }} no tiene paquetes.</span>
+          } @else {
+            <span class="field__hint">Paquetes de {{ selectedService()!.name }}.</span>
+          }
         </div>
         <div class="field">
           <label class="field__label" for="price">Precio total (MXN)</label>
@@ -139,6 +146,43 @@
         </form>
       </section>
 
+      <!-- Correo de confirmación -->
+      <section class="p-card mail">
+        <h2 class="p-card__title">Correo de confirmación</h2>
+        <p class="p-help">
+          Envía al cliente un correo con el resumen de lo contratado (paquete, precio total, pagos y saldo) y su ticket digital adjunto,
+          listo para compartir.
+        </p>
+        @if (e.client.email) {
+          <p class="mail__to">Se enviará a <strong>{{ e.client.email }}</strong></p>
+        } @else {
+          <p class="mail__note">
+            El cliente no tiene correo registrado. Agrégalo en <a class="p-link" [routerLink]="['/panel/clients', e.client.id]">su ficha</a>.
+          </p>
+        }
+        @if (!e.mailEnabled) {
+          <p class="mail__note">Falta configurar el correo saliente del sitio (datos SMTP en el archivo .env del servidor). Mientras tanto no se pueden enviar correos.</p>
+        }
+        @if (ticketForm.dirty) {
+          <p class="mail__note">Guarda los cambios del ticket antes de enviarlo.</p>
+        }
+        <div class="p-row">
+          <button
+            appBtn
+            size="sm"
+            type="button"
+            [loading]="sendingMail()"
+            [disabled]="sendingMail() || !e.client.email || !e.mailEnabled || ticketForm.dirty"
+            (click)="sendConfirmation()"
+          >
+            {{ e.confirmationSentAt ? 'Volver a enviar' : 'Enviar confirmación' }}
+          </button>
+          @if (e.confirmationSentAt) {
+            <span class="p-help">Último envío: {{ sentLabel(e.confirmationSentAt) }}</span>
+          }
+        </div>
+      </section>
+
       <!-- Ticket -->
       @if (e.reservation) {
         <section class="p-card">
@@ -171,16 +215,6 @@
             <label class="p-check"><input type="checkbox" formControlName="showTime" /> Mostrar horario</label>
             <label class="p-check"><input type="checkbox" formControlName="showVenue" /> Mostrar lugar</label>
             <label class="p-check"><input type="checkbox" formControlName="isActive" /> Enlace activo</label>
-            @if (usesTicketPhoto()) {
-            <app-image-picker
-              label="Foto del ticket"
-              hint="Opcional. Si no subes una, se usa la portada del tipo de evento."
-              folder="reservations"
-              ratio="4 / 3"
-              [value]="ticketCover()"
-              (valueChange)="setTicketCover($event)"
-            />
-            }
             @if (ticketPreview(); as preview) {
               <app-ticket-style-picker
                 [design]="ticketForm.controls.ticketDesign.value"
@@ -196,6 +230,12 @@
       }
     </div>
   </div>
+  <!-- Ticket fuera de pantalla: de aquí sale la imagen que se adjunta al correo de confirmación. -->
+  @if (mailTicketData(); as ticket) {
+    <div class="mail-ticket" aria-hidden="true">
+      <app-reservation-ticket #mailTicket [reservation]="ticket" [now]="mailNow()" />
+    </div>
+  }
 } @else {
   <app-skeleton-dashboard />
 }

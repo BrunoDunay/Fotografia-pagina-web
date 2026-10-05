@@ -69,6 +69,7 @@ export class EventCreate implements OnInit {
     blocksAvailability: [true],
     notes: [''],
     withPayment: [true],
+    sendConfirmation: [true],
     payment: this.fb.group({
       amount: [null as number | null, [Validators.min(0)]],
       paidAt: [todayInMexico()],
@@ -116,12 +117,20 @@ export class EventCreate implements OnInit {
     };
   });
 
-  /** Paquetes del servicio elegido (o todos si el servicio no tiene paquetes ligados). */
+  /** Correo del cliente (nuevo o existente): si lo hay, se puede enviar la confirmación al guardar. */
+  protected readonly clientEmail = computed(() => {
+    this.formValue();
+    return this.clientMode() === 'existing' ? (this.selectedClient()?.email ?? '') : this.form.controls.newClient.controls.email.value.trim();
+  });
+
+  /** Tipo de evento elegido en el formulario. */
+  protected readonly selectedService = computed(() => this.services().find((s) => s.id === this.serviceId()) ?? null);
+
+  /** Solo los paquetes del tipo de evento elegido; sin tipo de evento (o si no tiene paquetes) no hay ninguno. */
   protected readonly packageOptions = computed(() => {
-    const service = this.services().find((s) => s.id === this.serviceId());
-    const all = this.packages().filter((p) => p.isActive);
-    if (!service || !service.packageIds.length) return all;
-    return all.filter((p) => service.packageIds.includes(p.id));
+    const service = this.selectedService();
+    if (!service) return [];
+    return this.packages().filter((p) => p.isActive && service.packageIds.includes(p.id));
   });
 
   ngOnInit(): void {
@@ -130,10 +139,16 @@ export class EventCreate implements OnInit {
   }
 
   constructor() {
+    // Al cambiar el tipo de evento, se quita el paquete si no pertenece al nuevo tipo.
+    this.form.controls.serviceId.valueChanges.subscribe((serviceId) => {
+      const service = this.services().find((s) => s.id === serviceId);
+      const current = this.form.controls.packageId.value;
+      if (current && !service?.packageIds.includes(current)) this.form.controls.packageId.setValue('');
+    });
     // Al elegir paquete con precio definitivo, sugerirlo como precio total.
     this.form.controls.packageId.valueChanges.subscribe((id) => {
       const pkg = this.packages().find((p) => p.id === id);
-      if (pkg?.price && !pkg.isPriceProvisional && !this.form.controls.totalPrice.value) {
+      if (pkg?.price && !this.form.controls.totalPrice.value) {
         this.form.controls.totalPrice.setValue(pkg.price);
       }
     });
@@ -216,7 +231,8 @@ export class EventCreate implements OnInit {
     this.agenda.createEvent(body).subscribe({
       next: (event) => {
         this.toast.success(v.blocksAvailability ? 'Evento guardado. La fecha ya aparece como ocupada.' : 'Evento guardado.');
-        void this.router.navigate(['/panel/events', event.id], { queryParams: { created: 1 } });
+        const confirm = v.sendConfirmation && !!event.client.email;
+        void this.router.navigate(['/panel/events', event.id], { queryParams: { created: 1, ...(confirm ? { confirm: 1 } : {}) } });
       },
       error: (err: ApiError) => {
         this.saving.set(false);

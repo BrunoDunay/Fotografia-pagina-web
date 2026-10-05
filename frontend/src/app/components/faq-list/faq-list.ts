@@ -29,8 +29,10 @@ import { Faq } from '../../core/types/catalog.model';
       list-style: none;
     }
     summary::-webkit-details-marker { display: none; }
-    .q { font-family: var(--font-serif); font-size: var(--text-xl); line-height: 1.3; transition: color var(--duration-fast); }
-    summary:hover .q { color: var(--color-primary); }
+    .q { font-family: var(--font-serif); font-size: var(--text-xl); line-height: 1.3; transition: color var(--duration), transform 0.5s var(--ease-out); }
+    summary:hover .q { color: var(--color-primary); transform: translateX(6px); }
+    .item[open] .a { animation: answer-in 0.5s var(--ease-out); }
+    @keyframes answer-in { from { opacity: 0; transform: translateY(-6px); } }
     .sign { position: relative; flex: none; width: 14px; height: 14px; }
     .sign::before, .sign::after {
       content: '';

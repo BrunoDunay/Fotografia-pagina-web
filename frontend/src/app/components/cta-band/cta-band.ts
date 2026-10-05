@@ -4,17 +4,18 @@ import { Media } from '../../core/types/common.model';
 import { SettingsStore } from '../../core/services/settings.store';
 import { Photo } from '../photo/photo';
 import { Btn } from '../buttons/btn';
+import { Reveal } from '../reveal/reveal.directive';
 
 /** Banda a sangre con foto, título y acciones (disponibilidad / WhatsApp). */
 @Component({
   selector: 'app-cta-band',
-  imports: [RouterLink, Photo, Btn],
+  imports: [RouterLink, Photo, Btn, Reveal],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="band">
       <app-photo [media]="image()" sizes="100vw" alt="" />
       <div class="shade" aria-hidden="true"></div>
-      <div class="content container container--narrow">
+      <div class="content container container--narrow" appReveal>
         @if (eyebrow()) {
           <p class="eyebrow">{{ eyebrow() }}</p>
         }
@@ -33,6 +34,8 @@ import { Btn } from '../buttons/btn';
   `,
   styles: `
     .band { position: relative; display: grid; place-items: center; min-height: clamp(420px, 60vh, 640px); color: var(--color-text-inverse); overflow: hidden; }
+    .band app-photo { transition: transform 6s var(--ease-out); }
+    .band:hover app-photo { transform: scale(1.04); }
     .shade { position: absolute; inset: 0; background: var(--color-overlay-strong); }
     .content { position: relative; display: grid; justify-items: center; gap: var(--space-4); padding-block: var(--space-9); text-align: center; }
     .eyebrow { color: var(--color-accent); }

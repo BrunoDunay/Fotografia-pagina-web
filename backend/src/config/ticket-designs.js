@@ -11,14 +11,15 @@ export const TICKET_DESIGNS = {
   pearls: ['taupe', 'silver', 'blush'],
   lace: ['forest', 'black', 'burgundy', 'navy'],
   garden: ['olive', 'black', 'burgundy', 'navy'],
+  doves: ['olive', 'black', 'burgundy', 'navy'],
   // Playa y destino
   palms: ['olive', 'terracotta', 'teal'],
   palmtree: ['olive', 'terracotta', 'ink'],
   passport: ['terracotta', 'navy', 'olive'],
   boarding: ['navy', 'sand', 'terracotta'],
   // XV años
-  roses: ['blush', 'champagne', 'lilac'],
-  clouds: ['pink', 'lilac', 'sky', 'peach'],
+  roses: ['blush', 'champagne', 'lilac', 'red', 'black', 'ivory'],
+  clouds: ['pink', 'lilac', 'sky', 'peach', 'red', 'black', 'pearl'],
   // Graduaciones
   grad: ['navy', 'black', 'burgundy', 'forest'],
   glass: ['slate', 'black', 'burgundy', 'forest'],

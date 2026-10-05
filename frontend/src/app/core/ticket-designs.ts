@@ -9,6 +9,7 @@ export type TicketDesign =
   | 'pearls'
   | 'lace'
   | 'garden'
+  | 'doves'
   | 'palms'
   | 'palmtree'
   | 'passport'
@@ -46,8 +47,6 @@ export interface TicketDesignDef {
   key: TicketDesign;
   label: string;
   group: TicketGroup;
-  /** Usa la foto del ticket (la propia o la del tipo de evento); el panel permite elegirla. */
-  photo?: boolean;
   /** Slugs de servicios para los que se sugiere este diseño. */
   services: string[];
   palettes: TicketPalette[];
@@ -93,7 +92,6 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
     key: 'mono',
     label: 'Blanco y negro',
     group: 'Bodas',
-    photo: true,
     services: [],
     palettes: [
       // main = barra inferior · dark = velo sobre la foto
@@ -138,6 +136,19 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
       p('navy', 'Azul marino', '#18223a', '#0e1526', '#ffffff', '#ffffff', '#dfe6f3'),
     ],
   },
+  {
+    key: 'doves',
+    label: 'Palomas',
+    group: 'Bodas',
+    services: [],
+    palettes: [
+      // main = cartel · accent = líneas y texto sobre el cartel
+      p('olive', 'Verde olivo', '#4d5340', '#3a3f30', '#f5f1e6', '#3a3f30', '#f1ecdd'),
+      p('black', 'Negro', '#242322', '#131212', '#f4f0e8', '#242322', '#efe9dc'),
+      p('burgundy', 'Vino', '#4f1823', '#350d16', '#f7efe9', '#4f1823', '#f3e6dc'),
+      p('navy', 'Azul marino', '#222d47', '#151d31', '#f0f1f4', '#222d47', '#e9ebf1'),
+    ],
+  },
 
   // ---------------- Playa y destino ----------------
   {
@@ -146,10 +157,10 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
     group: 'Playa y destino',
     services: ['beach-weddings'],
     palettes: [
-      // main = texto · dark = hojas · accent = tronco
-      p('olive', 'Verde olivo', '#7c7a45', '#5f6e3c', '#f7f4ee', '#7c7a45', '#8a5a3c'),
-      p('terracotta', 'Terracota', '#a8623f', '#6f7c46', '#faf3ea', '#a8623f', '#7a5136'),
-      p('teal', 'Verde mar', '#2f6f73', '#3f7f6a', '#f3f7f5', '#2f6f73', '#8a6a4c'),
+      // main = texto · dark = palmera (a línea) · accent = monograma
+      p('olive', 'Verde olivo', '#6f6d44', '#6b7350', '#f7f4ee', '#6f6d44', '#8a7a5c'),
+      p('terracotta', 'Terracota', '#9c5d40', '#7d7a58', '#faf3ea', '#9c5d40', '#8a6b52'),
+      p('teal', 'Verde mar', '#2f6266', '#4f7a70', '#f3f7f5', '#2f6266', '#6f8a84'),
     ],
   },
   {
@@ -199,6 +210,9 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
       p('blush', 'Rosa', '#e9cdc8', '#c79c97', '#fbf4f0', '#3a2c2b', '#a9825f'),
       p('champagne', 'Champagne', '#ead9bb', '#c2a474', '#fbf7ee', '#3b3225', '#9a7b4f'),
       p('lilac', 'Lila', '#ddd0ea', '#ab94c6', '#f8f4fb', '#35293f', '#8a6aa6'),
+      p('red', 'Rojo', '#c9444b', '#7d1820', '#fbf3f1', '#3a1a1c', '#9c2a31'),
+      p('black', 'Negro', '#8c8280', '#4a4341', '#1c1a1a', '#f1eae4', '#c9a97a'),
+      p('ivory', 'Marfil', '#efe8dc', '#cfc3ae', '#fdfbf7', '#3b352d', '#a08a62'),
     ],
   },
   {
@@ -212,6 +226,9 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
       p('lilac', 'Lila', '#c7b3e6', '#9c84c9', '#ffffff', '#6f58a0', '#e8def7'),
       p('sky', 'Celeste', '#a9cbee', '#7aa5d6', '#ffffff', '#3f6ea3', '#dceaf9'),
       p('peach', 'Durazno', '#f5b9a0', '#e08f72', '#ffffff', '#b3603f', '#fde1d6'),
+      p('red', 'Rojo', '#c2303a', '#7f1620', '#ffffff', '#8f1c26', '#eba9ae'),
+      p('black', 'Negro', '#2b2b30', '#0e0e11', '#ffffff', '#1c1c20', '#74747f'),
+      p('pearl', 'Perla', '#ebe6de', '#d6cdbf', '#ffffff', '#6b6152', '#f8f5ef'),
     ],
   },
 
@@ -235,10 +252,10 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
     services: [],
     palettes: [
       // main = tarjeta · paper/accent = color de la copa y la pestaña
-      p('slate', 'Azul pizarra', '#3a4658', '#28313f', '#b9d6ea', '#28313f', '#b9d6ea'),
-      p('black', 'Negro y dorado', '#1f1f20', '#101011', '#e6cf9c', '#1f1f20', '#e6cf9c'),
-      p('burgundy', 'Vino', '#4a1722', '#2f0d15', '#f0c9cf', '#3a1019', '#f0c9cf'),
-      p('forest', 'Verde', '#22362b', '#15241b', '#bfe3cf', '#17281f', '#bfe3cf'),
+      p('slate', 'Azul pizarra', '#39424f', '#252c36', '#d5dbe2', '#252c36', '#d5dbe2'),
+      p('black', 'Negro y dorado', '#1f1f20', '#101011', '#dcc694', '#1f1f20', '#dcc694'),
+      p('burgundy', 'Vino', '#4a1722', '#2f0d15', '#e9d3c2', '#3a1019', '#e9d3c2'),
+      p('forest', 'Verde', '#22332a', '#15221b', '#ddd6b8', '#17251e', '#ddd6b8'),
     ],
   },
   {

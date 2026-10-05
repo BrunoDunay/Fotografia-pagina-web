@@ -1,6 +1,11 @@
 import { Op } from 'sequelize';
-import { Client, Event, MediaAsset, Package, Payment, Reservation, Service } from '../models/index.js';
-import { notFound } from '../utils/app-error.js';
+import { Client, Event, MediaAsset, Package, PackageFeature, Payment, Reservation, Service } from '../models/index.js';
+import { AppError, notFound } from '../utils/app-error.js';
+import { env } from '../config/env.js';
+import { hasImageSignature } from '../middlewares/upload.js';
+import { buildConfirmationEmail } from '../services/confirmation-email.js';
+import { sendMail } from '../services/mail.service.js';
+import { getSections } from '../services/settings.service.js';
 import { createEventWithBooking, paymentSummary } from '../services/event-booking.service.js';
 import { toMedia, toNumber } from '../services/serializers.js';
 
@@ -68,6 +73,9 @@ async function loadEventDetail(id) {
           defaultCover: toMedia(event.service?.coverMedia) ?? toMedia(event.service?.heroMedia),
         }))(json.reservation)
       : null,
+    confirmationSentAt: json.confirmationSentAt ?? null,
+    /** El servidor tiene configurado el correo saliente (SMTP_*). */
+    mailEnabled: env.mailEnabled,
     createdAt: json.createdAt,
     updatedAt: json.updatedAt,
   };
@@ -115,4 +123,58 @@ export async function remove(req, res) {
   if (!event) throw notFound('El evento');
   await event.destroy();
   res.status(204).end();
+}
+
+/**
+ * Envía al cliente el correo de confirmación: resumen de lo contratado (paquete, precio, pagos y saldo)
+ * y el ticket digital. La imagen del ticket la genera el panel y llega como archivo "ticket" (opcional).
+ */
+export async function sendConfirmation(req, res) {
+  const event = await Event.findByPk(req.valid.params.id, {
+    include: [
+      { model: Client, as: 'client' },
+      { model: Service, as: 'service', attributes: ['id', 'name', 'slug'] },
+      { model: Package, as: 'package', include: [{ model: PackageFeature, as: 'features' }] },
+      { model: Payment, as: 'payments' },
+      { model: Reservation, as: 'reservation' },
+    ],
+    order: [[{ model: Payment, as: 'payments' }, 'paidAt', 'ASC']],
+  });
+  if (!event) throw notFound('El evento');
+  if (!event.client?.email) {
+    throw new AppError(400, 'El cliente no tiene un correo registrado. Agrégalo en su ficha y vuelve a intentar.', 'CLIENT_WITHOUT_EMAIL');
+  }
+  const ticket = req.file;
+  if (ticket && !hasImageSignature(ticket.buffer)) throw new AppError(415, 'La imagen del ticket no es válida.', 'INVALID_IMAGE');
+
+  const { brand = {}, contact = {} } = await getSections(['brand', 'contact']);
+  const json = event.toJSON();
+  const reservation = json.reservation?.isActive ? json.reservation : null;
+  const mail = buildConfirmationEmail({
+    event: json,
+    payment: paymentSummary(json.totalPrice, json.payments),
+    ticketUrl: reservation ? `${env.PUBLIC_SITE_URL}/reservation/${reservation.publicCode}` : null,
+    hasTicketImage: Boolean(ticket),
+    studio: {
+      name: brand.studioName ?? 'Armando Ovalle Wedding Studio',
+      photographer: contact.photographerName ?? brand.photographerName ?? null,
+      phone: contact.phone ?? null,
+      email: contact.email ?? null,
+      instagram: contact.instagram?.handle ?? null,
+      siteUrl: env.PUBLIC_SITE_URL,
+    },
+  });
+
+  await sendMail({
+    to: { name: json.client.name, address: json.client.email },
+    replyTo: contact.email,
+    ...mail,
+    attachments: ticket
+      ? [{ filename: 'ticket-digital.' + (ticket.mimetype === 'image/jpeg' ? 'jpg' : 'png'), content: ticket.buffer, contentType: ticket.mimetype, cid: 'ticket' }]
+      : [],
+  });
+
+  const confirmationSentAt = new Date();
+  await event.update({ confirmationSentAt });
+  res.json({ sentTo: json.client.email, confirmationSentAt });
 }

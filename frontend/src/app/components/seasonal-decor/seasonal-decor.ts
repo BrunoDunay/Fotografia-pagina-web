@@ -38,7 +38,21 @@ const CONFIG: Record<Exclude<ThemeDecoration, 'none'>, DecorConfig> = {
   // Día de Muertos: flores y pétalos de cempasúchil + papel picado de calaveritas.
   dia_de_muertos: { count: 22, weights: [2, 2, 1], spin: 360, size: [0.8, 1.5], duration: [13, 22], garland: 'muertos' },
   papel_picado: { count: 0, weights: [1], spin: 0, size: [1, 1], duration: [1, 1], garland: 'tricolor' },
+  // Año Nuevo: no cae nada; son fuegos artificiales (ver BURSTS).
+  fireworks: { count: 0, weights: [1], spin: 0, size: [1, 1], duration: [1, 1] },
+  // Día de la Madre: la decoración es el arreglo floral bajo el logotipo (lo pinta el navbar).
+  mothers_day: { count: 0, weights: [1], spin: 0, size: [1, 1], duration: [1, 1] },
 };
+
+/** Fuegos artificiales: pocos, lentos y repartidos; cada uno estalla una vez por ciclo. */
+const BURSTS = [
+  { left: 22, top: 30, radius: 112, delay: 0, color: '#f6dc9a' },
+  { left: 76, top: 24, radius: 132, delay: 2.6, color: '#ffffff' },
+  { left: 50, top: 42, radius: 94, delay: 5.1, color: '#f2b8a8' },
+  { left: 88, top: 50, radius: 82, delay: 7.4, color: '#f6dc9a' },
+  { left: 10, top: 54, radius: 76, delay: 9.6, color: '#cfe3f5' },
+];
+const RAYS = Array.from({ length: 16 }, (_, i) => i * 22.5);
 
 /** Generador pseudoaleatorio con semilla: mismas partículas en cada visita (sin "saltos"). */
 function seeded(seed: number) {
@@ -62,7 +76,7 @@ const FLAGS = 14;
 
 /**
  * Decoración del tema estacional (nieve, Navidad, corazones, pétalos, hojas, confeti, verano,
- * papel picado o Día de Muertos).
+ * papel picado, Día de Muertos o fuegos artificiales de Año Nuevo).
  * - Solo sobre el área del Hero, detrás del navbar y sin capturar clics.
  * - Solo CSS (sin canvas ni librerías), se monta en el navegador después de pintar.
  * - Con `prefers-reduced-motion` cae más lento y sin giros.
@@ -77,6 +91,8 @@ const FLAGS = 14;
 export class SeasonalDecor {
   readonly decoration = input.required<Exclude<ThemeDecoration, 'none'>>();
 
+  protected readonly bursts = BURSTS;
+  protected readonly rays = RAYS;
   protected readonly ready = signal(false);
   protected readonly config = computed(() => CONFIG[this.decoration()]);
 

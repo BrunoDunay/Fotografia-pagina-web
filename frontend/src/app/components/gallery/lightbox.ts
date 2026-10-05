@@ -57,11 +57,13 @@ import { Icon } from '../icon/icon';
 
   `,
   styles: `
-    :host { position: fixed; inset: 0; z-index: var(--z-modal); display: grid; place-items: center; animation: fade 0.25s ease-out; touch-action: pan-y; }
+    :host { position: fixed; inset: 0; z-index: var(--z-modal); height: 100dvh; animation: fade 0.25s ease-out; touch-action: pan-y; }
     @keyframes fade { from { opacity: 0; } }
     .backdrop { position: absolute; inset: 0; background: rgba(20, 16, 14, 0.94); }
-    .stage { position: relative; margin: 0; width: 100%; height: 100%; display: grid; place-items: center; padding: 4.5rem 5rem; pointer-events: none; }
-    .stage img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4); animation: fade 0.35s ease-out; }
+    /* La celda mide exactamente el espacio libre (minmax(0, 1fr)): así el alto máximo de la foto es el de la pantalla y nunca se corta. */
+    .stage { position: absolute; inset: 0; margin: 0; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; padding: 4.5rem 5rem; pointer-events: none; }
+    .stage img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4); animation: photo-swap 0.45s var(--ease-out); }
+    @keyframes photo-swap { from { opacity: 0; transform: scale(0.985); } }
     .btn { position: absolute; z-index: 1; display: grid; place-items: center; padding: var(--space-3); border: 0; background: none; color: var(--color-text-inverse); opacity: 0.75; transition: opacity var(--duration-fast); }
     .btn:hover:not(:disabled) { opacity: 1; }
     .btn:disabled { opacity: 0.2; cursor: default; }
@@ -71,7 +73,7 @@ import { Icon } from '../icon/icon';
     .next { right: var(--space-3); }
     .counter { position: absolute; z-index: 1; top: var(--space-5); left: 50%; transform: translateX(-50%); color: var(--color-text-inverse); font-size: var(--text-sm); letter-spacing: var(--tracking-wider); }
     @media (max-width: 700px) {
-      .stage { padding: 4rem 0.5rem; }
+      .stage { padding: 4rem 0.5rem 4.5rem; }
       .nav { top: auto; bottom: var(--space-4); transform: none; }
     }
   `,

@@ -25,14 +25,14 @@ import { SettingsSaver, orNull } from './settings-saver';
             <input id="photographer" class="field__control" formControlName="photographerName" />
           </div>
           <div class="field">
-            <label class="field__label" for="tagline">Frase corta (footer)</label>
+            <label class="field__label" for="tagline">Frase corta (pie de página)</label>
             <input id="tagline" class="field__control" formControlName="tagline" />
           </div>
         </div>
       </section>
 
       <section class="p-card p-form">
-        <h2 class="p-card__title">SEO y redes sociales</h2>
+        <h2 class="p-card__title">Google y redes sociales</h2>
         <p class="p-help">Cómo aparece el sitio en Google y al compartir el enlace en WhatsApp, Facebook, etc.</p>
         <div class="p-grid p-grid--2">
           <div class="p-form">
@@ -47,12 +47,12 @@ import { SettingsSaver, orNull } from './settings-saver';
               <span class="field__hint">{{ form.controls.defaultDescription.value.length }}/160 recomendado</span>
             </div>
           </div>
-          <app-image-picker label="Imagen para compartir" folder="site" ratio="1.91 / 1" [(value)]="ogImage" hint="Si no hay, se usa la imagen del Hero." />
+          <app-image-picker label="Imagen para compartir" folder="site" ratio="1.91 / 1" [(value)]="ogImage" hint="La imagen que acompaña al enlace cuando se comparte. Si no hay, se usa la foto de portada." />
         </div>
       </section>
 
       <div class="p-actions">
-        <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.invalid">Guardar marca y SEO</button>
+        <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.invalid">Guardar</button>
       </div>
     </form>
   `,

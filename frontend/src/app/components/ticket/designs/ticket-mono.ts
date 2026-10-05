@@ -3,7 +3,7 @@ import { TicketStatus } from '../ticket-status';
 import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
 
 /**
- * Blanco y negro (ref. Bodas/Blanco y negro elegante): foto en blanco y negro con la fecha
+ * Blanco y negro (ref. Bodas/Blanco y negro elegante): foto fija (public/tickets/garden-cover.webp) en blanco y negro con la fecha
  * en números finos, carta en papel crema con firma manuscrita y barra de cuenta regresiva.
  */
 @Component({
@@ -12,9 +12,7 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="hero">
-      @if (v().photo; as photo) {
-        <img class="hero__img" [src]="photo" alt="" crossorigin="anonymous" />
-      }
+      <img class="hero__img" src="/tickets/garden-cover.webp" alt="" />
       <div class="hero__veil"></div>
       <span class="line" aria-hidden="true"></span>
       <p class="big">{{ v().digits.day }}</p>
@@ -67,7 +65,7 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
       overflow: hidden;
       isolation: isolate;
     }
-    .hero__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
+    .hero__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: center 45%; filter: grayscale(1) contrast(1.05); }
     .hero__veil { position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--t-dark) 52%, transparent); }
     .line { width: 0.2cqw; height: 9cqw; margin: 2cqw 0; background: currentColor; opacity: 0.85; }
     .big { font-size: 15.5cqw; font-weight: 200; letter-spacing: 0.02em; line-height: 0.98; text-transform: uppercase; }
