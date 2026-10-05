@@ -175,10 +175,11 @@
 
 /* Año Nuevo: barra nocturna (cielo estrellado con fuegos diminutos) y logotipo claro. */
 :host(.is-solid.is-night) .bar {
-  background: linear-gradient(90deg, #0b1020, #161b33 50%, #0b1020);
+  /* Azul de anochecer, no negro: noche de fiesta. */
+  background: linear-gradient(90deg, #1c2547, #2c3566 50%, #1c2547);
   border-bottom-color: rgb(228 199 122 / 0.35);
   color: var(--color-text-inverse);
-  box-shadow: 0 6px 24px rgba(8, 10, 22, 0.35);
+  box-shadow: 0 6px 24px rgba(20, 26, 56, 0.3);
 }
 
 :host(.is-night) .logo__img--light {

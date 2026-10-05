@@ -51,16 +51,9 @@ const BURSTS = [
 ].map((burst, index) => ({ ...burst, delay: round(index * 0.9) }));
 const RAYS = Array.from({ length: 10 }, (_, i) => i * 36);
 
-/** Serie de foquitos de colores en el borde inferior de la barra. */
-const BULBS = Array.from({ length: 34 }, (_, i) => ({
-  left: round(1.5 + i * (97 / 33)),
-  color: PARTY[i % PARTY.length],
-  delay: -round((i % 4) * 0.55 + random() * 0.3),
-}));
-
 /**
- * Noche de fiesta del navbar durante el tema de Año Nuevo: luces de colores desenfocadas, estrellas,
- * fuegos artificiales muy pequeños y una serie de foquitos en el borde (solo CSS).
+ * Noche de fiesta del navbar durante el tema de Año Nuevo: luces de colores desenfocadas, estrellas
+ * y fuegos artificiales muy pequeños (solo CSS).
  * Se pinta detrás del contenido de la barra.
  */
 @Component({
@@ -81,11 +74,6 @@ const BULBS = Array.from({ length: 34 }, (_, i) => ({
         }
       </span>
     }
-    <div class="lights">
-      @for (l of bulbs; track $index) {
-        <i class="bulb" [style.left.%]="l.left" [style.--c]="l.color" [style.animation-delay.s]="l.delay"></i>
-      }
-    </div>
   `,
   styles: `
     :host {
@@ -146,33 +134,15 @@ const BULBS = Array.from({ length: 34 }, (_, i) => ({
       21%, 100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--r) * -1)) scaleY(0.5); }
     }
 
-    /* Serie de foquitos en el borde inferior */
-    .lights { position: absolute; inset: auto 0 0; height: 0; }
-    .bulb {
-      bottom: 2px;
-      width: 4px;
-      height: 4px;
-      margin-left: -2px;
-      border-radius: 50%;
-      background: var(--c);
-      box-shadow: 0 0 6px 2px color-mix(in srgb, var(--c) 70%, transparent);
-      animation: bulb-blink 2.2s ease-in-out infinite alternate;
-    }
-    @keyframes bulb-blink {
-      from { opacity: 0.35; }
-      to { opacity: 1; }
-    }
-
     @media (max-width: 700px) {
-      .burst:nth-of-type(even), .bulb:nth-child(even), .glow:nth-of-type(3n) { display: none; }
+      .burst:nth-of-type(even), .glow:nth-of-type(3n) { display: none; }
     }
 
     /* Es la decoración del tema elegido: con "reducir movimiento" no se apaga. */
     @media (prefers-reduced-motion: reduce) {
-      .star, .spark, .glow, .bulb { animation-iteration-count: infinite !important; }
+      .star, .spark, .glow { animation-iteration-count: infinite !important; }
       .star { animation-duration: 5s !important; }
       .glow { animation-duration: 7s !important; }
-      .bulb { animation-duration: 3s !important; }
       .spark { animation-duration: 9s !important; }
     }
   `,
@@ -182,5 +152,4 @@ export class NavSky {
   protected readonly stars = STARS;
   protected readonly bursts = BURSTS;
   protected readonly rays = RAYS;
-  protected readonly bulbs = BULBS;
 }
