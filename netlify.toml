@@ -9,6 +9,10 @@
 [build.environment]
   NODE_VERSION = "24"
 
+# Complemento que convierte el SSR de Angular en una Edge Function (se declara explícito para no depender de la detección automática).
+[[plugins]]
+  package = "@netlify/angular-runtime"
+
 # Encabezados de seguridad para los archivos estáticos (las páginas renderizadas los reciben desde server.ts).
 [[headers]]
   for = "/*"
