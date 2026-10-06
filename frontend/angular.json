@@ -37,6 +37,11 @@
             }
           },
           "configurations": {
+            "node": {
+              "ssr": {
+                "entry": "src/server.node.ts"
+              }
+            },
             "production": {
               "budgets": [
                 {

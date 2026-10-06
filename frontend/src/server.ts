@@ -1,101 +1,71 @@
-import {
-  AngularNodeAppEngine,
-  createNodeRequestHandler,
-  isMainModule,
-  writeResponseToNodeResponse,
-} from '@angular/ssr/node';
-import compression from 'compression';
-import express from 'express';
-import { join } from 'node:path';
+import { AngularAppEngine, createRequestHandler } from '@angular/ssr';
+import { getAllowedHosts, getContext, getTrustProxyHeaders } from '@netlify/angular-runtime/app-engine.js';
+import { env } from 'node:process';
 import { environment } from './environments/environment';
 
 /**
- * Servidor del sitio (SSR). Variables de entorno en producción:
- * - PORT: puerto (por defecto 4000).
- * - NG_ALLOWED_HOSTS: dominios permitidos, separados por coma (ej. "armandoovalle.com,www.armandoovalle.com").
- *   Angular rechaza cualquier otro Host para evitar SSRF.
- * - SITE_URL / API_URL: sobrescriben las URLs del build (sitemap y robots).
+ * Servidor del sitio (SSR) para Netlify: corre como Edge Function, sin Express.
+ * También lo usa `ng serve` en desarrollo. Para alojar el sitio en un servidor Node propio
+ * existe `server.node.ts` (`npm run build:node`).
+ *
+ * El complemento de Netlify exige que este archivo exporte `netlifyAppEngineHandler` y `reqHandler`.
  */
-const browserDistFolder = join(import.meta.dirname, '../browser');
-const siteUrl = (process.env['SITE_URL'] || environment.siteUrl).replace(/\/$/, '');
-const apiUrl = (process.env['API_URL'] || environment.apiUrl).replace(/\/$/, '');
-
-const app = express();
-const angularApp = new AngularNodeAppEngine();
-
-app.disable('x-powered-by');
-app.use(compression());
-
-/** Encabezados de seguridad básicos para todas las respuestas. */
-app.use((_req, res, next) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-  if (environment.production) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-  next();
+const angularAppEngine = new AngularAppEngine({
+  // En Netlify, los dominios permitidos salen de las variables del sitio (incluye el dominio propio si se conecta uno).
+  allowedHosts: env['SITE_ID'] ? getAllowedHosts() : [],
+  trustProxyHeaders: getTrustProxyHeaders(),
 });
+
+const apiUrl = environment.apiUrl.replace(/\/$/, '');
+const STATIC_PAGES = ['/', '/about', '/events', '/availability', '/faq', '/contact', '/contract', '/legal/terms', '/legal/privacy'];
+
+const SECURITY_HEADERS: Record<string, string> = {
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  ...(environment.production ? { 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains' } : {}),
+};
 
 /** robots.txt: el panel, el login y los tickets privados no se indexan. */
-app.get('/robots.txt', (_req, res) => {
-  res.type('text/plain').set('Cache-Control', 'public, max-age=86400');
-  res.send(['User-agent: *', 'Allow: /', 'Disallow: /panel', 'Disallow: /login', 'Disallow: /reservation/', '', `Sitemap: ${siteUrl}/sitemap.xml`, ''].join('\n'));
-});
+function robots(origin: string): Response {
+  const body = ['User-agent: *', 'Allow: /', 'Disallow: /panel', 'Disallow: /login', 'Disallow: /reservation/', '', `Sitemap: ${origin}/sitemap.xml`, ''].join('\n');
+  return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=86400' } });
+}
 
 /** sitemap.xml: páginas fijas + cada servicio visible (se actualiza solo al publicar/ocultar servicios). */
-const STATIC_PAGES = ['/', '/about', '/events', '/availability', '/faq', '/contact', '/contract', '/legal/terms', '/legal/privacy'];
-app.get('/sitemap.xml', async (_req, res) => {
+async function sitemap(origin: string): Promise<Response> {
   let slugs: string[] = [];
   try {
-    const response = await fetch(`${apiUrl}/services`);
+    const response = await fetch(`${apiUrl}/services`, { signal: AbortSignal.timeout(8000) });
     if (response.ok) slugs = ((await response.json()) as { slug: string }[]).map((s) => s.slug);
   } catch {
     // Sin API: se publican al menos las páginas fijas.
   }
   const paths = [...STATIC_PAGES, ...slugs.map((slug) => `/events/${encodeURIComponent(slug)}`)];
-  const urls = paths.map((path) => `  <url><loc>${siteUrl}${path === '/' ? '/' : path}</loc></url>`).join('\n');
-  res.type('application/xml').set('Cache-Control', 'public, max-age=3600');
-  res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
-});
+  const urls = paths.map((path) => `  <url><loc>${origin}${path}</loc></url>`).join('\n');
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  return new Response(body, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
+}
 
-/**
- * Archivos estáticos. Los que llevan hash en el nombre (JS/CSS del build) se guardan un año;
- * el resto (logos, figuras, fotos provisionales) un día, para poder reemplazarlos.
- */
-app.use(
-  express.static(browserDistFolder, {
-    index: false,
-    redirect: false,
-    setHeaders: (res, path) => {
-      const hashed = /(^|[\\/])(main|chunk|polyfills|styles)-[\w-]{8}\.(js|css)$/.test(path) || /[\\/]media[\\/]/.test(path);
-      res.setHeader('Cache-Control', hashed ? 'public, max-age=31536000, immutable' : 'public, max-age=86400');
-    },
-  }),
-);
+/** Agrega los encabezados de seguridad a la página renderizada. */
+function secured(response: Response): Response {
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) headers.set(name, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
 
-/** Todo lo demás lo renderiza Angular. */
-app.use((req, res, next) => {
-  angularApp
-    .handle(req)
-    .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
-    .catch(next);
-});
+export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
+  const url = new URL(request.url);
+  if (url.pathname === '/robots.txt') return robots(url.origin);
+  if (url.pathname === '/sitemap.xml') return sitemap(url.origin);
 
-/**
- * Arranca el servidor si este módulo es el punto de entrada (o corre con PM2).
- */
-if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  const port = process.env['PORT'] || 4000;
-  app.listen(port, (error) => {
-    if (error) {
-      throw error;
-    }
-
-    console.log(`Node Express server listening on http://localhost:${port}`);
-  });
+  const context = getContext();
+  const result = await angularAppEngine.handle(request, context);
+  return result ? secured(result) : new Response('Not found', { status: 404 });
 }
 
 /**
  * Manejador usado por el Angular CLI (servidor de desarrollo y build).
  */
-export const reqHandler = createNodeRequestHandler(app);
+export const reqHandler = createRequestHandler(netlifyAppEngineHandler);

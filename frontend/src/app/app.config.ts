@@ -6,6 +6,7 @@ import { provideClientHydration, withEventReplay, withHttpTransferCacheOptions }
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { ssrTimeoutInterceptor } from './core/interceptors/ssr-timeout.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,7 +18,7 @@ export const appConfig: ApplicationConfig = {
       // Fundido suave entre páginas (los navegadores sin View Transitions navegan igual, sin animación).
       withViewTransitions({ skipInitialTransition: true }),
     ),
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([ssrTimeoutInterceptor, authInterceptor, errorInterceptor])),
     // Las respuestas GET hechas en SSR se reutilizan en el navegador (sin doble petición).
     // Nunca se cachean peticiones con Authorization (panel).
     provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({ includeRequestsWithAuthHeaders: false })),

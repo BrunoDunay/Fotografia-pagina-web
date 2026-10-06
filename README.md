@@ -67,9 +67,13 @@ Todo el texto comercial vive en la base de datos y se edita desde el panel. Lo q
 - Correo de confirmación de eventos (opcional): `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` y `MAIL_FROM`. Con Gmail se usa una "contraseña de aplicación" (ver `backend/.env.example`). Sin estos datos, el botón de enviar confirmación queda deshabilitado.
 - `npm start`: aplica las migraciones pendientes y crea la cuenta inicial si no existe.
 
-**Frontend**:
-- En `frontend/src/environments/environment.prod.ts`: `apiUrl` (URL pública de la API) y `siteUrl` (dominio del sitio). Luego `npm run build`.
-- Ejecutar `node dist/frontend/server/server.mjs` con estas variables:
+**Frontend en Netlify** (configuración actual):
+- `netlify.toml` (raíz) define carpeta, comando y encabezados; el SSR corre como Edge Function desde `frontend/src/server.ts`.
+- `frontend/src/environments/environment.ts`: `apiUrl` apunta a la API. `siteUrl` vacío = se usa el dominio con el que se visita el sitio.
+- En el backend, `CORS_ORIGINS` y `PUBLIC_SITE_URL` deben llevar la dirección del sitio en Netlify (o el dominio propio).
+
+**Frontend en un servidor Node propio** (alternativa):
+- `npm run build:node` (usa `frontend/src/server.node.ts`) y ejecutar `node dist/frontend/server/server.mjs` con estas variables:
   - `NG_ALLOWED_HOSTS`: dominios permitidos, separados por coma (ej. `armandoovalle.com,www.armandoovalle.com`). Angular rechaza cualquier otro (protección SSRF).
   - `PORT` (por defecto 4000). Opcionales: `SITE_URL` y `API_URL` para el sitemap.
 - El servidor comprime las respuestas, envía encabezados de seguridad y publica `/robots.txt` y `/sitemap.xml` (con los servicios visibles).
