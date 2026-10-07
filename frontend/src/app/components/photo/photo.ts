@@ -9,8 +9,6 @@ import { RESPONSIVE_WIDTHS, cloudinarySrcset, cloudinaryUrl } from '../../core/u
  *
  * - `ratio`: fija la proporción (evita saltos de layout). Sin ratio, la foto llena al contenedor.
  * - `priority`: para la imagen principal visible al cargar (Hero): carga inmediata.
- * - `fit="contain"`: la foto se ve completa, sin recortes, sea vertical u horizontal; el espacio
- *   que sobra lo ocupa la misma foto desenfocada (nunca franjas vacías).
  *
  * La aparición es solo CSS: la imagen nunca depende de JavaScript para hacerse visible
  * (funciona igual con SSR, antes de hidratar o sin JS).
@@ -21,14 +19,9 @@ import { RESPONSIVE_WIDTHS, cloudinarySrcset, cloudinaryUrl } from '../../core/u
   host: {
     '[style.aspect-ratio]': 'ratio()',
     '[class.fill]': '!ratio()',
-    '[class.contain]': "fit() === 'contain'",
   },
   template: `
-    @if (fit() === 'contain') {
-      <img class="backdrop" [src]="backdrop()" alt="" aria-hidden="true" decoding="async" />
-    }
     <img
-      class="photo"
       [src]="src()"
       [attr.srcset]="srcset() || null"
       [attr.sizes]="srcset() ? sizes() : null"
@@ -55,15 +48,6 @@ import { RESPONSIVE_WIDTHS, cloudinarySrcset, cloudinaryUrl } from '../../core/u
       object-fit: cover;
       animation: photo-in 0.9s var(--ease-out) both;
     }
-    :host(.contain) .photo { position: relative; object-fit: contain; }
-    /* Sobresale del marco para que el desenfoque no deje bordes claros. */
-    .backdrop {
-      position: absolute;
-      inset: -8%;
-      width: 116%;
-      height: 116%;
-      filter: blur(30px) brightness(0.62) saturate(1.1);
-    }
     @keyframes photo-in {
       from { opacity: 0; transform: scale(1.015); }
     }
@@ -76,14 +60,11 @@ export class Photo {
   readonly sizes = input('100vw');
   readonly priority = input(false);
   readonly position = input('center');
-  readonly fit = input<'cover' | 'contain'>('cover');
   /** Ancho máximo a pedir a Cloudinary para el src por defecto. */
   readonly maxWidth = input(1600);
 
   protected readonly image = computed(() => orPlaceholder(this.media()));
   protected readonly src = computed(() => cloudinaryUrl(this.image().url, { width: this.maxWidth() }));
-  /** Copia diminuta: el desenfoque la disimula y casi no pesa. */
-  protected readonly backdrop = computed(() => cloudinaryUrl(this.image().url, { width: 160 }));
   /** Sin anchos mayores al tope pedido ni a la foto original (Cloudinary no amplía: serían archivos repetidos). */
   protected readonly srcset = computed(() => {
     const limit = Math.min(this.maxWidth(), this.image().width || Infinity);
