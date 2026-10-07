@@ -14,7 +14,7 @@ export const Service = sequelize.define(
     heroDescription: DataTypes.TEXT,
     heroMediaId: DataTypes.UUID,
     coverMediaId: DataTypes.UUID,
-    videoUrl: DataTypes.TEXT,
+    videoMediaId: DataTypes.UUID,
     seoTitle: DataTypes.STRING(160),
     seoDescription: DataTypes.STRING(300),
     sortOrder: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },

@@ -1,33 +1,6 @@
-import { parseVideoUrl } from './video-embed';
 import { buildWhatsAppLink } from './whatsapp-link';
 import { countdownTo, dateParts, daysBetween, formatLongDate, ticketStage, todayInMexico } from './date-mx';
-import { cloudinarySrcset, cloudinaryUrl } from './cloudinary-url';
-
-describe('parseVideoUrl', () => {
-  it('acepta las variantes de YouTube y usa youtube-nocookie', () => {
-    for (const url of [
-      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      'https://youtu.be/dQw4w9WgXcQ',
-      'https://www.youtube.com/shorts/dQw4w9WgXcQ',
-      'https://m.youtube.com/watch?feature=share&v=dQw4w9WgXcQ',
-    ]) {
-      const video = parseVideoUrl(url);
-      expect(video?.provider).toBe('youtube');
-      expect(video?.embedUrl).toContain('youtube-nocookie.com/embed/dQw4w9WgXcQ');
-    }
-  });
-
-  it('acepta Vimeo', () => {
-    expect(parseVideoUrl('https://vimeo.com/123456789')?.embedUrl).toContain('player.vimeo.com/video/123456789');
-  });
-
-  it('rechaza otros hosts y esquemas peligrosos', () => {
-    expect(parseVideoUrl('https://evil.com/watch?v=dQw4w9WgXcQ')).toBeNull();
-    expect(parseVideoUrl('javascript:alert(1)')).toBeNull();
-    expect(parseVideoUrl('http://www.youtube.com/watch?v=dQw4w9WgXcQ')).toBeNull();
-    expect(parseVideoUrl(null)).toBeNull();
-  });
-});
+import { cloudinarySrcset, cloudinaryUrl, cloudinaryVideo } from './cloudinary-url';
 
 describe('buildWhatsAppLink', () => {
   it('codifica el mensaje y limpia el número', () => {
@@ -77,6 +50,15 @@ describe('cloudinaryUrl', () => {
   });
   it('srcset con varios anchos', () => {
     expect(cloudinarySrcset(url, [400, 800])).toContain('w_400,c_limit/v1712/aows/foto.jpg 400w');
+  });
+});
+
+describe('cloudinaryVideo', () => {
+  it('pide el MP4 y la portada que el backend manda preparar al subir', () => {
+    const video = cloudinaryVideo('https://res.cloudinary.com/demo/video/upload/v1712/aows/videos/boda.mov');
+    expect(video.mp4).toBe('https://res.cloudinary.com/demo/video/upload/vc_h264,q_auto/v1712/aows/videos/boda.mp4');
+    expect(video.poster).toBe('https://res.cloudinary.com/demo/video/upload/so_0,q_auto,w_1600,c_limit/v1712/aows/videos/boda.jpg');
+    expect(video.original).toContain('/v1712/aows/videos/boda.mov');
   });
 });
 

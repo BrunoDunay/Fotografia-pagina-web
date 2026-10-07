@@ -19,6 +19,7 @@ import { LegalDocument } from './legal-document.model.js';
 // Servicios ↔ imágenes
 Service.belongsTo(MediaAsset, { as: 'heroMedia', foreignKey: 'heroMediaId' });
 Service.belongsTo(MediaAsset, { as: 'coverMedia', foreignKey: 'coverMediaId' });
+Service.belongsTo(MediaAsset, { as: 'videoMedia', foreignKey: 'videoMediaId' });
 
 // Servicios ↔ paquetes (M:N)
 Service.belongsToMany(Package, { through: ServicePackage, as: 'packages', foreignKey: 'serviceId', otherKey: 'packageId' });

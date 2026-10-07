@@ -8,12 +8,11 @@ import { ToastService } from '../../../core/services/toast.service';
 import { SettingsStore } from '../../../core/services/settings.store';
 import { AdminService } from '../../../core/types/catalog.model';
 import { ApiError, Media } from '../../../core/types/common.model';
-import { parseVideoUrl } from '../../../core/utils/video-embed';
 import { Btn } from '../../../components/buttons/btn';
-import { VideoEmbed } from '../../../components/video-embed/video-embed';
 import { SkeletonText } from '../../../components/skeletons';
 import { PageHeader } from '../shared/page-header';
 import { ImagePicker } from '../shared/image-picker';
+import { VideoPicker } from '../shared/video-picker';
 import { ConfirmService } from '../shared/confirm.service';
 import { GalleryManager } from './gallery-manager';
 
@@ -22,7 +21,7 @@ type Tab = 'info' | 'hero' | 'video' | 'packages' | 'gallery' | 'seo';
 /** Alta y edición de un servicio: textos, Hero/portada, video, paquetes, galería y SEO. */
 @Component({
   selector: 'app-service-edit',
-  imports: [ReactiveFormsModule, RouterLink, Btn, VideoEmbed, SkeletonText, PageHeader, ImagePicker, GalleryManager],
+  imports: [ReactiveFormsModule, RouterLink, Btn, SkeletonText, PageHeader, ImagePicker, VideoPicker, GalleryManager],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './service-edit.html',
   styleUrl: './service-edit.css',
@@ -45,6 +44,7 @@ export class ServiceEdit implements OnInit {
   protected readonly tab = signal<Tab>('info');
   protected readonly heroImage = signal<Media | null>(null);
   protected readonly coverImage = signal<Media | null>(null);
+  protected readonly video = signal<Media | null>(null);
   protected readonly packageIds = signal<string[]>([]);
 
   protected readonly allPackages = toSignal(this.api.packages().pipe(catchError(() => of([]))), { initialValue: [] });
@@ -66,15 +66,11 @@ export class ServiceEdit implements OnInit {
     heroTitle: [''],
     heroSubtitle: [''],
     heroDescription: [''],
-    videoUrl: [''],
     seoTitle: [''],
     seoDescription: [''],
     isVisible: [true],
     isProvisional: [false],
   });
-
-  protected readonly videoUrl = toSignal(this.form.controls.videoUrl.valueChanges, { initialValue: '' });
-  protected readonly videoValid = computed(() => !this.videoUrl() || !!parseVideoUrl(this.videoUrl()));
 
   ngOnInit(): void {
     const id = this.id();
@@ -93,7 +89,6 @@ export class ServiceEdit implements OnInit {
           heroTitle: s.heroTitle ?? '',
           heroSubtitle: s.heroSubtitle ?? '',
           heroDescription: s.heroDescription ?? '',
-          videoUrl: s.videoUrl ?? '',
           seoTitle: s.seoTitle ?? '',
           seoDescription: s.seoDescription ?? '',
           isVisible: s.isVisible,
@@ -101,6 +96,7 @@ export class ServiceEdit implements OnInit {
         });
         this.heroImage.set(s.hero);
         this.coverImage.set(s.cover);
+        this.video.set(s.video);
         this.packageIds.set(s.packageIds);
         this.loaded.set(true);
       },
@@ -114,7 +110,7 @@ export class ServiceEdit implements OnInit {
 
   protected save(): void {
     this.form.markAllAsTouched();
-    if (this.form.invalid || !this.videoValid()) {
+    if (this.form.invalid) {
       this.toast.error('Revisa los campos marcados.');
       return;
     }
@@ -122,7 +118,7 @@ export class ServiceEdit implements OnInit {
     const body = {
       ...v,
       slug: v.slug || undefined,
-      videoUrl: v.videoUrl || null,
+      videoMediaId: this.video()?.id ?? null,
       heroMediaId: this.heroImage()?.id ?? null,
       coverMediaId: this.coverImage()?.id ?? null,
       packageIds: this.packageIds(),

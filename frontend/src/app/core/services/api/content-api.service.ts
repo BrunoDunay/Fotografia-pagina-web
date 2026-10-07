@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, concat, concatMap } from 'rxjs';
 import { API_URL } from '../../config/api.config';
 import { Media } from '../../types/common.model';
 import { AllSettings, SettingsSection } from '../../types/settings.model';
@@ -15,6 +15,43 @@ export interface AdminGallery {
   cover: Media | null;
   maxImages: number;
   images: GalleryImage[];
+}
+
+interface VideoUploadTicket {
+  uploadUrl: string;
+  fields: Record<string, string | number | boolean>;
+}
+
+/**
+ * Envío con XMLHttpRequest: es el único que informa el avance de una subida
+ * (el HttpClient de la app usa fetch, que no lo hace).
+ */
+function sendToStorage(ticket: VideoUploadTicket, file: File): Observable<number | { publicId: string }> {
+  return new Observable((subscriber) => {
+    const form = new FormData();
+    for (const [key, value] of Object.entries(ticket.fields)) form.append(key, String(value));
+    form.append('file', file, file.name);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', ticket.uploadUrl);
+    xhr.responseType = 'json';
+    xhr.upload.onprogress = (event) => {
+      // Se reserva el 100 para cuando el almacenamiento confirma que lo recibió.
+      if (event.lengthComputable) subscriber.next(Math.min(99, Math.round((event.loaded / event.total) * 100)));
+    };
+    xhr.onload = () => {
+      const body = xhr.response as { public_id?: string; error?: { message?: string } } | null;
+      if (xhr.status >= 200 && xhr.status < 300 && body?.public_id) {
+        subscriber.next({ publicId: body.public_id });
+        subscriber.complete();
+      } else {
+        subscriber.error(new Error(body?.error?.message ? `No se pudo subir el video: ${body.error.message}` : 'No se pudo subir el video.'));
+      }
+    };
+    xhr.onerror = () => subscriber.error(new Error('Se perdió la conexión mientras se subía el video. Intenta de nuevo.'));
+    xhr.send(form);
+    return () => xhr.abort();
+  });
 }
 
 /** Endpoints privados para administrar el contenido del sitio. */
@@ -129,6 +166,19 @@ export class ContentApiService {
 
   deleteMedia(id: string) {
     return this.http.delete<void>(`${this.api}/media/${id}`);
+  }
+
+  /**
+   * Sube un video directo al almacenamiento (no pasa por nuestra API: pesa demasiado) y luego lo registra.
+   * Emite el avance (0-100) y, al final, el video ya registrado.
+   */
+  uploadVideo(file: File): Observable<number | Media> {
+    return this.http.post<VideoUploadTicket>(`${this.api}/media/video-signature`, {}).pipe(
+      concatMap((ticket) => sendToStorage(ticket, file)),
+      concatMap((step) =>
+        typeof step === 'number' ? [step] : concat([100], this.http.post<Media>(`${this.api}/media/video`, { publicId: step.publicId })),
+      ),
+    );
   }
 
   // ---- FAQ ----

@@ -1,4 +1,4 @@
-/** Imagen servida desde Cloudinary. */
+/** Imagen (o video) servido desde Cloudinary. */
 export interface Media {
   id: string;
   url: string;

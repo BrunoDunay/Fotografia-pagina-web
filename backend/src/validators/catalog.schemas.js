@@ -9,21 +9,6 @@ const slug = z
   .max(80)
   .regex(/^([a-z0-9]+(-[a-z0-9]+)*)?$/, 'El slug solo puede tener minúsculas, números y guiones');
 
-/** Solo YouTube y Vimeo (se incrustan con iframe). */
-export const videoUrl = z
-  .union([
-    z
-      .url('URL inválida')
-      .refine(
-        (url) => /^https:\/\/(www\.)?(youtube\.com|youtu\.be|m\.youtube\.com|vimeo\.com|player\.vimeo\.com)\//.test(url),
-        'Solo se aceptan enlaces de YouTube o Vimeo',
-      ),
-    z.literal(''),
-    z.null(),
-  ])
-  .optional()
-  .transform((v) => (v ? v : null));
-
 // ---------- Servicios ----------
 const serviceFields = {
   name: requiredText(120, 'El nombre'),
@@ -35,7 +20,7 @@ const serviceFields = {
   heroDescription: optionalText(2000),
   heroMediaId: uuid.nullable().optional(),
   coverMediaId: uuid.nullable().optional(),
-  videoUrl,
+  videoMediaId: uuid.nullable().optional(),
   seoTitle: optionalText(160),
   seoDescription: optionalText(300),
   isVisible: z.boolean().optional(),
@@ -75,6 +60,7 @@ export const mediaUploadBody = z.object({
   folder: z.enum(['site', 'services', 'themes', 'reservations', 'about']).default('site'),
   alt: optionalText(255),
 });
+export const videoRegisterBody = z.object({ publicId: z.string().trim().min(1).max(255) });
 export const mediaAltBody = z.object({ alt: optionalText(255) });
 
 // ---------- FAQ ----------

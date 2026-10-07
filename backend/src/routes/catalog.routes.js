@@ -52,6 +52,8 @@ export const galleriesRoutes = Router()
 export const mediaRoutes = Router()
   .use(requireAuth)
   .post('/', uploadSingleImage, validate({ body: s.mediaUploadBody }), media.upload)
+  .post('/video-signature', media.videoSignature)
+  .post('/video', validate({ body: s.videoRegisterBody }), media.registerVideo)
   .patch('/:id', validate({ params: idParams, body: s.mediaAltBody }), media.updateAlt)
   .delete('/:id', validate({ params: idParams }), media.remove);
 

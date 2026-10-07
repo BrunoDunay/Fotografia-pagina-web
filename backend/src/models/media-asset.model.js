@@ -13,6 +13,7 @@ export const MediaAsset = sequelize.define(
     bytes: DataTypes.INTEGER,
     altText: DataTypes.STRING(255),
     folder: DataTypes.STRING(160),
+    resourceType: { type: DataTypes.STRING(10), allowNull: false, defaultValue: 'image' },
   },
   { tableName: 'media_assets' },
 );

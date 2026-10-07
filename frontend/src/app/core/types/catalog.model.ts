@@ -38,7 +38,8 @@ export interface ServiceDetail extends ServiceSummary {
   heroSubtitle: string | null;
   heroDescription: string | null;
   hero: Media | null;
-  videoUrl: string | null;
+  /** Video subido desde el panel (opcional). */
+  video: Media | null;
   seoTitle: string | null;
   seoDescription: string | null;
 }

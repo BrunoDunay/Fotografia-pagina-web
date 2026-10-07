@@ -55,7 +55,7 @@ export function toServiceDetail(service) {
     heroSubtitle: service.heroSubtitle,
     heroDescription: service.heroDescription,
     hero: toMedia(service.heroMedia),
-    videoUrl: service.videoUrl,
+    video: toMedia(service.videoMedia),
     seoTitle: service.seoTitle,
     seoDescription: service.seoDescription,
   };

@@ -69,18 +69,8 @@
 
     <!-- Video -->
     <section class="p-card p-form" [hidden]="tab() !== 'video'">
-      <div class="field">
-        <label class="field__label" for="video">Enlace de YouTube o Vimeo</label>
-        <input id="video" class="field__control" type="url" formControlName="videoUrl" placeholder="https://www.youtube.com/watch?v=…" [attr.aria-invalid]="!videoValid()" />
-        @if (!videoValid()) {
-          <span class="field__error">Solo se aceptan enlaces de YouTube o Vimeo.</span>
-        } @else {
-          <span class="field__hint">Vacío = la página no muestra sección de video.</span>
-        }
-      </div>
-      @if (videoUrl() && videoValid()) {
-        <div class="video-preview"><app-video-embed [url]="videoUrl()" title="Vista previa" /></div>
-      }
+      <app-video-picker label="Video del servicio" [(value)]="video" (valueChange)="form.markAsDirty()" />
+      <p class="p-help">Es opcional. Al guardar, el video aparece en la página del servicio, entre la descripción y los paquetes.</p>
     </section>
 
     <!-- Paquetes -->

@@ -3,10 +3,20 @@ import { Service, MediaAsset, Gallery, GalleryImage, Package, PackageFeature, Fa
 import { notFound } from '../utils/app-error.js';
 import { slugify } from '../utils/slugify.js';
 import { toMedia, toPackage, toServiceDetail, toServiceSummary } from '../services/serializers.js';
+import { deleteMediaAsset } from './media.controller.js';
+
+/** Los videos pesan: al cambiarlo o quitarlo, el anterior se borra del almacenamiento. */
+async function discardVideo(mediaId) {
+  if (!mediaId) return;
+  const asset = await MediaAsset.findByPk(mediaId);
+  if (asset?.resourceType !== 'video') return;
+  await deleteMediaAsset(asset).catch((error) => console.error('No se pudo borrar el video anterior:', error.message));
+}
 
 const mediaIncludes = [
   { model: MediaAsset, as: 'coverMedia' },
   { model: MediaAsset, as: 'heroMedia' },
+  { model: MediaAsset, as: 'videoMedia' },
 ];
 
 async function findServiceOr404(where) {
@@ -120,11 +130,13 @@ export async function create(req, res) {
 export async function update(req, res) {
   const { packageIds, ...data } = req.valid.body;
   const service = await findServiceOr404({ id: req.valid.params.id });
+  const previousVideoId = service.videoMediaId;
   await sequelize.transaction(async (transaction) => {
     if (data.slug === '') data.slug = slugify(data.name ?? service.name);
     await service.update(data, { transaction });
     await setPackages(service, packageIds, transaction);
   });
+  if (data.videoMediaId !== undefined && data.videoMediaId !== previousVideoId) await discardVideo(previousVideoId);
   res.json(toServiceDetail(await findServiceOr404({ id: service.id })));
 }
 
@@ -146,6 +158,8 @@ export async function reorder(req, res) {
 
 export async function remove(req, res) {
   const service = await findServiceOr404({ id: req.valid.params.id });
+  const videoId = service.videoMediaId;
   await service.destroy();
+  await discardVideo(videoId);
   res.status(204).end();
 }

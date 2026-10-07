@@ -18,6 +18,8 @@ describe('rutas privadas sin sesión → 401', () => {
     ['get', '/api/settings'],
     ['put', '/api/settings/home'],
     ['post', '/api/media'],
+    ['post', '/api/media/video-signature'],
+    ['post', '/api/media/video'],
     ['get', '/api/services/admin'],
     ['post', '/api/services'],
     ['put', '/api/themes/mode'],

@@ -7,10 +7,6 @@
   color: var(--color-danger);
 }
 
-.video-preview {
-  max-width: 640px;
-}
-
 .pkg-list {
   display: grid;
   gap: var(--space-2);

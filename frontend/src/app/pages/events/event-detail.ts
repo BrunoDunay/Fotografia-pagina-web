@@ -14,7 +14,7 @@ import { Reveal } from '../../components/reveal/reveal.directive';
 import { SectionTitle } from '../../components/section-title/section-title';
 import { PackageBrochure } from '../../components/packages/package-brochure';
 import { MasonryGallery } from '../../components/gallery/masonry-gallery';
-import { VideoEmbed } from '../../components/video-embed/video-embed';
+import { VideoPlayer } from '../../components/video-player/video-player';
 import { FaqList } from '../../components/faq-list/faq-list';
 import { CtaBand } from '../../components/cta-band/cta-band';
 import { SkeletonText } from '../../components/skeletons';
@@ -37,7 +37,7 @@ type LoadState = { status: 'loading' } | { status: 'ready'; service: ServicePage
     SectionTitle,
     PackageBrochure,
     MasonryGallery,
-    VideoEmbed,
+    VideoPlayer,
     FaqList,
     CtaBand,
     SkeletonText,

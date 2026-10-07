@@ -42,6 +42,8 @@ Otros comandos: `npm test` (pruebas), `npm run migrate`, `npm run migrate:down`.
 
 Sin las variables de Cloudinary, en desarrollo las imágenes se guardan en `backend/uploads/` (excluida de git); en producción Cloudinary es obligatorio.
 
+Los videos de los servicios (opcionales, hasta 100 MB) se suben desde el panel directo a Cloudinary, sin pasar por la API: para probarlos en desarrollo sí hacen falta las variables `CLOUDINARY_*`.
+
 ## 3. Frontend
 
 ```bash

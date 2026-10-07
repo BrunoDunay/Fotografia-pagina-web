@@ -55,12 +55,12 @@
         </div>
       </section>
 
-      <!-- Video destacado (solo si hay URL) -->
-      @if (s.videoUrl) {
+      <!-- Video destacado (solo si el fotógrafo subió uno) -->
+      @if (s.video) {
         <section class="video section">
           <div class="container">
             <app-section-title title="Video" [eyebrow]="s.name" />
-            <app-video-embed [url]="s.videoUrl" [title]="'Video de ' + s.name" />
+            <app-video-player [media]="s.video" [title]="'Video de ' + s.name" appReveal />
           </div>
         </section>
       }
