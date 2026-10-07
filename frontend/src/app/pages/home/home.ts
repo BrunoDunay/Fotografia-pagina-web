@@ -8,6 +8,7 @@ import { PublicApiService } from '../../core/services/api/public-api.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SITE_URL } from '../../core/config/api.config';
 import { ServiceSummary, Faq } from '../../core/types/catalog.model';
+import { orPlaceholder } from '../../core/utils/placeholder';
 import { Photo } from '../../components/photo/photo';
 import { Btn } from '../../components/buttons/btn';
 import { Icon } from '../../components/icon/icon';
@@ -54,6 +55,12 @@ export class Home {
   protected readonly home = computed(() => this.settings.settings()?.home ?? null);
   /** Un tema estacional puede sustituir la imagen del Hero. */
   protected readonly heroImage = computed(() => this.theme.active()?.heroImage ?? this.home()?.hero.image ?? null);
+
+  /** Proporción real de la foto de "Sobre mí": se muestra completa, sea vertical u horizontal. */
+  protected readonly aboutRatio = computed(() => {
+    const image = orPlaceholder(this.home()?.aboutTeaser.image);
+    return image.width && image.height ? +(image.width / image.height).toFixed(4) : 4 / 3;
+  });
 
   protected readonly services = toSignal(this.api.services().pipe(catchError(() => of([] as ServiceSummary[]))));
   /** La Home muestra los paquetes de boda (servicio principal); cada servicio muestra los suyos en su página. */
