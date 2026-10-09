@@ -42,7 +42,11 @@ const EXTENSIONS = /\.(mp4|mov|m4v|webm)$/i;
         <button type="button" class="remove" (click)="value.set(null)">Quitar</button>
       }
     </div>
-    <p class="p-help">MP4 o MOV, hasta {{ maxMb }} MB. No cierres esta página mientras se sube.</p>
+    <p class="p-help">
+      MP4 o MOV, hasta {{ maxMb }} MB (es el tope del almacenamiento). Para que quepa un video más largo, expórtalo en
+      1080p (Full HD) a unos 8 Mbps: así entran cerca de 1 minuto y 40 segundos, sin diferencia visible en la página.
+      No cierres esta página mientras se sube.
+    </p>
   `,
   styles: `
     :host { display: grid; gap: var(--space-2); align-content: start; }
@@ -80,7 +84,7 @@ export class VideoPicker {
       return;
     }
     if (file.size > MAX_MB * 1024 * 1024) {
-      this.toast.error(`El video pesa más de ${MAX_MB} MB. Expórtalo más corto o con menor calidad.`);
+      this.toast.error(`El video pesa ${Math.round(file.size / 1024 / 1024)} MB y el máximo es ${MAX_MB} MB. Expórtalo en 1080p a unos 8 Mbps y vuelve a subirlo.`);
       return;
     }
     this.progress.set(0);

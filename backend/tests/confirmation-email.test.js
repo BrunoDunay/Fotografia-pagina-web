@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildConfirmationEmail, longDate } from '../src/services/confirmation-email.js';
+import { buildConfirmationEmail, confirmationCopyAddress, longDate } from '../src/services/confirmation-email.js';
 
 const event = {
   title: 'Regina & Alejandro',
@@ -66,5 +66,21 @@ describe('correo de confirmación del evento', () => {
     expect(html).not.toContain('Tu paquete incluye');
     expect(text).not.toContain('Lugar:');
     expect(text).not.toContain('Horario:');
+  });
+});
+
+describe('copia del correo para el fotógrafo', () => {
+  it('va al correo de contacto del sitio', () => {
+    expect(confirmationCopyAddress(' foto@example.com ', 'cliente@example.com', 'estudio@example.com')).toBe('foto@example.com');
+  });
+
+  it('no se manda si es el mismo correo del cliente o el de la cuenta que envía', () => {
+    expect(confirmationCopyAddress('Foto@Example.com', 'foto@example.com', 'estudio@example.com')).toBeNull();
+    expect(confirmationCopyAddress('estudio@example.com', 'cliente@example.com', 'Estudio@example.com')).toBeNull();
+  });
+
+  it('sin correo de contacto no hay copia', () => {
+    expect(confirmationCopyAddress(null, 'cliente@example.com', 'estudio@example.com')).toBeNull();
+    expect(confirmationCopyAddress('', 'cliente@example.com', undefined)).toBeNull();
   });
 });

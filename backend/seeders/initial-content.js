@@ -337,51 +337,5 @@ export const themes = [
   { key: 'winter', name: 'Invierno', startMonth: 12, startDay: 21, endMonth: 3, endDay: 19, autoEnabled: false, priority: 10, decoration: 'snow', navbarBadge: null, tokenOverrides: { '--color-accent': '#BFD0DC' } },
 ];
 
-const PENDING = '[Texto provisional — pendiente de sustituir por la versión revisada del contrato real.]';
-
-/** PROVISIONAL: estructura de los documentos legales. No constituye asesoría legal. */
-export const legalDocuments = [
-  {
-    type: 'contract',
-    title: 'Contrato de prestación de servicios fotográficos',
-    version: '0.1',
-    intro:
-      'Este documento es una versión provisional que muestra la estructura del contrato. El contrato definitivo se firma con cada cliente y prevalece sobre este texto.',
-    sections: [
-      { number: 1, title: 'Partes', body: `Armando Ovalle Wedding Studio, representado por Jorge Armando Ovalle ("el Fotógrafo"), y la persona que contrata el servicio ("el Cliente"). ${PENDING}` },
-      { number: 2, title: 'Objeto del contrato', body: `Cobertura fotográfica del evento indicado por el Cliente, de acuerdo con el paquete contratado. ${PENDING}` },
-      { number: 3, title: 'Fecha, horario y lugar', body: `La fecha, el horario y la ubicación del evento se especifican al momento de la contratación. ${PENDING}` },
-      { number: 4, title: 'Precio y forma de pago', body: `La fecha se aparta mediante la firma de este contrato y el pago del apartado correspondiente. El saldo restante se cubre en los plazos acordados. ${PENDING}` },
-      { number: 5, title: 'Entrega del material', body: 'Las fotografías suelen entregarse aproximadamente entre un mes y medio y tres meses después del evento, dependiendo del tipo y volumen de trabajo. Las fotografías entregadas pasan por un proceso de selección y edición.' },
-      { number: 6, title: 'Cambios de fecha y cancelaciones', body: PENDING },
-      { number: 7, title: 'Eventos fuera de Aguascalientes', body: 'Los eventos fuera de Aguascalientes o de México pueden requerir una cotización diferente que considere traslados, hospedaje y demás gastos relacionados.' },
-      { number: 8, title: 'Derechos de autor y uso de las imágenes', body: PENDING },
-      { number: 9, title: 'Responsabilidades', body: PENDING },
-      { number: 10, title: 'Aceptación', body: `Ambas partes manifiestan su conformidad con el contenido del presente contrato. ${PENDING}` },
-    ],
-  },
-  {
-    type: 'terms',
-    title: 'Términos y condiciones',
-    version: '0.1',
-    intro: 'Versión provisional. Estos términos regulan el uso del sitio web de Armando Ovalle Wedding Studio.',
-    sections: [
-      { number: 1, title: 'Uso del sitio', body: 'El sitio tiene fines informativos sobre los servicios del estudio. La información de paquetes y precios puede cambiar sin previo aviso.' },
-      { number: 2, title: 'Propiedad de las imágenes', body: 'Todas las fotografías publicadas son propiedad de Armando Ovalle Wedding Studio. No está permitido su uso sin autorización.' },
-      { number: 3, title: 'Disponibilidad', body: 'El calendario de disponibilidad es informativo. Una fecha solo se considera apartada tras la firma del contrato y el pago del apartado.' },
-      { number: 4, title: 'Cambios a estos términos', body: PENDING },
-    ],
-  },
-  {
-    type: 'privacy',
-    title: 'Aviso de privacidad',
-    version: '0.1',
-    intro: 'Versión provisional. Debe revisarse para cumplir con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.',
-    sections: [
-      { number: 1, title: 'Responsable', body: 'Jorge Armando Ovalle (Armando Ovalle Wedding Studio), con contacto en Ovalle.photo00@gmail.com.' },
-      { number: 2, title: 'Datos que se recaban', body: 'Nombre, teléfono, correo electrónico y datos del evento proporcionados por el cliente al contratar.' },
-      { number: 3, title: 'Finalidad', body: 'Los datos se usan únicamente para organizar y dar seguimiento a los servicios contratados.' },
-      { number: 4, title: 'Derechos ARCO', body: PENDING },
-    ],
-  },
-];
+/** Contrato, términos y aviso de privacidad: viven en su propio archivo. */
+export { legalDocuments } from './legal-documents.js';

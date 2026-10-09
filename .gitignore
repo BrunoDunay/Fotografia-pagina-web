@@ -16,3 +16,6 @@ coverage/
 .DS_Store
 Thumbs.db
 *.log
+
+# Documentos de clientes usados como referencia (traen datos personales)
+ideas/*.docx

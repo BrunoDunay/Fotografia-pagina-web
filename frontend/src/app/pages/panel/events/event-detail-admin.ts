@@ -211,7 +211,7 @@ export class EventDetailAdmin implements OnInit {
       const ticket = await this.renderTicketImage();
       const res = await firstValueFrom(this.agenda.sendConfirmation(e.id, ticket));
       this.event.update((current) => (current ? { ...current, confirmationSentAt: res.confirmationSentAt } : current));
-      this.toast.success(`Correo de confirmación enviado a ${res.sentTo}.`);
+      this.toast.success(`Correo de confirmación enviado a ${res.sentTo}${res.copyTo ? `, con copia a ${res.copyTo}` : ''}.`);
     } catch {
       // El interceptor ya mostró el motivo (correo sin configurar, cliente sin correo…).
     } finally {

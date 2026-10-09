@@ -97,12 +97,20 @@ export interface ActiveTheme {
 
 export type LegalType = 'contract' | 'terms' | 'privacy';
 
+export interface LegalSection {
+  number: number;
+  /** Apartado al que pertenece (ej. "Cláusulas"); la numeración visible reinicia en cada apartado. */
+  part?: string | null;
+  title: string;
+  body: string;
+}
+
 export interface LegalDocument {
   type: LegalType;
   title: string;
   version: string;
   intro: string | null;
-  sections: { number: number; title: string; body: string }[];
+  sections: LegalSection[];
   isProvisional: boolean;
   updatedAt: string;
 }

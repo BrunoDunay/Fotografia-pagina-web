@@ -58,7 +58,7 @@ export class AgendaApiService {
   sendConfirmation(id: string, ticket: Blob | null) {
     const form = new FormData();
     if (ticket) form.append('ticket', ticket, 'ticket-digital.jpg');
-    return this.http.post<{ sentTo: string; confirmationSentAt: string }>(`${this.api}/events/${id}/send-confirmation`, form);
+    return this.http.post<{ sentTo: string; copyTo: string | null; confirmationSentAt: string }>(`${this.api}/events/${id}/send-confirmation`, form);
   }
 
   updateEvent(id: string, body: unknown) {

@@ -109,7 +109,15 @@ export const legalUpdateBody = z
     version: requiredText(40, 'La versión'),
     intro: optionalText(5000),
     sections: z
-      .array(z.object({ number: z.coerce.number().int().min(1), title: requiredText(200, 'El título'), body: requiredText(10000, 'El contenido') }))
+      .array(
+        z.object({
+          number: z.coerce.number().int().min(1),
+          /** Apartado al que pertenece (ej. "Cláusulas"); la numeración reinicia en cada apartado. */
+          part: optionalText(80),
+          title: requiredText(200, 'El título'),
+          body: requiredText(10000, 'El contenido'),
+        }),
+      )
       .max(60),
     isProvisional: z.boolean(),
   })

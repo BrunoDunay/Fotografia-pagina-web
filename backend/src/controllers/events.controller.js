@@ -3,7 +3,7 @@ import { Client, Event, MediaAsset, Package, PackageFeature, Payment, Reservatio
 import { AppError, notFound } from '../utils/app-error.js';
 import { env } from '../config/env.js';
 import { hasImageSignature } from '../middlewares/upload.js';
-import { buildConfirmationEmail } from '../services/confirmation-email.js';
+import { buildConfirmationEmail, confirmationCopyAddress } from '../services/confirmation-email.js';
 import { sendMail } from '../services/mail.service.js';
 import { getSections } from '../services/settings.service.js';
 import { createEventWithBooking, paymentSummary } from '../services/event-booking.service.js';
@@ -149,6 +149,7 @@ export async function sendConfirmation(req, res) {
 
   const { brand = {}, contact = {} } = await getSections(['brand', 'contact']);
   const json = event.toJSON();
+  const copyTo = confirmationCopyAddress(contact.email, json.client.email, env.SMTP_USER);
   const reservation = json.reservation?.isActive ? json.reservation : null;
   const mail = buildConfirmationEmail({
     event: json,
@@ -168,6 +169,7 @@ export async function sendConfirmation(req, res) {
   await sendMail({
     to: { name: json.client.name, address: json.client.email },
     replyTo: contact.email,
+    bcc: copyTo,
     ...mail,
     attachments: ticket
       ? [{ filename: 'ticket-digital.' + (ticket.mimetype === 'image/jpeg' ? 'jpg' : 'png'), content: ticket.buffer, contentType: ticket.mimetype, cid: 'ticket' }]
@@ -176,5 +178,5 @@ export async function sendConfirmation(req, res) {
 
   const confirmationSentAt = new Date();
   await event.update({ confirmationSentAt });
-  res.json({ sentTo: json.client.email, confirmationSentAt });
+  res.json({ sentTo: json.client.email, copyTo, confirmationSentAt });
 }

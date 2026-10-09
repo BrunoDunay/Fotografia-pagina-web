@@ -3,10 +3,27 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of, switchMap, tap } from 'rxjs';
 import { PublicApiService } from '../../core/services/api/public-api.service';
 import { SeoService } from '../../core/services/seo.service';
-import { LegalType } from '../../core/types/catalog.model';
+import { LegalSection, LegalType } from '../../core/types/catalog.model';
 import { Btn } from '../../components/buttons/btn';
 import { Icon } from '../../components/icon/icon';
 import { SkeletonText } from '../../components/skeletons';
+
+interface SectionGroup {
+  part: string | null;
+  sections: (LegalSection & { display: number })[];
+}
+
+/** Agrupa las secciones por apartado conservando el orden; cada apartado numera desde 1. */
+export function groupLegalSections(sections: LegalSection[]): SectionGroup[] {
+  const groups: SectionGroup[] = [];
+  for (const section of sections) {
+    const part = section.part?.trim() || null;
+    let group = groups.at(-1);
+    if (!group || group.part !== part) groups.push((group = { part, sections: [] }));
+    group.sections.push({ ...section, display: group.sections.length + 1 });
+  }
+  return groups;
+}
 
 const PATHS: Record<LegalType, string> = { contract: '/contract', terms: '/legal/terms', privacy: '/legal/privacy' };
 
@@ -45,6 +62,8 @@ export class LegalDocumentPage {
     ),
   );
 
+  protected readonly path = computed(() => PATHS[this.type()]);
+  protected readonly groups = computed(() => groupLegalSections(this.doc()?.sections ?? []));
   protected readonly pdfUrl = computed(() => this.api.legalPdfUrl(this.type()));
   protected readonly updated = computed(() => {
     const d = this.doc();

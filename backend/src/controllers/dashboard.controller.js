@@ -11,7 +11,7 @@ export async function getDashboard(_req, res) {
   const monthStart = `${year}-${month}-01`;
   const monthEnd = new Date(Date.UTC(Number(year), Number(month), 0)).toISOString().slice(0, 10);
 
-  const [upcoming, monthEvents, openEvents, provisionalPackages, provisionalServices, provisionalLegal, settings, galleries] =
+  const [upcoming, monthEvents, openEvents, unpricedPackages, provisionalServices, provisionalLegal, settings, galleries] =
     await Promise.all([
       Event.findAll({
         where: { eventDate: { [Op.gte]: today }, status: { [Op.ne]: 'cancelled' } },
@@ -29,7 +29,8 @@ export async function getDashboard(_req, res) {
         attributes: ['id', 'totalPrice'],
         include: [{ model: Payment, as: 'payments', attributes: ['amount'] }],
       }),
-      Package.findAll({ where: { isPriceProvisional: true, isActive: true }, attributes: ['id', 'name'] }),
+      // Solo los que no tienen precio capturado: ocultar el precio al público es una decisión, no un pendiente.
+      Package.findAll({ where: { price: null, isActive: true }, attributes: ['id', 'name'] }),
       Service.findAll({ where: { isProvisional: true }, attributes: ['id', 'name'] }),
       LegalDocument.findAll({ where: { isProvisional: true }, attributes: ['type', 'title'] }),
       getSections(['home', 'about']),
@@ -53,7 +54,7 @@ export async function getDashboard(_req, res) {
   }
 
   const provisional = [
-    ...provisionalPackages.map((p) => ({ type: 'package', id: p.id, label: `Precio del paquete "${p.name}"` })),
+    ...unpricedPackages.map((p) => ({ type: 'package', id: p.id, label: `Paquete "${p.name}" sin precio` })),
     ...provisionalServices.map((s) => ({ type: 'service', id: s.id, label: `Textos del servicio "${s.name}"` })),
     ...provisionalLegal.map((d) => ({ type: 'legal', id: d.type, label: `${d.title} (provisional)` })),
     ...galleries

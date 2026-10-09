@@ -10,7 +10,7 @@ import { Icon } from '../../../components/icon/icon';
 import { SkeletonText } from '../../../components/skeletons';
 import { PageHeader } from '../shared/page-header';
 
-type SectionGroup = FormGroup<{ title: FormControl<string>; body: FormControl<string> }>;
+type SectionGroup = FormGroup<{ part: FormControl<string>; title: FormControl<string>; body: FormControl<string> }>;
 
 const LABELS: Record<LegalType, { label: string; path: string }> = {
   contract: { label: 'Contrato', path: '/contract' },
@@ -25,6 +25,7 @@ const LABELS: Record<LegalType, { label: string; path: string }> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-page-header title="Documentos legales" subtitle="El PDF descargable se genera automáticamente con este mismo contenido." />
+    <p class="p-help">Las secciones seguidas que comparten el mismo apartado se agrupan bajo ese título y se numeran desde 1.</p>
 
     <div class="p-tabs" role="tablist">
       @for (t of types; track t) {
@@ -61,13 +62,14 @@ const LABELS: Record<LegalType, { label: string; path: string }> = {
             <section class="p-card section" [formGroupName]="i" cdkDrag>
               <div class="p-row">
                 <span class="p-drag" cdkDragHandle aria-label="Arrastrar">⠿</span>
-                <span class="num">{{ i + 1 }}.</span>
+                <span class="num">{{ displayNumber(i) }}.</span>
                 <input class="field__control" formControlName="title" placeholder="Título de la sección" aria-label="Título de la sección" />
                 <button type="button" class="p-icon-btn p-icon-btn--danger" (click)="sections.removeAt(i); form.markAsDirty()" aria-label="Eliminar sección">
                   <app-icon name="close" [size]="14" />
                 </button>
               </div>
               <textarea class="field__control" formControlName="body" rows="5" aria-label="Contenido de la sección"></textarea>
+              <input class="field__control part" formControlName="part" placeholder="Apartado (opcional), ej. Cláusulas" aria-label="Apartado al que pertenece la sección" />
             </section>
           }
         </div>
@@ -88,6 +90,7 @@ const LABELS: Record<LegalType, { label: string; path: string }> = {
     .section .p-row { flex-wrap: nowrap; }
     .section.cdk-drag-preview { box-shadow: var(--shadow-lg); }
     .num { font-family: var(--font-serif); font-size: var(--text-xl); color: var(--color-primary); }
+    .part { max-width: 22rem; font-size: var(--text-sm); }
     .add { justify-self: start; padding: 0; border: 0; background: none; }
   `,
 })
@@ -134,12 +137,21 @@ export class LegalAdmin {
     if (!doc) return;
     this.sections.clear();
     this.form.reset({ title: doc.title, version: doc.version, intro: doc.intro ?? '', isProvisional: doc.isProvisional });
-    for (const s of doc.sections) this.addSection(s.title, s.body);
+    for (const s of doc.sections) this.addSection(s.title, s.body, s.part ?? '');
     this.form.markAsPristine();
   }
 
-  protected addSection(title = '', body = ''): void {
-    this.sections.push(this.fb.group({ title: [title, Validators.required], body: [body, Validators.required] }));
+  /** Número visible: la cuenta reinicia cada vez que cambia el apartado. */
+  protected displayNumber(index: number): number {
+    const part = (i: number) => this.sections.at(i).controls.part.value.trim();
+    let start = index;
+    while (start > 0 && part(start - 1) === part(index)) start--;
+    return index - start + 1;
+  }
+
+  /** Una sección nueva continúa el apartado de la última. */
+  protected addSection(title = '', body = '', part = this.sections.controls.at(-1)?.controls.part.value ?? ''): void {
+    this.sections.push(this.fb.group({ part: [part], title: [title, Validators.required], body: [body, Validators.required] }));
     this.form.markAsDirty();
   }
 
@@ -153,7 +165,7 @@ export class LegalAdmin {
 
   protected save(): void {
     const v = this.form.getRawValue();
-    const body = { ...v, intro: v.intro || null, sections: v.sections.map((s, i) => ({ number: i + 1, ...s })) };
+    const body = { ...v, intro: v.intro || null, sections: v.sections.map((s, i) => ({ number: i + 1, ...s, part: s.part.trim() || null })) };
     this.saving.set(true);
     this.api.updateLegal(this.type(), body).subscribe({
       next: (doc) => {

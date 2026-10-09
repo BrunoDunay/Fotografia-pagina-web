@@ -24,10 +24,10 @@ function getTransporter() {
 }
 
 /** Envía un correo desde la cuenta del estudio. */
-export async function sendMail({ to, subject, html, text, attachments = [], replyTo }) {
+export async function sendMail({ to, subject, html, text, attachments = [], replyTo, bcc }) {
   const from = env.MAIL_FROM || env.SMTP_USER;
   try {
-    return await getTransporter().sendMail({ from, to, subject, html, text, attachments, replyTo: replyTo || undefined });
+    return await getTransporter().sendMail({ from, to, subject, html, text, attachments, replyTo: replyTo || undefined, bcc: bcc || undefined });
   } catch (error) {
     if (error instanceof AppError) throw error;
     // No se reenvía el detalle técnico (puede incluir datos de la cuenta); queda en el log del servidor.

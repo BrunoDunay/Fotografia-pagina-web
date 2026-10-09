@@ -27,6 +27,17 @@ const CONCEPT = { apartado: 'Apartado', abono: 'Abono', liquidacion: 'Liquidaci�
 const METHOD = { efectivo: 'efectivo', transferencia: 'transferencia', tarjeta: 'tarjeta', otro: 'otro medio' };
 
 /**
+ * Copia oculta del correo de confirmación para el fotógrafo (el correo de contacto del sitio), para que
+ * lo vea llegar a su propia bandeja: el envío sale de la cuenta del estudio, no de la suya.
+ * No se manda copia si ese correo es el del cliente o el de la misma cuenta que envía.
+ */
+export function confirmationCopyAddress(contactEmail, clientEmail, senderEmail) {
+  const same = (a, b) => String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase();
+  const copy = String(contactEmail ?? '').trim();
+  return copy && !same(copy, clientEmail) && !same(copy, senderEmail) ? copy : null;
+}
+
+/**
  * @param {object} data
  * @param {object} data.event        Evento con cliente, servicio, paquete (con features) y pagos.
  * @param {{total:number, paid:number, balance:number}} data.payment

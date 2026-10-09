@@ -17,27 +17,43 @@
     <div class="doc__layout">
       <nav class="toc" aria-label="Índice">
         <p class="toc__title">Índice</p>
-        <ol>
-          @for (section of d.sections; track section.number) {
-            <li>
-              <a [href]="'#s' + section.number">{{ section.number }}. {{ section.title }}</a>
-            </li>
+        @for (group of groups(); track $index) {
+          @if (group.part) {
+            <p class="toc__part">{{ group.part }}</p>
           }
-        </ol>
+          <ol>
+            @for (section of group.sections; track section.number) {
+              <li>
+                <a [href]="path() + '#s' + section.number">{{ section.display }}. {{ section.title }}</a>
+              </li>
+            }
+          </ol>
+        }
       </nav>
 
       <div class="doc__body">
         @if (d.intro) {
           <p class="intro">{{ d.intro }}</p>
         }
-        @for (section of d.sections; track section.number) {
-          <section class="clause" [id]="'s' + section.number">
-            <h2>
-              <span class="clause__num">{{ section.number < 10 ? '0' + section.number : section.number }}</span>
-              {{ section.title }}
-            </h2>
-            <p>{{ section.body }}</p>
-          </section>
+        @for (group of groups(); track $index) {
+          @if (group.part) {
+            <h2 class="part">{{ group.part }}</h2>
+          }
+          @for (section of group.sections; track section.number) {
+            <section class="clause" [id]="'s' + section.number">
+              <h3>
+                <span class="clause__num">{{ section.display < 10 ? '0' + section.display : section.display }}</span>
+                {{ section.title }}
+              </h3>
+              <p>{{ section.body }}</p>
+            </section>
+          }
+        }
+        @if (d.type === 'contract') {
+          <div class="signatures" aria-hidden="true">
+            <span>Firma del cliente</span>
+            <span>Firma del fotógrafo</span>
+          </div>
         }
       </div>
     </div>

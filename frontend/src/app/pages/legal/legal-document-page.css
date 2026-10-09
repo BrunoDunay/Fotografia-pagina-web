@@ -51,6 +51,13 @@
   color: var(--color-text-muted);
 }
 
+.toc__part {
+  margin: var(--space-4) 0 var(--space-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}
+
 .toc ol {
   display: grid;
   gap: var(--space-2);
@@ -77,13 +84,39 @@
   line-height: 1.6;
 }
 
+.part {
+  margin-top: var(--space-8);
+  padding-bottom: var(--space-4);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  letter-spacing: var(--tracking-wide);
+  text-align: center;
+}
+
+.signatures {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-7);
+  margin-top: calc(var(--space-8) * 1.5);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.signatures span {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-text);
+}
+
 .clause {
   padding: var(--space-6) 0;
   border-top: var(--hairline);
   scroll-margin-top: calc(var(--navbar-height) + var(--space-6));
 }
 
-.clause h2 {
+.clause h3 {
   display: flex;
   align-items: baseline;
   gap: var(--space-4);
@@ -102,6 +135,8 @@
 .clause p {
   line-height: 1.9;
   white-space: pre-line;
+  /* Las líneas para llenar a mano (____) no desbordan en pantallas angostas. */
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 900px) {
