@@ -296,9 +296,13 @@ export class EventDetailAdmin implements OnInit {
   }
 
   protected changeStatus(status: string): void {
-    this.agenda.setEventStatus(this.id(), status as EventStatus).subscribe((e) => {
-      this.setEvent(e);
-      this.toast.success(`Estado: ${EVENT_STATUS_LABEL[e.status]}.`);
+    this.agenda.setEventStatus(this.id(), status as EventStatus).subscribe({
+      next: (e) => {
+        this.setEvent(e);
+        this.toast.success(`Estado: ${EVENT_STATUS_LABEL[e.status]}.`);
+      },
+      // Rechazado (p. ej. "Realizado" antes de la fecha): el selector vuelve al estado guardado.
+      error: () => this.event.update((e) => (e ? { ...e } : e)),
     });
   }
 

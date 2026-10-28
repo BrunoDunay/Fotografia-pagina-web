@@ -37,7 +37,8 @@ export class EventCreate implements OnInit {
   private readonly toast = inject(ToastService);
   private readonly fb = inject(NonNullableFormBuilder);
 
-  protected readonly statusOptions = entries(EVENT_STATUS_LABEL);
+  /** "Realizado" no se ofrece: el evento pasa a ese estado solo, al día siguiente de su fecha. */
+  protected readonly statusOptions = entries(EVENT_STATUS_LABEL).filter((o) => o.value !== 'completed');
   protected readonly conceptOptions = entries(PAYMENT_CONCEPT_LABEL);
   protected readonly methodOptions = entries(PAYMENT_METHOD_LABEL);
 

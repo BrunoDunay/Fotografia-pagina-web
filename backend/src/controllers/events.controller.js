@@ -8,6 +8,7 @@ import { sendMail } from '../services/mail.service.js';
 import { getSections } from '../services/settings.service.js';
 import { createEventWithBooking, paymentSummary } from '../services/event-booking.service.js';
 import { toMedia, toNumber } from '../services/serializers.js';
+import { assertCanComplete } from '../services/event-status.service.js';
 
 const summaryIncludes = [
   { model: Client, as: 'client', attributes: ['id', 'name', 'phone'] },
@@ -100,6 +101,7 @@ export async function getOne(req, res) {
 }
 
 export async function create(req, res) {
+  assertCanComplete(req.valid.body.status, req.valid.body.eventDate);
   const id = await createEventWithBooking(req.valid.body);
   res.status(201).json(await loadEventDetail(id));
 }
@@ -107,6 +109,7 @@ export async function create(req, res) {
 export async function update(req, res) {
   const event = await Event.findByPk(req.valid.params.id);
   if (!event) throw notFound('El evento');
+  assertCanComplete(req.valid.body.status ?? event.status, req.valid.body.eventDate ?? event.eventDate);
   await event.update(req.valid.body);
   res.json(await loadEventDetail(event.id));
 }
@@ -114,6 +117,7 @@ export async function update(req, res) {
 export async function setStatus(req, res) {
   const event = await Event.findByPk(req.valid.params.id);
   if (!event) throw notFound('El evento');
+  assertCanComplete(req.valid.body.status, event.eventDate);
   await event.update({ status: req.valid.body.status });
   res.json(await loadEventDetail(event.id));
 }
