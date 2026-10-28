@@ -60,7 +60,7 @@ function softRose(cx: number, cy: number, radius: number, seed: number) {
 
       <app-ticket-calendar [v]="v()" />
       <app-ticket-status [v]="v()" />
-      <img class="logo" [src]="v().darkPaper ? '/brand/logo-light.webp' : '/brand/logo-dark.webp'" alt="Armando Ovalle Wedding Studio" width="600" height="146" />
+      <img class="logo" [src]="v().darkPaper ? '/brand/logo-ao-horizontal-light.webp' : '/brand/logo-ao-horizontal-dark.webp'" alt="Armando Ovalle Wedding Studio" width="600" height="146" />
     </article>
   `,
   styles: `

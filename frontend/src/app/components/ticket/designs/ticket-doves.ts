@@ -92,7 +92,7 @@ function plaque(x: number, y: number, w: number, h: number, r: number): string {
       </div>
 
       <app-ticket-status [v]="v()" />
-      <img class="logo" src="/brand/logo-dark.webp" alt="Armando Ovalle Wedding Studio" width="600" height="146" />
+      <img class="logo" src="/brand/logo-ao-horizontal-dark.webp" alt="Armando Ovalle Wedding Studio" width="600" height="121" />
     </section>
   `,
   styles: `

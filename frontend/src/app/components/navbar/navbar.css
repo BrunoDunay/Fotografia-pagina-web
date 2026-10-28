@@ -104,7 +104,7 @@
 .logo__img {
   grid-area: 1 / 1;
   width: auto;
-  height: 40px;
+  height: 42px;
   transition: opacity var(--duration) var(--ease-out), transform var(--duration-slow) var(--ease-out);
 }
 

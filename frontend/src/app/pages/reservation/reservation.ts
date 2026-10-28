@@ -102,7 +102,7 @@ export class ReservationPage {
       this.seo.setPage({
         title: `${r.title} · ${formatLongDate(r.eventDate)} | Armando Ovalle Wedding Studio`,
         description: 'Fecha reservada con Armando Ovalle Wedding Studio. ¡Nos vemos pronto!',
-        image: r.cover?.url ?? `${this.siteUrl}/brand/logo-dark.png`,
+        image: r.cover?.url ?? `${this.siteUrl}/brand/logo-ao-share.png`,
         path: `/reservation/${r.code}`,
         noindex: true,
       });

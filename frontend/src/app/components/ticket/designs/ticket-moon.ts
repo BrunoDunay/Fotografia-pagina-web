@@ -48,7 +48,7 @@ import { TicketView, fitSize } from '../ticket-view';
     </svg>
 
     <app-ticket-status [v]="v()" />
-    <img class="logo" src="/brand/logo-dark.webp" alt="Armando Ovalle Wedding Studio" width="600" height="146" />
+    <img class="logo" src="/brand/logo-ao-horizontal-dark.webp" alt="Armando Ovalle Wedding Studio" width="600" height="121" />
 
     <svg class="layers layers--bottom" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
       <path style="fill: var(--t-accent); filter: var(--shadow)" d="M0 0h100v22c-14 12-28 2-42 8S24 40 0 28z" />

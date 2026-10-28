@@ -48,7 +48,7 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
       <span class="line" aria-hidden="true"></span>
       <p class="date">{{ v().shortDate }}</p>
       <app-ticket-status [v]="v()" />
-      <img class="logo" src="/brand/logo-light.webp" alt="Armando Ovalle Wedding Studio" width="600" height="146" />
+      <img class="logo" src="/brand/logo-ao-horizontal-light.webp" alt="Armando Ovalle Wedding Studio" width="600" height="121" />
     </section>
   `,
   styles: `

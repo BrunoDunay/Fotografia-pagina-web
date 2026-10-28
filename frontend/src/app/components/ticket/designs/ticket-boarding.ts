@@ -53,7 +53,7 @@ import { TicketView, fitSize } from '../ticket-view';
     </article>
 
     <app-ticket-status [v]="v()" />
-    <img class="logo" src="/brand/logo-light.webp" alt="Armando Ovalle Wedding Studio" width="600" height="146" />
+    <img class="logo" src="/brand/logo-ao-horizontal-light.webp" alt="Armando Ovalle Wedding Studio" width="600" height="121" />
   `,
   styles: `
     :host {
