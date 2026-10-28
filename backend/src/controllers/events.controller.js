@@ -157,7 +157,7 @@ export async function sendConfirmation(req, res) {
     ticketUrl: reservation ? `${env.PUBLIC_SITE_URL}/reservation/${reservation.publicCode}` : null,
     hasTicketImage: Boolean(ticket),
     studio: {
-      name: brand.studioName ?? 'Armando Ovalle Wedding Studio',
+      name: brand.studioName ?? 'Armando Ovalle',
       photographer: contact.photographerName ?? brand.photographerName ?? null,
       phone: contact.phone ?? null,
       email: contact.email ?? null,

@@ -9,7 +9,7 @@
  * Todo se puede editar después en /panel/legal.
  */
 
-const STUDIO = 'Armando Ovalle Wedding Studio';
+const STUDIO = 'Armando Ovalle';
 const OWNER = 'Jorge Armando Ovalle Cruz';
 const ADDRESS = 'Av. Eugenio Garza Sada No. 136, Fraccionamiento Los Pocitos, Aguascalientes, Ags.';
 const PHONE = '+52 449 999 5998';

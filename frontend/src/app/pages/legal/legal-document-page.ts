@@ -51,7 +51,7 @@ export class LegalDocumentPage {
         this.api.legal(type).pipe(
           tap((d) =>
             this.seo.setPage({
-              title: `${d.title} | Armando Ovalle Wedding Studio`,
+              title: `${d.title} | Armando Ovalle`,
               description: d.intro?.slice(0, 160) ?? d.title,
               path: PATHS[type],
             }),

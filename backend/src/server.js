@@ -4,6 +4,7 @@ import { runPendingMigrations } from './config/migrate.js';
 import { initializeData } from './config/initialize-data.js';
 import { createApp } from './app.js';
 import { localUploadsEnabled } from './config/cloudinary.js';
+import { scheduleEventCompletion } from './services/event-status.service.js';
 
 async function start() {
   try {
@@ -24,6 +25,8 @@ async function start() {
   } else if (!env.cloudinaryEnabled) {
     console.warn('Cloudinary no está configurado: la subida de imágenes estará deshabilitada.');
   }
+
+  scheduleEventCompletion();
 
   const server = createApp().listen(env.PORT, () => {
     console.log(`API lista en http://localhost:${env.PORT}/api (${env.NODE_ENV})`);

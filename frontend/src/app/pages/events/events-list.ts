@@ -54,7 +54,7 @@ export class EventsList {
 
   constructor() {
     inject(SeoService).setPage({
-      title: 'Servicios de fotografía | Armando Ovalle Wedding Studio',
+      title: 'Servicios de fotografía | Armando Ovalle',
       description: 'Fotografía de bodas, XV años, graduaciones, baby showers, conciertos, sesiones y fotografía comercial en Aguascalientes.',
       path: '/events',
     });

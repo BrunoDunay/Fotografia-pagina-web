@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Media } from '../../core/types/common.model';
 import { SettingsStore } from '../../core/services/settings.store';
@@ -13,7 +13,7 @@ import { Reveal } from '../reveal/reveal.directive';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="band">
-      <app-photo [media]="image()" sizes="100vw" alt="" />
+      <app-photo [media]="photo()" sizes="100vw" alt="" />
       <div class="shade" aria-hidden="true"></div>
       <div class="content container container--narrow" appReveal>
         @if (eyebrow()) {
@@ -55,4 +55,6 @@ export class CtaBand {
   readonly image = input<Media | null>(null);
 
   protected readonly settings = inject(SettingsStore);
+  /** Sin foto propia de la página, la que el fotógrafo eligió en el panel (Contenido → Inicio). */
+  protected readonly photo = computed(() => this.image() ?? this.settings.settings()?.home?.ctaBand?.image ?? null);
 }

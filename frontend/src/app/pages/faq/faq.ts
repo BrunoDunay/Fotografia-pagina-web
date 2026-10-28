@@ -48,7 +48,7 @@ export class Faq {
 
   private setSeo(list: FaqItem[]): void {
     this.seo.setPage({
-      title: 'Preguntas frecuentes | Armando Ovalle Wedding Studio',
+      title: 'Preguntas frecuentes | Armando Ovalle',
       description: 'Tiempos de entrega, contrato, apartado de fecha, eventos fuera de Aguascalientes y más.',
       path: '/faq',
       // Datos estructurados FAQPage: pueden mostrarse directamente en Google.

@@ -55,7 +55,7 @@ export class Contact {
 
   constructor() {
     inject(SeoService).setPage({
-      title: 'Contacto | Armando Ovalle Wedding Studio',
+      title: 'Contacto | Armando Ovalle',
       description: 'Contacta a Jorge Armando Ovalle por WhatsApp, email, Instagram o Facebook.',
       path: '/contact',
     });

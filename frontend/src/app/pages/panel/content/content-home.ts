@@ -87,6 +87,17 @@ import { SettingsSaver, orNull } from './settings-saver';
         </div>
       </section>
 
+      <section class="p-card p-form">
+        <h2 class="p-card__title">Banda «Reserva tu fecha»</h2>
+        <app-image-picker
+          label="Foto de fondo"
+          folder="site"
+          ratio="21 / 9"
+          [(value)]="ctaImage"
+          hint="Aparece detrás del texto «¿Tu fecha está disponible?» en el inicio y en la lista de servicios. Funciona mejor una foto horizontal con espacio libre al centro. Las páginas de cada servicio usan su propia foto de la tarjeta."
+        />
+      </section>
+
       <div class="p-actions">
         <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.invalid">Guardar página de inicio</button>
       </div>
@@ -101,6 +112,7 @@ export class ContentHome implements OnInit {
   protected readonly saving = signal(false);
   protected readonly heroImage = signal<Media | null>(null);
   protected readonly aboutImage = signal<Media | null>(null);
+  protected readonly ctaImage = signal<Media | null>(null);
 
   protected readonly form = this.fb.group({
     hero: this.fb.group({ title: ['', Validators.required], subtitle: [''], ctaLabel: [''], ctaLink: [''] }),
@@ -123,6 +135,7 @@ export class ContentHome implements OnInit {
     });
     this.heroImage.set(h.hero.image);
     this.aboutImage.set(h.aboutTeaser.image);
+    this.ctaImage.set(h.ctaBand?.image ?? null);
   }
 
   protected save(): void {
@@ -138,6 +151,7 @@ export class ContentHome implements OnInit {
         ctaLabel: orNull(v.aboutTeaser.ctaLabel),
         image: this.aboutImage(),
       },
+      ctaBand: { image: this.ctaImage() },
     };
     this.saving.set(true);
     this.saver.save('home', value, 'Home actualizada.').subscribe({

@@ -96,12 +96,12 @@ export class ReservationPage {
     effect(() => {
       const r = this.reservation();
       if (this.state().status === 'missing') {
-        this.seo.setPage({ title: 'Ticket no disponible | Armando Ovalle Wedding Studio', noindex: true });
+        this.seo.setPage({ title: 'Ticket no disponible | Armando Ovalle', noindex: true });
       }
       if (!r) return;
       this.seo.setPage({
-        title: `${r.title} · ${formatLongDate(r.eventDate)} | Armando Ovalle Wedding Studio`,
-        description: 'Fecha reservada con Armando Ovalle Wedding Studio. ¡Nos vemos pronto!',
+        title: `${r.title} · ${formatLongDate(r.eventDate)} | Armando Ovalle`,
+        description: 'Fecha reservada con Armando Ovalle. ¡Nos vemos pronto!',
         image: r.cover?.url ?? `${this.siteUrl}/brand/logo-ao-share.png`,
         path: `/reservation/${r.code}`,
         noindex: true,

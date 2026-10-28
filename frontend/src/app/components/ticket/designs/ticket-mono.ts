@@ -34,7 +34,7 @@ import { DEFAULT_TICKET_NOTE, TicketView, fitSize } from '../ticket-view';
 
     <footer class="bar">
       <app-ticket-status [v]="v()" [divided]="true" />
-      <img class="logo" src="/brand/logo-ao-horizontal-light.webp" alt="Armando Ovalle Wedding Studio" width="600" height="121" />
+      <img class="logo" src="/brand/logo-ao-horizontal-light.webp" alt="Armando Ovalle" width="600" height="121" />
     </footer>
   `,
   styles: `

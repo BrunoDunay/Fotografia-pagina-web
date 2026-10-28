@@ -34,7 +34,7 @@ export async function downloadPdf(req, res) {
   const brand = await getSection('brand');
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `attachment; filename="${slugify(doc.title)}.pdf"`);
-  streamLegalPdf(doc, brand?.studioName ?? 'Armando Ovalle Wedding Studio', res);
+  streamLegalPdf(doc, brand?.studioName ?? 'Armando Ovalle', res);
 }
 
 export async function update(req, res) {

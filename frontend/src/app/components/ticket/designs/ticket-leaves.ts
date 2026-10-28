@@ -60,7 +60,7 @@ function sprig(x: number, y: number, angle: number, leaves: number, size: number
 
     <footer class="band">
       <app-ticket-status [v]="v()" />
-      <img class="logo" src="/brand/logo-ao-horizontal-light.webp" alt="Armando Ovalle Wedding Studio" width="600" height="121" />
+      <img class="logo" src="/brand/logo-ao-horizontal-light.webp" alt="Armando Ovalle" width="600" height="121" />
     </footer>
   `,
   styles: `

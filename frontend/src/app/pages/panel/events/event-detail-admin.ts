@@ -179,7 +179,7 @@ export class EventDetailAdmin implements OnInit {
     const firstName = e.client.name.split(' ')[0];
     return buildWhatsAppLink(
       digits,
-      `¡Hola ${firstName}! Aquí está la reservación de tu evento con Armando Ovalle Wedding Studio: ${url}`,
+      `¡Hola ${firstName}! Aquí está la reservación de tu evento con Armando Ovalle: ${url}`,
     );
   });
 

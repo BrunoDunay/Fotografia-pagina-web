@@ -70,7 +70,7 @@ interface LaceFlower {
       <p class="heading"><i>Reserva</i> la fecha</p>
       <app-ticket-calendar [v]="v()" />
       <app-ticket-status [v]="v()" />
-      <img class="logo" src="/brand/logo-ao-horizontal-dark.webp" alt="Armando Ovalle Wedding Studio" width="600" height="121" />
+      <img class="logo" src="/brand/logo-ao-horizontal-dark.webp" alt="Armando Ovalle" width="600" height="121" />
     </section>
   `,
   styles: `

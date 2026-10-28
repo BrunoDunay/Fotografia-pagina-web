@@ -1,4 +1,4 @@
-# Armando Ovalle Wedding Studio
+# Armando Ovalle
 
 Sitio web público y panel administrativo del fotógrafo Jorge Armando Ovalle.
 

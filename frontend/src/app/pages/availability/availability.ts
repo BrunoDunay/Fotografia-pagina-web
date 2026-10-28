@@ -78,7 +78,7 @@ export class Availability {
 
   constructor() {
     inject(SeoService).setPage({
-      title: 'Disponibilidad | Armando Ovalle Wedding Studio',
+      title: 'Disponibilidad | Armando Ovalle',
       description: 'Consulta si la fecha de tu boda o evento está disponible.',
       path: '/availability',
     });

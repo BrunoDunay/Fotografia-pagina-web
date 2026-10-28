@@ -27,7 +27,7 @@ const schema = z.object({
   SMTP_PORT: z.coerce.number().int().positive().default(587),
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
-  /** Remitente visible, ej. "Armando Ovalle Wedding Studio <correo@dominio.com>". Por defecto, SMTP_USER. */
+  /** Remitente visible, ej. "Armando Ovalle <correo@dominio.com>". Por defecto, SMTP_USER. */
   MAIL_FROM: z.string().optional(),
 });
 

@@ -90,7 +90,7 @@ export class EventDetail {
     effect(() => {
       const service = this.service();
       if (!service) return;
-      const title = service.seoTitle || `Fotografía de ${service.name.toLowerCase()} | Armando Ovalle Wedding Studio`;
+      const title = service.seoTitle || `Fotografía de ${service.name.toLowerCase()} | Armando Ovalle`;
       const description =
         service.seoDescription || service.shortDescription || `Fotografía de ${service.name.toLowerCase()} en Aguascalientes y todo México.`;
       this.seo.setPage({
@@ -105,7 +105,7 @@ export class EventDetail {
           serviceType: service.name,
           description,
           url: `${this.siteUrl}/events/${service.slug}`,
-          provider: { '@type': 'ProfessionalService', name: 'Armando Ovalle Wedding Studio' },
+          provider: { '@type': 'ProfessionalService', name: 'Armando Ovalle' },
           areaServed: 'MX',
         },
       });

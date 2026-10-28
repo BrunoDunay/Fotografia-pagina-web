@@ -11,7 +11,7 @@ import { TicketView, fitSize } from '../ticket-view';
   imports: [TicketStatus],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <img class="logo" src="/brand/logo-ao-horizontal-light.webp" alt="Armando Ovalle Wedding Studio" width="600" height="121" />
+    <img class="logo" src="/brand/logo-ao-horizontal-light.webp" alt="Armando Ovalle" width="600" height="121" />
 
     <!-- Copa: líquido de color y contorno a línea blanca -->
     <svg class="glass" viewBox="0 0 60 100" aria-hidden="true">

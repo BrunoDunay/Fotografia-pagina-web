@@ -22,7 +22,7 @@ import { Btn } from '../../components/buttons/btn';
 })
 export class NotFound {
   constructor() {
-    inject(SeoService).setPage({ title: 'Página no encontrada | Armando Ovalle Wedding Studio', noindex: true });
+    inject(SeoService).setPage({ title: 'Página no encontrada | Armando Ovalle', noindex: true });
     // En SSR, responder con un 404 real (no un 200) para buscadores.
     const response = inject(RESPONSE_INIT, { optional: true });
     if (response) response.status = 404;

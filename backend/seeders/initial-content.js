@@ -9,7 +9,7 @@
 export const settings = {
   // REAL
   brand: {
-    studioName: 'Armando Ovalle Wedding Studio',
+    studioName: 'Armando Ovalle',
     photographerName: 'Jorge Armando Ovalle',
     tagline: 'Fotografía de bodas y eventos',
     logoLight: null,
@@ -19,7 +19,7 @@ export const settings = {
   home: {
     hero: {
       title: 'Armando Ovalle',
-      subtitle: 'Wedding Studio',
+      subtitle: null,
       ctaLabel: 'Ver disponibilidad',
       ctaLink: '/availability',
       image: null,
@@ -34,10 +34,11 @@ export const settings = {
       eyebrow: 'Sobre mí',
       title: 'Hola, soy Armando',
       subtitle: 'Fotógrafo de bodas y eventos',
-      text: 'Más de 7 años de experiencia y más de 200 eventos cubiertos. Me gusta trabajar con discreción para que tú solo te preocupes por disfrutar.',
+      text: 'Más de 7 años de experiencia y más de 400 eventos cubiertos. Me gusta trabajar con discreción para que tú solo te preocupes por disfrutar.',
       ctaLabel: 'Conocer más',
       image: null,
     },
+    ctaBand: { image: null },
   },
 
   about: {
@@ -71,20 +72,20 @@ export const settings = {
   // REAL
   contact: {
     photographerName: 'Jorge Armando Ovalle',
-    studioName: 'Armando Ovalle Wedding Studio',
+    studioName: 'Armando Ovalle',
     phone: '+52 449 999 5998',
     whatsapp: '524499995998',
     email: 'Ovalle.photo00@gmail.com',
     instagram: { handle: 'armandoovalle.ws', url: 'https://www.instagram.com/armandoovalle.ws/' },
-    facebook: { name: 'Armando Ovalle Wedding Studio', url: 'https://www.facebook.com/profile.php?id=100067234990368' },
+    facebook: { name: 'Armando Ovalle', url: 'https://www.facebook.com/profile.php?id=100067234990368' },
   },
 
   whatsapp: {
-    message: 'Hola, me interesa conocer más sobre los servicios de Armando Ovalle Wedding Studio.',
+    message: 'Hola, me interesa conocer más sobre los servicios de Armando Ovalle.',
   },
 
   seo: {
-    defaultTitle: 'Armando Ovalle Wedding Studio | Fotografía de bodas y eventos en Aguascalientes',
+    defaultTitle: 'Armando Ovalle | Fotografía de bodas y eventos en Aguascalientes',
     defaultDescription:
       'Fotografía de bodas, XV años, graduaciones, sesiones y eventos en Aguascalientes y todo México. Más de 7 años de experiencia y más de 200 eventos cubiertos.',
     ogImage: null,

@@ -23,14 +23,9 @@
   line-height: 1;
 }
 
-.brand__name {
-  font-family: var(--font-serif);
-  font-size: var(--text-2xl);
-}
-
-.brand__script {
-  font-size: var(--text-2xl);
-  color: var(--color-accent);
+.brand img {
+  width: 220px;
+  height: auto;
 }
 
 .title {

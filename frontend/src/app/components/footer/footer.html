@@ -1,8 +1,8 @@
 <footer class="footer">
   <div class="container top">
     <div class="brand">
-      <a routerLink="/" aria-label="Armando Ovalle Wedding Studio — inicio">
-        <img src="/brand/logo-ao-light.webp" alt="Armando Ovalle Wedding Studio" width="800" height="641" loading="lazy" />
+      <a routerLink="/" aria-label="Armando Ovalle — inicio">
+        <img src="/brand/logo-ao-light.webp" alt="Armando Ovalle" width="800" height="641" loading="lazy" />
       </a>
       @if (settings.brand()?.tagline; as tagline) {
         <p class="tagline">{{ tagline }}</p>
@@ -63,7 +63,7 @@
   </div>
 
   <div class="container bottom">
-    <p>© {{ year }} {{ settings.brand()?.studioName ?? 'Armando Ovalle Wedding Studio' }}</p>
+    <p>© {{ year }} {{ settings.brand()?.studioName ?? 'Armando Ovalle' }}</p>
     <nav class="legal" aria-label="Legal">
       <a routerLink="/contract">Contrato</a>
       <a routerLink="/legal/terms">Términos y condiciones</a>

@@ -34,6 +34,8 @@ export const settingsSchemas = {
       ctaLabel: optionalText(40),
       image: mediaRef,
     }),
+    /** Foto de la banda "Reserva tu fecha" en las páginas que no tienen una propia. */
+    ctaBand: z.object({ image: mediaRef }).default({ image: null }),
   }),
 
   about: z.object({

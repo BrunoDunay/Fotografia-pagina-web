@@ -19,6 +19,8 @@ export interface HomeSettings {
     ctaLabel: string | null;
     image: Media | null;
   };
+  /** Foto de la banda "Reserva tu fecha" (ausente en configuraciones guardadas antes de existir). */
+  ctaBand?: { image: Media | null };
 }
 
 export interface AboutSettings {

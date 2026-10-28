@@ -22,7 +22,7 @@ const event = {
     { amount: '5000.00', paidAt: '2026-09-19', concept: 'abono', method: 'efectivo' },
   ],
 };
-const studio = { name: 'Armando Ovalle Wedding Studio', photographer: 'Jorge Armando Ovalle', phone: '449 999 5998', email: 'estudio@example.com', instagram: 'ovalle', siteUrl: 'https://ejemplo.mx' };
+const studio = { name: 'Armando Ovalle', photographer: 'Jorge Armando Ovalle', phone: '449 999 5998', email: 'estudio@example.com', instagram: 'ovalle', siteUrl: 'https://ejemplo.mx' };
 const payment = { total: 32000, paid: 12000, balance: 20000 };
 
 describe('correo de confirmación del evento', () => {
