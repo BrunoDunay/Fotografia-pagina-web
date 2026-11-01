@@ -33,6 +33,15 @@ describe('reseñas: el panel exige sesión', () => {
   });
 });
 
+describe('reseñas: el contenido del cliente no se puede editar', () => {
+  it('rechaza cambiar el texto aunque se tenga sesión', async () => {
+    const jwt = (await import('jsonwebtoken')).default;
+    const token = jwt.sign({ sub: ID, email: 'a@b.mx' }, process.env.JWT_SECRET, { algorithm: 'HS256' });
+    const res = await request(app).patch(`/api/reviews/${ID}`).set('Authorization', `Bearer ${token}`).send({ comment: 'Texto cambiado' });
+    expect(res.status).toBe(400);
+  });
+});
+
 describe('reseñas: formulario público', () => {
   it('a un bot que llena la trampa se le responde "recibida" sin guardar nada', async () => {
     const res = await post({ ...valid, website: 'http://spam.example' });

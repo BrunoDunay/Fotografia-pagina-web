@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-const STAR = 'M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z';
+const STAR = 'M12 2L14.29 9.44L22.08 9.32L15.71 13.81L18.23 21.18L12 16.5L5.77 21.18L8.29 13.81L1.92 9.32L9.71 9.44Z';
 
-/** Calificación de 1 a 5 (solo lectura). */
+/** Calificación de 1 a 5 (solo lectura). Estrella fina de puntas delgadas; las vacías van solo con un filete. */
 @Component({
   selector: 'app-review-stars',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,7 +17,7 @@ const STAR = 'M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9
   styles: `
     :host { display: inline-flex; gap: 2px; color: var(--color-primary); }
     svg { fill: currentColor; }
-    svg.off { fill: var(--color-border-strong); }
+    svg.off { fill: none; stroke: var(--color-border-strong); stroke-width: 1.2; stroke-linejoin: round; }
   `,
 })
 export class ReviewStars {

@@ -47,7 +47,7 @@ async function shrinkPhoto(file: File): Promise<File> {
   imports: [ReactiveFormsModule, RouterLink, Btn, Icon],
   template: `
     <div class="card">
-      <span class="seal" aria-hidden="true">AO</span>
+      <span class="seal" aria-hidden="true"><img src="/icon-192.png" alt="" width="192" height="192" /></span>
 
       @if (sent()) {
         <div class="thanks" role="status">
@@ -164,17 +164,21 @@ async function shrinkPhoto(file: File): Promise<File> {
     .card { position: relative; display: grid; gap: var(--space-4); padding: var(--space-8) clamp(1.25rem, 3vw, 2.5rem) var(--space-6); background: var(--color-surface); border: var(--hairline); box-shadow: var(--shadow-md); }
     /* Doble filete de papelería fina. */
     .card::before { content: ''; position: absolute; inset: 8px; border: 1px solid var(--color-accent-soft); pointer-events: none; }
-    .seal { position: absolute; top: -32px; left: 50%; translate: -50% 0; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--color-secondary); color: var(--color-accent); font-family: var(--font-serif); font-size: 1.25rem; letter-spacing: 0.08em; box-shadow: 0 0 0 4px var(--color-background), var(--shadow-md); }
+    .seal { position: absolute; top: -34px; left: 50%; translate: -50% 0; display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: var(--color-secondary); box-shadow: 0 0 0 4px var(--color-background), var(--shadow-md); }
+    .seal img { width: 62%; height: auto; }
     .ask { justify-self: center; }
     .lead { text-align: center; font-size: var(--text-2xl); line-height: 1.2; margin-top: calc(-1 * var(--space-2)); }
     form { position: relative; display: grid; gap: var(--space-4); }
     .rate { display: flex; justify-content: center; gap: var(--space-1); }
     .rate button { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; transition: transform var(--duration-fast) var(--ease-out); }
     .rate button:active { transform: scale(0.88); }
-    .rate svg { width: 30px; height: 30px; fill: var(--color-border); transition: fill var(--duration-fast); }
-    .rate button.on svg { fill: var(--color-accent); stroke: var(--color-primary); stroke-width: 0.6; }
+    .rate svg { width: 30px; height: 30px; fill: none; stroke: var(--color-border-strong); stroke-width: 1; stroke-linejoin: round; transition: fill var(--duration-fast), stroke var(--duration-fast); }
+    .rate button.on svg { fill: var(--color-primary); stroke: var(--color-primary); }
     .rate__word { min-height: 1.4em; margin-top: calc(-1 * var(--space-3)); text-align: center; font-family: var(--font-serif); font-style: italic; color: var(--color-primary); }
-    .field { position: relative; }
+    /* Cada campo reserva el renglón de su aviso: cuando aparece, nada se recorre ni se desalinea. */
+    form .field { position: relative; gap: var(--space-2); padding-bottom: 1.25rem; }
+    form .field .field__error { position: absolute; left: 0; right: 0; bottom: 0; font-size: var(--text-xs); line-height: 1.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: in 300ms var(--ease-out); }
+    form { row-gap: var(--space-3); }
     .comment { width: 100%; min-height: 128px; padding: var(--space-4); border: 1px solid var(--color-border); background: var(--color-background); font: inherit; color: inherit; line-height: 1.6; resize: vertical; transition: border-color var(--duration-fast); }
     .comment:focus { outline: none; border-color: var(--color-primary); }
     .count { position: absolute; right: var(--space-3); top: calc(128px - 1.8rem); font-size: var(--text-xs); color: var(--color-text-muted); pointer-events: none; }

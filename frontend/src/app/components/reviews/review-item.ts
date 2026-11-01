@@ -49,7 +49,7 @@ export function initials(name: string): string {
 
       @if (review().reply) {
         <div class="reply">
-          <span class="avatar avatar--studio" aria-hidden="true">AO</span>
+          <span class="avatar avatar--studio" aria-hidden="true"><img src="/icon-192.png" alt="" width="192" height="192" /></span>
           <div>
             <p class="meta">
               <strong>{{ studioHandle() }}</strong>
@@ -76,7 +76,11 @@ export function initials(name: string): string {
     .when { font-size: var(--text-xs); color: var(--color-text-muted); }
     .reply { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: var(--space-3); margin-top: var(--space-3); padding: var(--space-3) var(--space-4); background: var(--color-surface-alt); border-left: 2px solid var(--color-accent); }
     .reply .avatar { width: 36px; height: 36px; box-shadow: none; }
-    .avatar--studio { display: grid; place-items: center; background: var(--color-secondary); color: var(--color-accent); font-family: var(--font-serif); font-size: 0.82rem; letter-spacing: 0.08em; }
+    .avatar--studio { display: grid; place-items: center; background: var(--color-secondary); }
+    .avatar--studio img { width: 64%; height: auto; }
+    /* En el inicio las reseñas largas se cortan: la completa se lee en la página de Reseñas. */
+    :host(.compact) .body > .comment { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+    :host(.compact) .reply .comment { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .reply .comment { margin-top: 2px; font-size: var(--text-sm); }
     .verified { fill: var(--color-primary); }
     .verified .tick { fill: none; stroke: var(--color-text-inverse); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }

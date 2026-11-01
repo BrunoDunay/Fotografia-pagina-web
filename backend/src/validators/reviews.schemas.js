@@ -47,14 +47,14 @@ const optionalReply = z
   .optional()
   .transform((v) => (v === '' ? null : v));
 
-/** Panel: corregir datos, responder, publicar u ocultar. */
+/**
+ * Panel: solo publicar/ocultar y responder. Lo que escribió el cliente (texto, estrellas, nombre, evento)
+ * no se puede cambiar, ni siquiera llamando a la API directamente: `strict` rechaza cualquier otro campo.
+ */
 export const reviewUpdateBody = z
   .object({
-    authorName: text(2, 60, 'El nombre').optional(),
-    eventLabel: text(2, 80, 'El evento').optional(),
-    rating: z.number().int().min(1).max(5).optional(),
-    comment: text(1, 1000, 'La reseña').optional(),
     reply: optionalReply,
     status: z.enum(REVIEW_STATUSES).optional(),
   })
+  .strict('Solo se puede cambiar el estado de la reseña o tu respuesta.')
   .refine((v) => Object.keys(v).length > 0, 'No hay cambios que guardar');

@@ -25,19 +25,13 @@ const TABS: { id: ReviewStatus; label: string; empty: string }[] = [
 const DEFAULT_MESSAGE =
   '¡Hola! Fue un gusto fotografiar tu evento. Si tienes un minuto, me encantaría leer cómo lo viviste. Puedes dejarme tu reseña aquí:';
 
-interface Draft {
-  authorName: string;
-  eventLabel: string;
-  rating: number;
-  comment: string;
-  reply: string;
-}
-
 /**
  * Reseñas en el panel:
  * - "Por revisar": lo que llegó del sitio. La foto viene difuminada (por si alguien mandó algo indebido);
- *   se ve solo si el fotógrafo lo decide. Desde ahí se publica, se oculta, se corrige o se elimina.
- * - "Publicadas" y "Ocultas": se pueden responder, ocultar, volver a publicar, editar o borrar.
+ *   se ve solo si el fotógrafo lo decide. Desde ahí se publica, se oculta o se elimina.
+ * - "Publicadas" y "Ocultas": se pueden responder, ocultar, volver a publicar o borrar.
+ * - El texto, las estrellas, el nombre y el evento NO se pueden modificar: así las reseñas siguen siendo
+ *   creíbles. El fotógrafo solo decide si se publican, las responde o quita una foto inapropiada.
  * - "Pedir reseñas": el enlace directo al formulario (para WhatsApp) y la tarjeta con QR para historias.
  * En el sitio aparecen siempre por fecha, de la más reciente a la más antigua.
  */
@@ -122,37 +116,20 @@ interface Draft {
               <li class="p-card review fade-up">
                 <div class="photo">
                   @if (r.photo) {
-                    <img [src]="thumb(r.photo.url)" alt="" [class.is-blurred]="!revealed().has(r.id)" />
-                    @if (!revealed().has(r.id)) {
-                      <button type="button" class="peek" (click)="reveal(r.id)"><app-icon name="eye" [size]="16" /> Ver foto</button>
-                    } @else {
-                      <button type="button" class="peek peek--hide" (click)="unreveal(r.id)" aria-label="Volver a difuminar"><app-icon name="eyeOff" [size]="14" /></button>
+                    <!-- Solo las que están por revisar llegan difuminadas: las publicadas u ocultas ya se vieron. -->
+                    <img [src]="thumb(r.photo.url)" alt="" [class.is-blurred]="r.status === 'pending' && !revealed().has(r.id)" />
+                    @if (r.status === 'pending') {
+                      @if (!revealed().has(r.id)) {
+                        <button type="button" class="peek" (click)="reveal(r.id)"><app-icon name="eye" [size]="16" /> Ver foto</button>
+                      } @else {
+                        <button type="button" class="peek peek--hide" (click)="unreveal(r.id)" aria-label="Volver a difuminar"><app-icon name="eyeOff" [size]="14" /></button>
+                      }
                     }
                   } @else {
                     <span class="initials" aria-hidden="true">{{ initials(r.authorName) }}</span>
                   }
                 </div>
 
-                @if (editing() === r.id) {
-                  <form class="edit p-form" (ngSubmit)="saveEdit(r)">
-                    <div class="p-grid">
-                      <label class="field"><span class="field__label">Nombre</span><input class="field__control" name="n" [(ngModel)]="draft.authorName" maxlength="60" required /></label>
-                      <label class="field"><span class="field__label">Evento</span><input class="field__control" name="e" [(ngModel)]="draft.eventLabel" maxlength="80" required /></label>
-                      <label class="field"><span class="field__label">Estrellas</span>
-                        <select class="field__control" name="r" [(ngModel)]="draft.rating">
-                          @for (s of [5, 4, 3, 2, 1]; track s) { <option [ngValue]="s">{{ s }}</option> }
-                        </select>
-                      </label>
-                    </div>
-                    <label class="field"><span class="field__label">Reseña</span><textarea class="field__control" name="c" rows="4" [(ngModel)]="draft.comment" maxlength="1000" required></textarea></label>
-                    <label class="field"><span class="field__label">Tu respuesta (opcional, se ve debajo de la reseña)</span><textarea class="field__control" name="rp" rows="3" [(ngModel)]="draft.reply" maxlength="1000"></textarea></label>
-                    <div class="p-row">
-                      <span class="p-spacer"></span>
-                      <button appBtn variant="ghost" type="button" (click)="editing.set(null)">Cancelar</button>
-                      <button appBtn type="submit" [loading]="busy() === r.id">Guardar</button>
-                    </div>
-                  </form>
-                } @else {
                   <div class="body">
                     <p class="meta">
                       <strong>{{ r.authorName }}</strong>
@@ -186,7 +163,6 @@ interface Draft {
                         <button appBtn variant="outline" size="sm" type="button" (click)="setStatus(r, 'hidden')"><app-icon name="eyeOff" [size]="15" /> Ocultar</button>
                       }
                       <button appBtn variant="outline" size="sm" type="button" (click)="startReply(r)"><app-icon name="reply" [size]="15" /> {{ r.reply ? 'Editar respuesta' : 'Responder' }}</button>
-                      <button appBtn variant="ghost" size="sm" type="button" (click)="startEdit(r)">Editar</button>
                       @if (r.photo) {
                         <button appBtn variant="ghost" size="sm" type="button" (click)="removePhoto(r)">Quitar foto</button>
                       }
@@ -194,7 +170,6 @@ interface Draft {
                       <button type="button" class="p-icon-btn p-icon-btn--danger" (click)="remove(r)" aria-label="Eliminar reseña" title="Eliminar"><app-icon name="close" [size]="14" /></button>
                     </div>
                   </div>
-                }
               </li>
             }
           </ul>
@@ -243,7 +218,6 @@ interface Draft {
     .reply { padding: var(--space-3) var(--space-4); background: var(--color-surface-alt); border-left: 2px solid var(--color-accent); }
     .reply-box { display: grid; gap: var(--space-2); }
     .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-2); }
-    .edit { gap: var(--space-4); }
 
     @media (max-width: 900px) { .share { grid-template-columns: 1fr; } .share__card { max-width: 300px; } }
     @media (max-width: 560px) {
@@ -269,9 +243,7 @@ export class ReviewsAdmin {
   protected readonly emptyText = computed(() => TABS.find((t) => t.id === this.tab())!.empty);
   protected readonly revealed = signal(new Set<string>());
   protected readonly busy = signal<string | null>(null);
-  protected readonly editing = signal<string | null>(null);
   protected readonly replying = signal<string | null>(null);
-  protected draft: Draft = { authorName: '', eventLabel: '', rating: 5, comment: '', reply: '' };
   protected replyText = '';
 
   // Compartir
@@ -333,7 +305,6 @@ export class ReviewsAdmin {
       next: (updated) => {
         this.busy.set(null);
         this.apply(updated);
-        this.editing.set(null);
         this.replying.set(null);
         this.toast.success(done);
       },
@@ -346,28 +317,12 @@ export class ReviewsAdmin {
   }
 
   protected startReply(r: AdminReview): void {
-    this.editing.set(null);
     this.replyText = r.reply ?? '';
     this.replying.set(r.id);
   }
 
   protected saveReply(r: AdminReview): void {
     this.patch(r, { reply: this.replyText.trim() || null }, this.replyText.trim() ? 'Respuesta guardada.' : 'Respuesta eliminada.');
-  }
-
-  protected startEdit(r: AdminReview): void {
-    this.replying.set(null);
-    this.draft = { authorName: r.authorName, eventLabel: r.eventLabel, rating: r.rating, comment: r.comment, reply: r.reply ?? '' };
-    this.editing.set(r.id);
-  }
-
-  protected saveEdit(r: AdminReview): void {
-    const d = this.draft;
-    if (!d.authorName.trim() || !d.eventLabel.trim() || !d.comment.trim()) {
-      this.toast.error('Nombre, evento y reseña no pueden quedar vacíos.');
-      return;
-    }
-    this.patch(r, { authorName: d.authorName, eventLabel: d.eventLabel, rating: Number(d.rating), comment: d.comment, reply: d.reply.trim() || null }, 'Cambios guardados.');
   }
 
   protected async removePhoto(r: AdminReview): Promise<void> {

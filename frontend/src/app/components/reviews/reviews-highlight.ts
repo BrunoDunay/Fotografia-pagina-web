@@ -12,8 +12,8 @@ import { ReviewStars } from './review-stars';
 import { ReviewsSoon } from './reviews-soon';
 
 /**
- * Sección de reseñas de la página de inicio: el promedio, las tres más recientes y los botones para leer
- * todas o dejar la tuya. Con el módulo apagado (producción, por ahora) muestra el aviso de "muy pronto".
+ * Sección de reseñas de la página de inicio: el promedio y solo las tres más recientes (con el texto recortado),
+ * para que el inicio no crezca con cada reseña nueva. Todas se leen en su propia página, /reviews. Con el módulo apagado (producción, por ahora) muestra el aviso de "muy pronto".
  */
 @Component({
   selector: 'app-reviews-highlight',
@@ -32,15 +32,15 @@ import { ReviewsSoon } from './reviews-soon';
         @if (p.items.length) {
           <ul class="grid">
             @for (r of p.items; track r.id; let i = $index) {
-              <li class="card" appReveal [revealDelay]="i * 100"><app-review-item [review]="r" /></li>
+              <li class="card" appReveal [revealDelay]="i * 100"><app-review-item class="compact" [review]="r" /></li>
             }
           </ul>
         } @else {
           <p class="empty text-muted" appReveal>Pronto verás aquí lo que dicen las parejas y familias que fotografié.</p>
         }
         <div class="ctas" appReveal="fade">
-          @if (p.total > p.items.length) {
-            <a appBtn variant="outline" routerLink="/reviews">Leer todas las reseñas</a>
+          @if (p.total > 0) {
+            <a appBtn variant="outline" routerLink="/reviews">Ver todas las reseñas{{ p.total > p.items.length ? ' (' + p.total + ')' : '' }}</a>
           }
           <a appBtn routerLink="/reviews" fragment="escribir">Dejar mi reseña</a>
         </div>

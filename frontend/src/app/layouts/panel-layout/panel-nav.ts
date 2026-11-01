@@ -35,7 +35,7 @@ export const PANEL_NAV: PanelNavGroup[] = [
       {
         label: 'Reseñas',
         path: '/panel/reviews',
-        icon: 'M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z',
+        icon: 'M12 2L14.29 9.44L22.08 9.32L15.71 13.81L18.23 21.18L12 16.5L5.77 21.18L8.29 13.81L1.92 9.32L9.71 9.44Z',
         soon: !environment.reviewsEnabled,
       },
       { label: 'Preguntas frecuentes', path: '/panel/faq', icon: 'M9 9a3 3 0 116 0c0 2-3 2-3 4M12 17h.01M12 21a9 9 0 100-18 9 9 0 000 18z' },

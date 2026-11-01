@@ -42,4 +42,5 @@ export interface ReviewSubmission {
   elapsedMs: number;
 }
 
-export type ReviewUpdate = Partial<Pick<AdminReview, 'authorName' | 'eventLabel' | 'rating' | 'comment' | 'reply' | 'status'>>;
+/** Lo único que el fotógrafo puede cambiar: el estado y su respuesta (lo que escribió el cliente no se toca). */
+export type ReviewUpdate = Partial<Pick<AdminReview, 'reply' | 'status'>>;
