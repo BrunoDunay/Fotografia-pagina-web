@@ -7,8 +7,8 @@ export const environment = {
   siteUrl: '',
   cloudinaryCloudName: '',
   /**
-   * Reseñas de clientes: apagadas hasta que se aprueben. Mientras tanto, el inicio muestra "Reseñas, muy pronto"
-   * y el panel tiene la sección deshabilitada. Para activarlas: true aquí y REVIEWS_ENABLED=true en la API.
+   * Reseñas de clientes (aprobadas el 1 nov 2026). Con false, el inicio muestra "Reseñas, muy pronto" y el panel
+   * tiene la sección deshabilitada; para apagarlas también en la API: REVIEWS_ENABLED=false en Render.
    */
-  reviewsEnabled: false,
+  reviewsEnabled: true,
 };

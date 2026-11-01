@@ -30,8 +30,8 @@ const schema = z.object({
   /** Remitente visible, ej. "Armando Ovalle <correo@dominio.com>". Por defecto, SMTP_USER. */
   MAIL_FROM: z.string().optional(),
   /**
-   * Reseñas de clientes. Por defecto encendidas en desarrollo y apagadas en producción hasta que se aprueben:
-   * con "false" la API no recibe ni muestra reseñas (responde 503 REVIEWS_DISABLED).
+   * Reseñas de clientes: encendidas por defecto. Con "false" la API no recibe ni muestra reseñas
+   * (responde 503 REVIEWS_DISABLED); sirve para apagarlas sin tocar el código.
    */
   REVIEWS_ENABLED: z.enum(['true', 'false']).optional(),
 });
@@ -64,6 +64,6 @@ export const env = {
   cloudinaryEnabled: Boolean(
     parsed.data.CLOUDINARY_CLOUD_NAME && parsed.data.CLOUDINARY_API_KEY && parsed.data.CLOUDINARY_API_SECRET,
   ),
-  reviewsEnabled: parsed.data.REVIEWS_ENABLED ? parsed.data.REVIEWS_ENABLED === 'true' : parsed.data.NODE_ENV !== 'production',
+  reviewsEnabled: parsed.data.REVIEWS_ENABLED !== 'false',
   mailEnabled: Boolean(parsed.data.SMTP_HOST && parsed.data.SMTP_USER && parsed.data.SMTP_PASS),
 };

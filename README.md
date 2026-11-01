@@ -67,7 +67,7 @@ Todo el texto comercial vive en la base de datos y se edita desde el panel. Lo q
 - **Moderación:** nada se publica solo. Lo nuevo llega a *Panel → Reseñas → Por revisar*, con la foto difuminada hasta que el fotógrafo decide verla. Desde ahí se publica, oculta, responde o elimina (también se puede quitar solo la foto). Lo que escribió el cliente (texto, estrellas, nombre y evento) no se puede editar, para que las reseñas sean creíbles. El *Resumen* avisa cuántas hay por revisar.
 - **Pedir reseñas:** en el panel, el enlace directo al formulario (`/reviews#escribir`) para mandarlo por WhatsApp y una tarjeta 1080 × 1920 con QR, estilo ticket, para historias (tres colores).
 - **Protecciones del formulario público:** 5 envíos por hora por persona y 60 por hora en todo el sitio (antes de leer la foto), campo trampa para bots y tiempo mínimo de llenado (a los bots se les responde "recibida" sin guardar nada), sin enlaces en el texto, foto de máx. 6 MB con revisión de la firma real del archivo, límites de largo, y un tope de 150 reseñas sin revisar.
-- **Encender / apagar:** en desarrollo están encendidas. En producción están apagadas hasta aprobarlas: el inicio muestra "Reseñas, muy pronto" y el panel la sección deshabilitada. Para activarlas: `reviewsEnabled: true` en `frontend/src/environments/environment.ts` y `REVIEWS_ENABLED=true` en las variables del backend.
+- **Encender / apagar:** activas en producción desde el 1 nov 2026. Para apagarlas: `reviewsEnabled: false` en `frontend/src/environments/environment.ts` (el inicio muestra "Reseñas, muy pronto" y el panel la sección deshabilitada) y `REVIEWS_ENABLED=false` en las variables del backend.
 
 ## Producción
 
