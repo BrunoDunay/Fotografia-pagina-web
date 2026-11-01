@@ -103,7 +103,7 @@ export class ReviewsPage {
 
   constructor() {
     inject(SeoService).setPage({
-      title: 'Reseñas | Armando Ovalle Wedding Studio',
+      title: 'Reseñas | Armando Ovalle',
       description: 'Lo que dicen las parejas y familias que fotografié. Si ya trabajamos juntos, déjame tu reseña.',
       path: '/reviews',
     });

@@ -22,7 +22,7 @@ export const STORY_PALETTES: { id: StoryPalette; label: string; swatch: string }
   host: { '[class]': '"palette-" + palette()' },
   template: `
     <div class="frame">
-      <img class="logo" [src]="palette() === 'espresso' ? '/brand/logo-light.png' : '/brand/logo-dark.png'" alt="Armando Ovalle Wedding Studio" />
+      <img class="logo" [src]="palette() === 'espresso' ? '/brand/logo-ao-horizontal-light.webp' : '/brand/logo-ao-horizontal-dark.webp'" alt="Armando Ovalle" width="496" height="100" />
 
       <p class="script kicker">Tu opinión</p>
       <p class="title">significa mucho<br />para mí</p>
@@ -61,7 +61,7 @@ export const STORY_PALETTES: { id: StoryPalette; label: string; swatch: string }
     .frame::before { inset: 4cqw; }
     .frame::after { inset: 5.4cqw; border-width: 0.15cqw; border-color: var(--gold); opacity: 0.7; }
 
-    .logo { width: 56cqw; height: auto; margin-bottom: 6cqw; }
+    .logo { width: 62cqw; height: auto; margin-bottom: 8cqw; }
     .kicker { font-size: 12cqw; line-height: 1; color: var(--accent); }
     .title { margin-top: 1cqw; font-family: var(--font-serif); font-size: 9.2cqw; line-height: 1.05; font-weight: 400; }
     .text { max-width: 62cqw; margin-top: 3.5cqw; font-size: 3.6cqw; line-height: 1.5; font-weight: 300; color: var(--muted); }
