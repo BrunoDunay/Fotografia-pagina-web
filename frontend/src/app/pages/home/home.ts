@@ -20,11 +20,12 @@ import { FaqList } from '../../components/faq-list/faq-list';
 import { ContactDetails } from '../../components/contact-details/contact-details';
 import { CtaBand } from '../../components/cta-band/cta-band';
 import { SkeletonCard, SkeletonText } from '../../components/skeletons';
+import { ReviewsHighlight } from '../../components/reviews/reviews-highlight';
 
 /**
  * Home. Composición derivada de ideas/Home:
  * Hero (Harlow) → propuesta de valor → sobre mí (Lena) → servicios (Featured Work)
- * → paquetes (folleto) → banda de disponibilidad → FAQ → contacto.
+ * → paquetes (folleto) → banda de disponibilidad → reseñas → FAQ → contacto.
  */
 @Component({
   selector: 'app-home',
@@ -42,6 +43,7 @@ import { SkeletonCard, SkeletonText } from '../../components/skeletons';
     CtaBand,
     SkeletonCard,
     SkeletonText,
+    ReviewsHighlight,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.html',

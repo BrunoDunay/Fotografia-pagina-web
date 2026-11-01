@@ -38,3 +38,19 @@ export function assertImageFiles(files) {
     }
   }
 }
+
+/**
+ * Foto de perfil de una reseña (formulario público): límites mucho más cortos que los del panel.
+ * Una sola imagen de hasta 6 MB y pocos campos de texto, para que nadie pueda saturar la memoria del servidor.
+ */
+export const REVIEW_PHOTO_MAX_MB = 6;
+export const uploadReviewPhoto = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: REVIEW_PHOTO_MAX_MB * 1024 * 1024, files: 1, fields: 10, fieldSize: 4 * 1024, parts: 12 },
+  fileFilter: (_req, file, cb) => {
+    if (!ALLOWED_MIME.has(file.mimetype)) {
+      return cb(new AppError(415, 'La foto debe ser JPG, PNG, WEBP o HEIC.', 'UNSUPPORTED_FORMAT'));
+    }
+    cb(null, true);
+  },
+}).single('photo');

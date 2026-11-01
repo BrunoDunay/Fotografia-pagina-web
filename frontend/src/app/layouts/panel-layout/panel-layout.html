@@ -12,6 +12,13 @@
         <ul>
           @for (item of group.items; track item.path) {
             <li>
+              @if (item.soon) {
+                <span class="nav__link nav__link--soon" aria-disabled="true" title="Disponible muy pronto">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="item.icon" /></svg>
+                  {{ item.label }}
+                  <span class="nav__soon">Pronto</span>
+                </span>
+              } @else {
               <a
                 class="nav__link"
                 [routerLink]="item.path"
@@ -21,6 +28,7 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="item.icon" /></svg>
                 {{ item.label }}
               </a>
+              }
             </li>
           }
         </ul>

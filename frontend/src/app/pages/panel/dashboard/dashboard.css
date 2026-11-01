@@ -158,3 +158,76 @@ details .p-link {
     gap: var(--space-1);
   }
 }
+
+/* Aviso de reseñas por revisar */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent);
+  transition: transform var(--duration-fast), box-shadow var(--duration-fast);
+  animation: notice-in 600ms var(--ease-out);
+}
+
+.notice:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.notice__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-surface);
+}
+
+.notice__icon svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--color-accent);
+  stroke: var(--color-primary);
+  stroke-width: 1;
+}
+
+.notice__count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+}
+
+.notice__text {
+  display: grid;
+  flex: 1;
+}
+
+.notice__text strong {
+  font-weight: 500;
+}
+
+.notice__go {
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+@keyframes notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}

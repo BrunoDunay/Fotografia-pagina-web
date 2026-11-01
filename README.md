@@ -60,6 +60,15 @@ npm start              # http://localhost:4200
 
 Todo el texto comercial vive en la base de datos y se edita desde el panel. Lo que todavía es provisional (paquetes y precios, textos narrativos, contrato y legales) está marcado en BD y aparece en el dashboard del panel como **"Pendiente de confirmar"**. El contenido inicial está en `backend/seeders/initial-content.js`.
 
+## Reseñas de clientes
+
+- **Sitio:** página `/reviews` (formulario + reseñas publicadas, de la más reciente a la más antigua) y una sección en el inicio con las tres más recientes.
+- **Formulario:** estrellas, comentario, evento y foto de perfil opcional. La foto se reduce en el navegador (640 px, sin datos ocultos como la ubicación GPS).
+- **Moderación:** nada se publica solo. Lo nuevo llega a *Panel → Reseñas → Por revisar*, con la foto difuminada hasta que el fotógrafo decide verla. Desde ahí se publica, oculta, responde, corrige o elimina (también se puede quitar solo la foto). El *Resumen* avisa cuántas hay por revisar.
+- **Pedir reseñas:** en el panel, el enlace directo al formulario (`/reviews#escribir`) para mandarlo por WhatsApp y una tarjeta 1080 × 1920 con QR, estilo ticket, para historias (tres colores).
+- **Protecciones del formulario público:** 5 envíos por hora por persona y 60 por hora en todo el sitio (antes de leer la foto), campo trampa para bots y tiempo mínimo de llenado (a los bots se les responde "recibida" sin guardar nada), sin enlaces en el texto, foto de máx. 6 MB con revisión de la firma real del archivo, límites de largo, y un tope de 150 reseñas sin revisar.
+- **Encender / apagar:** en desarrollo están encendidas. En producción están apagadas hasta aprobarlas: el inicio muestra "Reseñas, muy pronto" y el panel la sección deshabilitada. Para activarlas: `reviewsEnabled: true` en `frontend/src/environments/environment.ts` y `REVIEWS_ENABLED=true` en las variables del backend.
+
 ## Producción
 
 **Backend** (`backend/.env`):

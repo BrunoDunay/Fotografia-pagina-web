@@ -15,6 +15,7 @@ import { AvailabilityBlock } from './availability-block.model.js';
 import { Faq } from './faq.model.js';
 import { SeasonalTheme } from './seasonal-theme.model.js';
 import { LegalDocument } from './legal-document.model.js';
+import { Review } from './review.model.js';
 
 // Servicios ↔ imágenes
 Service.belongsTo(MediaAsset, { as: 'heroMedia', foreignKey: 'heroMediaId' });
@@ -50,6 +51,9 @@ Reservation.belongsTo(MediaAsset, { as: 'coverMedia', foreignKey: 'coverMediaId'
 Faq.belongsTo(Service, { as: 'service', foreignKey: 'serviceId' });
 SeasonalTheme.belongsTo(MediaAsset, { as: 'heroMedia', foreignKey: 'heroMediaId' });
 
+// Reseñas: la foto de perfil (opcional) de quien comenta.
+Review.belongsTo(MediaAsset, { as: 'photo', foreignKey: 'photoMediaId' });
+
 export {
   Admin,
   SiteSetting,
@@ -68,4 +72,5 @@ export {
   Faq,
   SeasonalTheme,
   LegalDocument,
+  Review,
 };

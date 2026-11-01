@@ -25,6 +25,7 @@ export const PANEL_ROUTES: Routes = [
       { path: 'services/new', title: 'Nuevo servicio | Panel', loadComponent: () => import('./services/service-edit').then((m) => m.ServiceEdit) },
       { path: 'services/:id', title: 'Servicio | Panel', loadComponent: () => import('./services/service-edit').then((m) => m.ServiceEdit) },
       { path: 'packages', title: 'Paquetes | Panel', loadComponent: () => import('./packages/packages-admin').then((m) => m.PackagesAdmin) },
+      { path: 'reviews', title: 'Reseñas | Panel', loadComponent: () => import('./reviews/reviews-admin').then((m) => m.ReviewsAdmin) },
       { path: 'faq', title: 'FAQ | Panel', loadComponent: () => import('./faq/faq-admin').then((m) => m.FaqAdmin) },
       { path: 'legal', title: 'Legales | Panel', loadComponent: () => import('./legal/legal-admin').then((m) => m.LegalAdmin) },
       { path: 'themes', title: 'Temas | Panel', loadComponent: () => import('./themes/themes-admin').then((m) => m.ThemesAdmin) },

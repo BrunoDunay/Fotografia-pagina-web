@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authRoutes } from './auth.routes.js';
+import { reviewsRoutes } from './reviews.routes.js';
 import {
   faqsRoutes,
   galleriesRoutes,
@@ -35,4 +36,5 @@ export const apiRoutes = Router()
   .use('/clients', clientsRoutes)
   .use('/payments', paymentsRoutes)
   .use('/reservations', reservationsRoutes)
-  .use('/dashboard', dashboardRoutes);
+  .use('/dashboard', dashboardRoutes)
+  .use('/reviews', reviewsRoutes);

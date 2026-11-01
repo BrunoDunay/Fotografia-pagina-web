@@ -103,7 +103,12 @@
 <!-- 6. Banda de disponibilidad -->
 <app-cta-band />
 
-<!-- 7. Preguntas frecuentes -->
+<!-- 7. Reseñas (con el módulo apagado: aviso de "muy pronto") -->
+<section class="reviews section">
+  <div class="container"><app-reviews-highlight /></div>
+</section>
+
+<!-- 8. Preguntas frecuentes -->
 @if (faqs()?.length) {
   <section class="section container container--narrow">
     <app-section-title title="Preguntas frecuentes" eyebrow="FAQ" layout="center" />
@@ -114,7 +119,7 @@
   </section>
 }
 
-<!-- 8. Contacto -->
+<!-- 9. Contacto -->
 <section class="contact section">
   <div class="container contact__grid">
     <div appReveal="left">

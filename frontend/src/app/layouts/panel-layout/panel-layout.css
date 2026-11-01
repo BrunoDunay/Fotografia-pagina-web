@@ -185,3 +185,19 @@
     padding-inline: var(--space-4);
   }
 }
+
+/* Sección que aún no está activa (p. ej. Reseñas en producción). */
+.nav__link--soon {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.nav__soon {
+  margin-left: auto;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  font-size: 0.62rem;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}

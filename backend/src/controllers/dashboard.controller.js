@@ -1,5 +1,6 @@
 import { Op } from 'sequelize';
-import { Client, Event, Gallery, GalleryImage, LegalDocument, Package, Payment, Service } from '../models/index.js';
+import { Client, Event, Gallery, GalleryImage, LegalDocument, Package, Payment, Review, Service } from '../models/index.js';
+import { env } from '../config/env.js';
 import { todayInStudioTz } from '../utils/dates-mx.js';
 import { getSections } from '../services/settings.service.js';
 import { toEventSummary } from './events.controller.js';
@@ -41,6 +42,8 @@ export async function getDashboard(_req, res) {
     ]);
 
   const imageCounts = await GalleryImage.count({ group: ['galleryId'] });
+  // Reseñas que esperan revisión (aviso en el Resumen). Con el módulo apagado no se consulta.
+  const pendingReviews = env.reviewsEnabled ? await Review.count({ where: { status: 'pending' } }) : 0;
   const countByGallery = Object.fromEntries(imageCounts.map((r) => [r.galleryId, Number(r.count)]));
 
   let pendingBalance = 0;
@@ -74,5 +77,6 @@ export async function getDashboard(_req, res) {
     eventsThisMonth: monthEvents,
     pendingPayments: { events: pendingEvents, balance: Math.round(pendingBalance * 100) / 100 },
     provisional,
+    reviews: { enabled: env.reviewsEnabled, pending: pendingReviews },
   });
 }

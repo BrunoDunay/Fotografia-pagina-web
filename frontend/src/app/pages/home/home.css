@@ -252,3 +252,8 @@
     gap: var(--space-5);
   }
 }
+
+/* ---------- Reseñas ---------- */
+.reviews {
+  background: var(--color-surface-alt);
+}

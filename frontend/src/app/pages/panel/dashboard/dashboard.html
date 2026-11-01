@@ -14,6 +14,19 @@
 @if (error()) {
   <p class="p-alert p-alert--danger" role="alert">{{ error() }}</p>
 } @else if (data(); as d) {
+  @if (d.reviews?.enabled && d.reviews!.pending > 0) {
+    <a class="notice" routerLink="/panel/reviews">
+      <span class="notice__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z" /></svg>
+        <span class="notice__count">{{ d.reviews!.pending }}</span>
+      </span>
+      <span class="notice__text">
+        <strong>{{ d.reviews!.pending === 1 ? 'Tienes 1 reseña nueva por revisar' : 'Tienes ' + d.reviews!.pending + ' reseñas nuevas por revisar' }}</strong>
+        <span class="p-help">No se publican hasta que las apruebes.</span>
+      </span>
+      <span class="notice__go">Revisar →</span>
+    </a>
+  }
   <div class="stats">
     <a class="stat" routerLink="/panel/events">
       <span class="stat__label">Eventos este mes</span>

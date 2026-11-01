@@ -111,4 +111,6 @@ export interface Dashboard {
   eventsThisMonth: number;
   pendingPayments: { events: number; balance: number };
   provisional: { type: string; id: string; label: string }[];
+  /** Reseñas que esperan revisión (el módulo puede estar apagado). */
+  reviews?: { enabled: boolean; pending: number };
 }
