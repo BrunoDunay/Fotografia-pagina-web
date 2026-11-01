@@ -5,8 +5,6 @@
   padding: calc(var(--space-3) + env(safe-area-inset-top, 0px)) var(--space-3) 0;
   pointer-events: none;
   transition: padding var(--duration) var(--ease-out);
-  /* Se mantiene fijo durante las transiciones entre páginas. */
-  view-transition-name: navbar;
 }
 
 /* Al hacer scroll (o en páginas sin foto de portada) la barra queda pegada al borde superior, de lado a lado. */

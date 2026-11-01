@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { PublicLayout } from './layouts/public-layout/public-layout';
+import { curtainGuard } from './components/brand-intro/route-curtain';
 
 /** `navOverlay: true` → la página abre con un Hero a sangre y el navbar va transparente encima. */
 export const routes: Routes = [
@@ -27,6 +28,8 @@ export const routes: Routes = [
   {
     path: '',
     component: PublicLayout,
+    // Entre páginas del sitio: espera a que la cortina con el monograma tape la pantalla.
+    canActivateChild: [curtainGuard],
     children: [
       {
         path: '',

@@ -428,55 +428,14 @@ ol {
   transform: none;
 }
 
-/* ---------- Transición entre páginas (View Transitions) ---------- */
-/* Fundido breve: la página que sale se desvanece y la nueva sube unos píxeles. */
-@keyframes page-out {
-  to {
-    opacity: 0;
-  }
+/* ---------- Entrada con el logo y transición entre páginas (components/brand-intro) ---------- */
+/* Si la entrada ya se vio en esta visita (script en index.html), no aparece. */
+.ao-intro-seen app-brand-intro {
+  display: none;
 }
 
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-}
-
-::view-transition-old(root) {
-  animation: page-out 180ms ease-out both;
-}
-
-::view-transition-new(root) {
-  animation: page-in 420ms var(--ease-out) 60ms both;
-}
-
-/* El navbar no participa del fundido: se queda en su sitio. */
-::view-transition-old(navbar),
-::view-transition-new(navbar) {
-  animation: none;
-}
-
-::view-transition-group(navbar) {
-  z-index: 1;
-}
-
-/* Con "reducir movimiento": solo fundidos (sin desplazamientos). El !important gana a la regla global que corta las animaciones. */
-@keyframes page-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
+/* Con "reducir movimiento": la regla global corta las animaciones, así que la entrada y la cortina pasan al instante. */
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root) {
-    animation: page-out 160ms ease-out both !important;
-  }
-
-  ::view-transition-new(root) {
-    animation: page-fade-in 320ms ease-out 40ms both !important;
-  }
-
   .reveal {
     transform: none !important;
     transition: opacity 0.8s ease-out !important;

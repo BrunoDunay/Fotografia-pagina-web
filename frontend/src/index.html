@@ -15,6 +15,8 @@
   <!-- Las fotos se sirven desde Cloudinary: abrir la conexión desde el inicio acelera el Hero. -->
   <link rel="preconnect" href="https://res.cloudinary.com">
   <link rel="dns-prefetch" href="https://res.cloudinary.com">
+  <!-- La entrada con el logo se ve una vez por visita: si ya se vio, se oculta antes del primer pintado. -->
+  <script>try{if(sessionStorage.getItem('ao-intro'))document.documentElement.classList.add('ao-intro-seen')}catch(e){}</script>
 </head>
 <body>
   <app-root></app-root>

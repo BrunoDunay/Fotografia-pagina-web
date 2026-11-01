@@ -7,6 +7,8 @@ import { Footer } from '../../components/footer/footer';
 import { WhatsappFloat } from '../../components/whatsapp-float/whatsapp-float';
 import { SeasonalDecor } from '../../components/seasonal-decor/seasonal-decor';
 import { ThemeService } from '../../core/services/theme.service';
+import { BrandIntro } from '../../components/brand-intro/brand-intro';
+import { RouteCurtain } from '../../components/brand-intro/route-curtain';
 
 function deepestData(snapshot: ActivatedRouteSnapshot): Record<string, unknown> {
   let route = snapshot;
@@ -14,12 +16,17 @@ function deepestData(snapshot: ActivatedRouteSnapshot): Record<string, unknown> 
   return route.data;
 }
 
-/** Layout del sitio público: navbar + contenido + footer + WhatsApp flotante (+ decoración del tema sobre el Hero). */
+/**
+ * Layout del sitio público: navbar + contenido + footer + WhatsApp flotante (+ decoración del tema sobre el Hero).
+ * Encima: la entrada con el logo (una vez por visita) y la cortina de transición entre páginas.
+ */
 @Component({
   selector: 'app-public-layout',
-  imports: [RouterOutlet, Navbar, Footer, WhatsappFloat, SeasonalDecor],
+  imports: [RouterOutlet, Navbar, Footer, WhatsappFloat, SeasonalDecor, BrandIntro, RouteCurtain],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <app-brand-intro />
+    <app-route-curtain />
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     @if (navOverlay() && decoration(); as decoration) {
       <app-seasonal-decor [decoration]="decoration" />
