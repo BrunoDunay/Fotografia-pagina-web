@@ -3,6 +3,7 @@ import { SettingsStore } from '../../core/services/settings.store';
 import { Review } from '../../core/types/review.model';
 import { cloudinaryUrl } from '../../core/utils/cloudinary-url';
 import { ReviewStars } from './review-stars';
+import { AoLogo } from '../brand/ao-logo';
 
 /** "hace 3 días", "hace 2 meses"… como en los comentarios de Instagram. */
 export function timeAgo(iso: string, now = Date.now()): string {
@@ -31,7 +32,7 @@ export function initials(name: string): string {
 @Component({
   selector: 'app-review-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReviewStars],
+  imports: [ReviewStars, AoLogo],
   template: `
     @if (avatar(); as src) {
       <img class="avatar" [src]="src" alt="" width="52" height="52" loading="lazy" />
@@ -49,7 +50,7 @@ export function initials(name: string): string {
 
       @if (review().reply) {
         <div class="reply">
-          <span class="avatar avatar--studio" aria-hidden="true"><img src="/icon-192.png" alt="" width="192" height="192" /></span>
+          <span class="avatar avatar--studio" aria-hidden="true"><app-ao-logo layout="monogram" label="" /></span>
           <div>
             <p class="meta">
               <strong>{{ studioHandle() }}</strong>
@@ -65,8 +66,17 @@ export function initials(name: string): string {
     </div>
   `,
   styles: `
-    :host { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: var(--space-4); padding: var(--space-5) 0; border-bottom: var(--hairline); }
-    .avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px var(--color-background), 0 0 0 3px var(--color-accent); }
+    :host { position: relative; display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: var(--space-4); padding: var(--space-5) 0; border-bottom: var(--hairline); }
+    /* Foto de perfil con un filete fino (sin el aro de color, que parecía una historia de Instagram). */
+    .avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 1px solid var(--color-border-strong); transition: transform var(--duration-slow) var(--ease-out), border-color var(--duration) ease; }
+    /* Hover discreto: una línea champán aparece a la izquierda, la foto crece apenas y el nombre toma el color de acento. */
+    :host::before { content: ''; position: absolute; left: -14px; top: var(--space-5); bottom: var(--space-5); width: 1px; background: var(--color-accent); transform: scaleY(0); transform-origin: top; transition: transform var(--duration-slow) var(--ease-out); }
+    .meta strong { transition: color var(--duration) ease; }
+    @media (hover: hover) {
+      :host(:hover)::before { transform: scaleY(1); }
+      :host(:hover) .avatar { transform: scale(1.05); border-color: var(--color-accent); }
+      :host(:hover) .body > .meta strong { color: var(--color-primary); }
+    }
     .avatar--initials { display: grid; place-items: center; background: var(--color-accent-soft); color: var(--color-primary); font-family: var(--font-serif); font-size: 1.15rem; letter-spacing: 0.04em; }
     .body { display: grid; gap: var(--space-1); min-width: 0; }
     .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px var(--space-3); line-height: 1.3; }
@@ -76,8 +86,8 @@ export function initials(name: string): string {
     .when { font-size: var(--text-xs); color: var(--color-text-muted); }
     .reply { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: var(--space-3); margin-top: var(--space-3); padding: var(--space-3) var(--space-4); background: var(--color-surface-alt); border-left: 2px solid var(--color-accent); }
     .reply .avatar { width: 36px; height: 36px; box-shadow: none; }
-    .avatar--studio { display: grid; place-items: center; background: var(--color-secondary); }
-    .avatar--studio img { width: 64%; height: auto; }
+    .avatar--studio { display: grid; place-items: center; background: var(--color-surface); }
+    .avatar--studio app-ao-logo { width: 46%; aspect-ratio: 484 / 600; }
     /* En el inicio las reseñas largas se cortan: la completa se lee en la página de Reseñas. */
     :host(.compact) .body > .comment { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
     :host(.compact) .reply .comment { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }

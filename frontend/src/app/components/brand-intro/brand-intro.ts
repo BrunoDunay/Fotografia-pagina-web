@@ -2,48 +2,67 @@ import { ChangeDetectionStrategy, Component, PLATFORM_ID, afterNextRender, injec
 import { isPlatformBrowser } from '@angular/common';
 import { AO_FLIP, AO_MONOGRAM, AO_SEEDS, AO_VIEWBOX_FULL, AO_WORDMARK } from '../../core/brand/ao-logo';
 
-/** Lo que dura la entrada completa (debe coincidir con la última animación de abajo). */
-const INTRO_MS = 2500;
+/** Lo que dura la entrada desde que arranca (debe coincidir con la última animación de abajo). */
+const INTRO_MS = 2700;
 const SEEN_KEY = 'ao-intro';
 
 /**
- * Entrada del sitio (basada en la referencia "animación para logo de entrada", pero mucho más ágil):
- * 1. Pantalla color espresso de la marca y dos puntos dorados donde nace el trazo.
- * 2. Los contornos de la O y la A se dibujan en dorado fino, luego se rellenan con el degradado del logo.
+ * Entrada del sitio (basada en la referencia "animación para logo de entrada", pero ágil):
+ * 1. Pantalla espresso de la marca y dos puntos de luz donde nace el trazo.
+ * 2. Los contornos de la O y la A se dibujan en champán, se rellenan con el degradado del logo
+ *    y un destello fino lo recorre.
  * 3. Sube el nombre ARMANDO OVALLE letra por letra.
  * 4. El logo se desvanece y la cortina sube para descubrir la página.
  *
- * Todo es CSS sobre el HTML que ya manda el servidor, así que arranca con el primer pintado (sin esperar a
- * Angular) y, si el JS fallara, la cortina se retira sola igual. Se ve una vez por visita: un script en
- * index.html marca la página antes de pintarse si ya se vio, y entonces no aparece ni un instante.
+ * Fluidez: la pantalla espresso viene en el HTML del servidor (tapa la página desde el primer cuadro),
+ * pero el dibujo arranca hasta que Angular terminó de cargar (clase .play): así no compite con el arranque
+ * del sitio y no se traba. El contorno es de un solo color (barato de pintar) y la cortina se retira con
+ * `transform`, que el navegador anima sin usar el hilo principal. Si el JS fallara, la cortina se va sola.
+ * Se ve una vez por visita (index.html la oculta antes de pintarse si ya se vio).
  */
 @Component({
   selector: 'app-brand-intro',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (!done()) {
-      <div class="intro" aria-hidden="true">
+      <div class="intro" [class.play]="playing()" aria-hidden="true">
         <svg class="mark" [attr.viewBox]="viewBox" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <linearGradient id="ao-intro-gold" gradientUnits="userSpaceOnUse" x1="780" y1="540" x2="1250" y2="1140">
-              <stop offset="0" stop-color="#e3cf9f" />
-              <stop offset="0.45" stop-color="#bf9d5f" />
-              <stop offset="0.7" stop-color="#a8854a" />
-              <stop offset="1" stop-color="#d6bd85" />
+            <linearGradient id="ao-intro-fill" gradientUnits="userSpaceOnUse" x1="780" y1="540" x2="1250" y2="1140">
+              <stop offset="0" stop-color="#e2dac9" />
+              <stop offset="0.42" stop-color="#cdc1a9" />
+              <stop offset="0.72" stop-color="#b3a793" />
+              <stop offset="1" stop-color="#d8cfbd" />
             </linearGradient>
+            <linearGradient id="ao-intro-shine" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#fff" stop-opacity="0" />
+              <stop offset="0.5" stop-color="#fff" stop-opacity="0.8" />
+              <stop offset="1" stop-color="#fff" stop-opacity="0" />
+            </linearGradient>
+            <clipPath id="ao-intro-clip">
+              <path [attr.transform]="flip" [attr.d]="m.o" /><path [attr.transform]="flip" [attr.d]="m.a" />
+              <path [attr.transform]="flip" [attr.d]="m.footLeft" /><path [attr.transform]="flip" [attr.d]="m.footRight" />
+            </clipPath>
           </defs>
           @for (s of seeds; track $index) {
-            <circle class="seed" [attr.cx]="s.x" [attr.cy]="s.y" r="7" [style.--d]="$index * 70 + 'ms'" />
+            <circle class="seed" [attr.cx]="s.x" [attr.cy]="s.y" r="6" [style.animation-delay]="$index * 60 + 'ms'" />
           }
-          <g [attr.transform]="flip">
-            <path class="part" [attr.d]="m.o" pathLength="1" style="--draw: 120ms; --fill: 760ms" />
-            <path class="part" [attr.d]="m.a" pathLength="1" style="--draw: 200ms; --fill: 820ms" />
-            <path class="part part--foot" [attr.d]="m.footLeft" pathLength="1" style="--draw: 520ms; --fill: 860ms" />
-            <path class="part part--foot" [attr.d]="m.footRight" pathLength="1" style="--draw: 560ms; --fill: 880ms" />
+          <g class="fill" fill="url(#ao-intro-fill)" [attr.transform]="flip">
+            <path [attr.d]="m.o" /><path [attr.d]="m.a" /><path [attr.d]="m.footLeft" /><path [attr.d]="m.footRight" />
+          </g>
+          <g class="outline" [attr.transform]="flip">
+            <path [attr.d]="m.o" pathLength="1" style="animation-delay: 80ms" />
+            <path [attr.d]="m.a" pathLength="1" style="animation-delay: 150ms" />
+            <path class="foot" [attr.d]="m.footLeft" pathLength="1" style="animation-delay: 420ms" />
+            <path class="foot" [attr.d]="m.footRight" pathLength="1" style="animation-delay: 450ms" />
+          </g>
+          <g clip-path="url(#ao-intro-clip)">
+            <g transform="skewX(-18)"><rect class="shine" x="760" y="500" width="120" height="700" fill="url(#ao-intro-shine)" /></g>
           </g>
           <g class="word">
             @for (l of word; track $index) {
-              <g class="letter" [style.--i]="$index"><path [attr.transform]="l.transform" [attr.d]="l.d" /></g>
+              <!-- Se anima el grupo: el path conserva la posición que trae del PDF. -->
+              <g class="letter" [style.animation-delay]="1000 + $index * 26 + 'ms'"><path [attr.transform]="l.transform" [attr.d]="l.d" /></g>
             }
           </g>
         </svg>
@@ -58,34 +77,38 @@ const SEEN_KEY = 'ao-intro';
       display: grid;
       place-items: center;
       background: #2a2421;
-      animation: curtain-up 560ms cubic-bezier(0.76, 0, 0.24, 1) 1940ms forwards;
+      will-change: transform;
+      /* Respaldo: si el JS no llegara a arrancar la entrada, la cortina se retira sola. */
+      animation: curtain-up 600ms cubic-bezier(0.76, 0, 0.24, 1) 5s forwards;
     }
-    .mark { width: min(68vw, 460px); height: auto; overflow: visible; animation: mark-out 380ms ease-in 1760ms forwards; }
+    .mark { width: min(68vw, 460px); height: auto; overflow: visible; will-change: transform, opacity; }
+    .seed { fill: #e2dac9; opacity: 0; }
+    .fill { opacity: 0; }
+    .outline { fill: none; stroke: #d3c7b0; stroke-width: 2.4; }
+    .outline path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .shine { opacity: 0; }
+    .word path { fill: #faf7f3; }
+    .letter { opacity: 0; }
 
-    .seed { fill: #d6bd85; transform-box: fill-box; transform-origin: center; scale: 0; animation: seed 520ms ease-out var(--d) forwards; }
+    /* --- Arranca cuando el sitio ya cargó --- */
+    .play { animation: curtain-up 620ms cubic-bezier(0.76, 0, 0.24, 1) 2080ms forwards; }
+    .play .seed { transform-box: fill-box; transform-origin: center; animation: seed 520ms ease-out forwards; }
+    .play .outline path { animation: draw 640ms cubic-bezier(0.65, 0, 0.35, 1) forwards; }
+    .play .outline .foot { animation-duration: 360ms; }
+    .play .outline { animation: fade-out 320ms ease-out 820ms forwards; }
+    .play .fill { animation: fade-in 380ms ease-out 680ms forwards; }
+    .play .shine { animation: shine 820ms cubic-bezier(0.4, 0, 0.2, 1) 1060ms forwards; }
+    .play .letter { animation: letter 460ms cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .play .mark { animation: mark-out 380ms ease-in 1900ms forwards; }
 
-    .part {
-      fill: url(#ao-intro-gold);
-      fill-opacity: 0;
-      stroke: url(#ao-intro-gold);
-      stroke-width: 2.6;
-      stroke-dasharray: 1;
-      stroke-dashoffset: 1;
-      animation:
-        draw 680ms cubic-bezier(0.65, 0, 0.35, 1) var(--draw) forwards,
-        fill-in 380ms ease-out var(--fill) forwards;
-    }
-    .part--foot { animation-duration: 380ms, 380ms; }
-
-    .letter { opacity: 0; translate: 0 14px; animation: rise 420ms cubic-bezier(0.22, 1, 0.36, 1) calc(980ms + var(--i) * 28ms) forwards; }
-    .letter path { fill: #faf7f3; }
-
-    @keyframes seed { 0% { scale: 0; opacity: 1; } 35% { scale: 1; } 70% { opacity: 1; } 100% { scale: 1; opacity: 0; } }
+    @keyframes seed { 0% { opacity: 0; transform: scale(0); } 30% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
     @keyframes draw { to { stroke-dashoffset: 0; } }
-    @keyframes fill-in { to { fill-opacity: 1; stroke-opacity: 0; } }
-    @keyframes rise { to { opacity: 1; translate: 0 0; } }
+    @keyframes fade-in { to { opacity: 1; } }
+    @keyframes fade-out { to { opacity: 0; } }
+    @keyframes shine { 0% { opacity: 1; transform: translateX(0); } 85% { opacity: 1; } 100% { opacity: 0; transform: translateX(560px); } }
+    @keyframes letter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
     @keyframes mark-out { to { opacity: 0; transform: translateY(-12px) scale(0.97); } }
-    @keyframes curtain-up { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
+    @keyframes curtain-up { to { transform: translateY(-100%); visibility: hidden; } }
   `,
 })
 export class BrandIntro {
@@ -95,13 +118,13 @@ export class BrandIntro {
   protected readonly word = AO_WORDMARK;
   protected readonly seeds = AO_SEEDS;
   protected readonly done = signal(false);
+  protected readonly playing = signal(false);
 
   constructor() {
     const browser = isPlatformBrowser(inject(PLATFORM_ID));
     afterNextRender(() => {
       if (!browser) return;
-      const seen = document.documentElement.classList.contains('ao-intro-seen');
-      if (seen) {
+      if (document.documentElement.classList.contains('ao-intro-seen')) {
         this.done.set(true);
         return;
       }
@@ -110,7 +133,13 @@ export class BrandIntro {
       } catch {
         // Modo privado sin almacenamiento: la entrada se verá en cada visita, nada más.
       }
-      setTimeout(() => this.done.set(true), INTRO_MS + 100);
+      // Dos cuadros después de cargar: el navegador ya pintó y terminó el trabajo pesado del arranque.
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          this.playing.set(true);
+          setTimeout(() => this.done.set(true), INTRO_MS + 100);
+        }),
+      );
     });
   }
 }

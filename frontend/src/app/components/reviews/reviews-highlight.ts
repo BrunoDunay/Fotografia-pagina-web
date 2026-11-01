@@ -56,7 +56,8 @@ import { ReviewsSoon } from './reviews-soon';
     .score { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-2); color: var(--color-text-muted); }
     .score strong { color: var(--color-text); font-weight: 500; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--space-4); align-items: start; list-style: none; padding: 0; }
-    .card { padding: var(--space-5); background: var(--color-surface); border: var(--hairline); }
+    .card { padding: var(--space-5); background: var(--color-surface); border: var(--hairline); transition: transform var(--duration-slow) var(--ease-out), box-shadow var(--duration-slow) var(--ease-out), border-color var(--duration) ease; }
+    @media (hover: hover) { .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--color-accent); } }
     .card app-review-item { padding: 0; border: 0; }
     .empty { text-align: center; }
     .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }

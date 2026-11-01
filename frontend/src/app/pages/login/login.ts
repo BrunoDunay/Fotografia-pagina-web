@@ -1,3 +1,4 @@
+import { AoLogo } from '../../components/brand/ao-logo';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -8,7 +9,7 @@ import { Btn } from '../../components/buttons/btn';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, Btn],
+  imports: [ReactiveFormsModule, RouterLink, Btn, AoLogo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.html',
   styleUrl: './login.css',

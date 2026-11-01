@@ -1,3 +1,4 @@
+import { AoLogo } from '../../components/brand/ao-logo';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,7 +11,7 @@ import { ConfirmDialog } from '../../pages/panel/shared/confirm-dialog';
 /** Layout del panel: aside izquierdo con categorías + main central. */
 @Component({
   selector: 'app-panel-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, PanelUiStyles, ConfirmDialog],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, PanelUiStyles, ConfirmDialog, AoLogo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './panel-layout.html',
   styleUrl: './panel-layout.css',

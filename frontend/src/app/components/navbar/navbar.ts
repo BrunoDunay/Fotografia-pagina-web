@@ -1,3 +1,4 @@
+import { AoLogo } from '../brand/ao-logo';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -34,7 +35,7 @@ const ORNAMENTS: Record<string, string> = {
  */
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive, Icon, NavSky],
+  imports: [RouterLink, RouterLinkActive, Icon, NavSky, AoLogo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',

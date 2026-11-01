@@ -9,6 +9,7 @@ import { ApiError } from '../../core/types/common.model';
 import { Btn } from '../buttons/btn';
 import { Icon } from '../icon/icon';
 import { STAR_PATH } from './review-stars';
+import { AoLogo } from '../brand/ao-logo';
 
 const MAX_PHOTO_MB = 6;
 const TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
@@ -44,10 +45,10 @@ async function shrinkPhoto(file: File): Promise<File> {
 @Component({
   selector: 'app-review-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterLink, Btn, Icon],
+  imports: [ReactiveFormsModule, RouterLink, Btn, Icon, AoLogo],
   template: `
     <div class="card">
-      <span class="seal" aria-hidden="true"><img src="/icon-192.png" alt="" width="192" height="192" /></span>
+      <span class="seal" aria-hidden="true"><app-ao-logo layout="monogram" label="" /></span>
 
       @if (sent()) {
         <div class="thanks" role="status">
@@ -164,8 +165,9 @@ async function shrinkPhoto(file: File): Promise<File> {
     .card { position: relative; display: grid; gap: var(--space-4); padding: var(--space-8) clamp(1.25rem, 3vw, 2.5rem) var(--space-6); background: var(--color-surface); border: var(--hairline); box-shadow: var(--shadow-md); }
     /* Doble filete de papelería fina. */
     .card::before { content: ''; position: absolute; inset: 8px; border: 1px solid var(--color-accent-soft); pointer-events: none; }
-    .seal { position: absolute; top: -34px; left: 50%; translate: -50% 0; display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: var(--color-secondary); box-shadow: 0 0 0 4px var(--color-background), var(--shadow-md); }
-    .seal img { width: 62%; height: auto; }
+    /* Sello claro con el monograma (se vuelve a formar al pasar el cursor). */
+    .seal { position: absolute; top: -34px; left: 50%; translate: -50% 0; display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: var(--color-surface); border: 1px solid var(--color-border); box-shadow: var(--shadow-md); }
+    .seal app-ao-logo { width: 46%; aspect-ratio: 484 / 600; }
     .ask { justify-self: center; }
     .lead { text-align: center; font-size: var(--text-2xl); line-height: 1.2; margin-top: calc(-1 * var(--space-2)); }
     form { position: relative; display: grid; gap: var(--space-4); }

@@ -20,8 +20,8 @@
   </nav>
 
   <a class="logo" routerLink="/" aria-label="Armando Ovalle — inicio">
-    <img class="logo__img logo__img--light" src="/brand/logo-ao-horizontal-light.webp" alt="" width="496" height="100" />
-    <img class="logo__img logo__img--dark" src="/brand/logo-ao-horizontal-dark.webp" alt="" width="496" height="100" />
+    <!-- Logo en línea: al pasar el cursor el monograma se vuelve a formar. El nombre toma el color de la barra. -->
+    <app-ao-logo class="logo__img" layout="horizontal" label="" />
     @if (ornamentVisible()) {
       @if (ornament(); as src) {
         <img class="bouquet" [class.bouquet--edge]="ornamentOnEdge()" [class.bouquet--bloom]="ornamentBlooms()" [src]="src" alt="" width="220" height="72" aria-hidden="true" />

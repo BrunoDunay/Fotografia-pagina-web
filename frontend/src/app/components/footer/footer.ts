@@ -1,3 +1,4 @@
+import { AoLogo } from '../brand/ao-logo';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -9,7 +10,7 @@ import { NAV_LINKS } from '../navbar/nav-links';
 
 @Component({
   selector: 'app-footer',
-  imports: [RouterLink, Icon],
+  imports: [RouterLink, Icon, AoLogo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './footer.html',
   styleUrl: './footer.css',

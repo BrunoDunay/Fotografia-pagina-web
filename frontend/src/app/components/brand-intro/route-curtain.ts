@@ -3,9 +3,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { CanActivateChildFn, NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { AO_FLIP, AO_MONOGRAM, AO_VIEWBOX_MONOGRAM } from '../../core/brand/ao-logo';
 
-const COVER_MS = 360; // lo que tarda la cortina en tapar la pantalla
-const MIN_SHOWN_MS = 620; // tiempo mínimo tapada: alcanza a dibujarse el monograma
-const LEAVE_MS = 460;
+// El monograma termina de dibujarse ANTES de que el router cargue la página nueva: mientras se arma la página
+// (trabajo pesado) ya no hay nada dibujándose, y la salida de la cortina usa transform (no se traba).
+const COVER_MS = 500;
+const MIN_SHOWN_MS = 560;
+const LEAVE_MS = 520;
 
 /**
  * Transición entre páginas: versión corta de la entrada. La cortina espresso sube, el monograma AO se dibuja
@@ -59,40 +61,37 @@ export const curtainGuard: CanActivateChildFn = () => inject(RouteCurtainService
     @if (curtain.phase() !== 'idle') {
       <svg class="mark" [attr.viewBox]="viewBox">
         <defs>
-          <linearGradient id="ao-curtain-gold" gradientUnits="userSpaceOnUse" x1="780" y1="540" x2="1250" y2="1140">
-            <stop offset="0" stop-color="#e3cf9f" />
-            <stop offset="0.5" stop-color="#bf9d5f" />
-            <stop offset="1" stop-color="#d6bd85" />
+          <linearGradient id="ao-curtain-fill" gradientUnits="userSpaceOnUse" x1="780" y1="540" x2="1250" y2="1140">
+            <stop offset="0" stop-color="#e2dac9" />
+            <stop offset="0.5" stop-color="#c6baa2" />
+            <stop offset="1" stop-color="#d8cfbd" />
           </linearGradient>
         </defs>
-        <g [attr.transform]="flip">
-          <path class="part" [attr.d]="m.o" pathLength="1" />
-          <path class="part" [attr.d]="m.a" pathLength="1" style="animation-delay: 150ms, 420ms" />
-          <path class="part" [attr.d]="m.footLeft" pathLength="1" style="animation-delay: 300ms, 440ms" />
-          <path class="part" [attr.d]="m.footRight" pathLength="1" style="animation-delay: 300ms, 440ms" />
+        <g class="fill" fill="url(#ao-curtain-fill)" [attr.transform]="flip">
+          <path [attr.d]="m.o" /><path [attr.d]="m.a" /><path [attr.d]="m.footLeft" /><path [attr.d]="m.footRight" />
+        </g>
+        <g class="outline" [attr.transform]="flip">
+          <path [attr.d]="m.o" pathLength="1" />
+          <path [attr.d]="m.a" pathLength="1" style="animation-delay: 60ms" />
+          <path [attr.d]="m.footLeft" pathLength="1" style="animation-delay: 160ms" />
+          <path [attr.d]="m.footRight" pathLength="1" style="animation-delay: 170ms" />
         </g>
       </svg>
     }
   `,
   styles: `
-    :host { position: fixed; inset: 0; z-index: 999; display: grid; place-items: center; background: #2a2421; pointer-events: none; visibility: hidden; transform: translateY(100%); }
-    :host(.is-in) { visibility: visible; pointer-events: auto; animation: cover 360ms cubic-bezier(0.76, 0, 0.24, 1) forwards; }
-    :host(.is-out) { visibility: visible; transform: none; animation: leave 460ms cubic-bezier(0.76, 0, 0.24, 1) forwards; }
-    .mark { width: 64px; height: auto; overflow: visible; }
+    :host { position: fixed; inset: 0; z-index: 999; display: grid; place-items: center; background: #2a2421; pointer-events: none; visibility: hidden; transform: translateY(100%); will-change: transform; }
+    :host(.is-in) { visibility: visible; pointer-events: auto; animation: cover 380ms cubic-bezier(0.76, 0, 0.24, 1) forwards; }
+    :host(.is-out) { visibility: visible; transform: none; animation: leave 520ms cubic-bezier(0.76, 0, 0.24, 1) forwards; }
+    .mark { width: 64px; height: auto; overflow: visible; will-change: opacity; }
     :host(.is-out) .mark { animation: fade 200ms ease-in forwards; }
-    .part {
-      fill: url(#ao-curtain-gold);
-      fill-opacity: 0;
-      stroke: url(#ao-curtain-gold);
-      stroke-width: 6;
-      stroke-dasharray: 1;
-      stroke-dashoffset: 1;
-      animation: draw 420ms cubic-bezier(0.65, 0, 0.35, 1) 120ms forwards, fill-in 220ms ease-out 400ms forwards;
-    }
+    .fill { opacity: 0; animation: fade-in 200ms ease-out 330ms forwards; }
+    .outline { fill: none; stroke: #d3c7b0; stroke-width: 5; animation: fade 160ms ease-out 400ms forwards; }
+    .outline path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 300ms cubic-bezier(0.65, 0, 0.35, 1) 60ms forwards; }
     @keyframes cover { from { transform: translateY(100%); } to { transform: none; } }
     @keyframes leave { from { transform: none; } to { transform: translateY(-100%); } }
     @keyframes draw { to { stroke-dashoffset: 0; } }
-    @keyframes fill-in { to { fill-opacity: 1; stroke-opacity: 0; } }
+    @keyframes fade-in { to { opacity: 1; } }
     @keyframes fade { to { opacity: 0; } }
   `,
 })

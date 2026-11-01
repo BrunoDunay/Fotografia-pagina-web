@@ -2,7 +2,7 @@
   <div class="container top">
     <div class="brand">
       <a routerLink="/" aria-label="Armando Ovalle — inicio">
-        <img src="/brand/logo-ao-light.webp" alt="Armando Ovalle" width="800" height="641" loading="lazy" />
+        <app-ao-logo class="footer-logo" layout="stacked" />
       </a>
       @if (settings.brand()?.tagline; as tagline) {
         <p class="tagline">{{ tagline }}</p>

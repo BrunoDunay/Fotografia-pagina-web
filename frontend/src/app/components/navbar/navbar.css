@@ -55,11 +55,13 @@
 /* ---- Enlaces ---- */
 .links {
   display: flex;
-  gap: var(--space-5);
+  /* Con seis enlaces, el espacio se ajusta al ancho para que ninguno se parta en dos renglones. */
+  gap: clamp(var(--space-3), 1.5vw, var(--space-5));
 }
 
 .links a {
   position: relative;
+  white-space: nowrap;
   font-size: 0.8rem;
   font-weight: 400;
   letter-spacing: 0.06em;
@@ -103,19 +105,8 @@
   grid-area: 1 / 1;
   width: auto;
   height: 42px;
-  transition: opacity var(--duration) var(--ease-out), transform var(--duration-slow) var(--ease-out);
-}
-
-.logo__img--light {
-  opacity: 0;
-}
-
-:host(.is-overlay) .logo__img--light {
-  opacity: 1;
-}
-
-:host(.is-overlay) .logo__img--dark {
-  opacity: 0;
+  aspect-ratio: 2950 / 600;
+  transition: transform var(--duration-slow) var(--ease-out);
 }
 
 .season-badge {
@@ -210,13 +201,6 @@
   box-shadow: 0 6px 24px rgba(20, 26, 56, 0.3);
 }
 
-:host(.is-night) .logo__img--light {
-  opacity: 1;
-}
-
-:host(.is-night) .logo__img--dark {
-  opacity: 0;
-}
 
 .bar {
   position: relative;
