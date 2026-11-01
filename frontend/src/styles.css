@@ -458,7 +458,12 @@ ol {
     scroll-behavior: auto;
   }
 
-  *,
+  /*
+   * El logo (entrada, cortina entre páginas y logo al pasar el cursor) sí se anima: dibujar el contorno,
+   * rellenarlo y el destello son efectos finos, no movimientos grandes. Esos componentes cambian sus
+   * desplazamientos por fundidos cuando está activo "reducir movimiento".
+   */
+  *:not(app-brand-intro, app-brand-intro *, app-route-curtain, app-route-curtain *, app-ao-logo, app-ao-logo *),
   *::before,
   *::after {
     animation-duration: 0.01ms !important;

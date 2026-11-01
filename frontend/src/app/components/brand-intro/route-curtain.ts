@@ -93,6 +93,11 @@ export const curtainGuard: CanActivateChildFn = () => inject(RouteCurtainService
     @keyframes draw { to { stroke-dashoffset: 0; } }
     @keyframes fade-in { to { opacity: 1; } }
     @keyframes fade { to { opacity: 0; } }
+    /* "Reducir movimiento": la cortina aparece y se va con un fundido, sin deslizarse. */
+    @media (prefers-reduced-motion: reduce) {
+      @keyframes cover { from { opacity: 0; transform: none; } to { opacity: 1; transform: none; } }
+      @keyframes leave { from { opacity: 1; transform: none; } to { opacity: 0; transform: none; } }
+    }
   `,
 })
 export class RouteCurtain {

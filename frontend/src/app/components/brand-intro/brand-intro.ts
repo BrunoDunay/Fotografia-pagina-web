@@ -109,6 +109,14 @@ const SEEN_KEY = 'ao-intro';
     @keyframes letter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
     @keyframes mark-out { to { opacity: 0; transform: translateY(-12px) scale(0.97); } }
     @keyframes curtain-up { to { transform: translateY(-100%); visibility: hidden; } }
+
+    /* "Reducir movimiento" (por ejemplo, Windows con los efectos de animación apagados): el logo se dibuja igual,
+       pero en vez de deslizarse, las letras y la cortina solo se desvanecen. */
+    @media (prefers-reduced-motion: reduce) {
+      @keyframes letter { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes mark-out { to { opacity: 0; } }
+      @keyframes curtain-up { to { opacity: 0; visibility: hidden; } }
+    }
   `,
 })
 export class BrandIntro {

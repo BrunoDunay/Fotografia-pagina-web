@@ -102,7 +102,6 @@ let next = 0;
     @keyframes ao-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
     @keyframes ao-shine { from { opacity: 1; transform: translateX(0); } 85% { opacity: 1; } to { opacity: 0; transform: translateX(620px); } }
     @keyframes ao-letter { 0% { opacity: 1; } 30% { opacity: 0.3; } 100% { opacity: 1; } }
-    @media (prefers-reduced-motion: reduce) { :host(.is-playing) * { animation: none !important; } }
   `,
 })
 export class AoLogo {
