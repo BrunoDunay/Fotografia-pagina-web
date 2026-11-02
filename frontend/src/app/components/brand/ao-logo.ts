@@ -32,6 +32,7 @@ let next = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.is-playing]': 'playing()',
+    '[class.shine-only]': "effect() === 'shine'",
     '(mouseenter)': 'play()',
     '(focusin)': 'play()',
   },
@@ -97,6 +98,10 @@ let next = 0;
     :host(.is-playing) .shine { animation: ao-shine 760ms cubic-bezier(0.4, 0, 0.2, 1) 820ms both; }
     :host(.is-playing) .word path { animation: ao-letter 520ms ease both; animation-delay: calc(140ms + var(--i) * 26ms); }
 
+    /* Solo destello (navbar): el monograma no se apaga ni se redibuja, solo lo cruza la luz. */
+    :host(.is-playing.shine-only) .mono, :host(.is-playing.shine-only) .outline, :host(.is-playing.shine-only) .outline path, :host(.is-playing.shine-only) .word path { animation: none; }
+    :host(.is-playing.shine-only) .shine { animation-delay: 0ms; }
+
     @keyframes ao-mono { 0% { opacity: 1; } 18%, 55% { opacity: 0.12; } 85%, 100% { opacity: 1; } }
     @keyframes ao-outline { 0% { opacity: 0; } 10%, 62% { opacity: 1; } 90%, 100% { opacity: 0; } }
     @keyframes ao-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
@@ -107,6 +112,8 @@ let next = 0;
 export class AoLogo {
   readonly layout = input<AoLayout>('horizontal');
   readonly label = input('Armando Ovalle');
+  /** full: se vuelve a formar y lo cruza el destello. shine: solo el destello (más discreto). */
+  readonly effect = input<'full' | 'shine'>('full');
   protected readonly l = computed(() => LAYOUTS[this.layout()]);
   protected readonly flip = AO_FLIP;
   protected readonly m = AO_MONOGRAM;
@@ -120,6 +127,6 @@ export class AoLogo {
     if (this.playing()) return;
     this.playing.set(true);
     clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.playing.set(false), 1650);
+    this.timer = setTimeout(() => this.playing.set(false), this.effect() === 'shine' ? 850 : 1650);
   }
 }

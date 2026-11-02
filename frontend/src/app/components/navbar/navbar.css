@@ -85,10 +85,6 @@
   opacity: 1;
 }
 
-.logo:hover .logo__img {
-  transform: scale(1.03);
-}
-
 .links a:hover::after,
 .links a.is-active::after {
   transform: scaleX(1);
@@ -106,7 +102,6 @@
   width: auto;
   height: 42px;
   aspect-ratio: 2950 / 600;
-  transition: transform var(--duration-slow) var(--ease-out);
 }
 
 .season-badge {

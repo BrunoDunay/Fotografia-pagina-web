@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { AO_FLIP, AO_MONOGRAM, AO_SEEDS, AO_VIEWBOX_FULL, AO_WORDMARK } from '../../core/brand/ao-logo';
 
 /** Lo que dura la entrada desde que arranca (debe coincidir con la última animación de abajo). */
-const INTRO_MS = 2700;
+const INTRO_MS = 2450;
 const SEEN_KEY = 'ao-intro';
 
 /**
@@ -12,12 +12,12 @@ const SEEN_KEY = 'ao-intro';
  * 2. Los contornos de la O y la A se dibujan en champán, se rellenan con el degradado del logo
  *    y un destello fino lo recorre.
  * 3. Sube el nombre ARMANDO OVALLE letra por letra.
- * 4. El logo se desvanece y la cortina sube para descubrir la página.
+ * 4. Todo se desvanece (medio segundo) y deja ver la página que ya estaba detrás.
  *
  * Fluidez: la pantalla espresso viene en el HTML del servidor (tapa la página desde el primer cuadro),
  * pero el dibujo arranca hasta que Angular terminó de cargar (clase .play): así no compite con el arranque
- * del sitio y no se traba. El contorno es de un solo color (barato de pintar) y la cortina se retira con
- * `transform`, que el navegador anima sin usar el hilo principal. Si el JS fallara, la cortina se va sola.
+ * del sitio y no se traba. El contorno es de un solo color (barato de pintar) y la salida es un fundido de
+ * `opacity`, que el navegador anima sin usar el hilo principal. Si el JS fallara, la pantalla se va sola.
  * Se ve una vez por visita (index.html la oculta antes de pintarse si ya se vio).
  */
 @Component({
@@ -77,9 +77,9 @@ const SEEN_KEY = 'ao-intro';
       display: grid;
       place-items: center;
       background: #2a2421;
-      will-change: transform;
-      /* Respaldo: si el JS no llegara a arrancar la entrada, la cortina se retira sola. */
-      animation: curtain-up 600ms cubic-bezier(0.76, 0, 0.24, 1) 5s forwards;
+      will-change: opacity;
+      /* Respaldo: si el JS no llegara a arrancar la entrada, la pantalla se desvanece sola. */
+      animation: dissolve-fallback 500ms ease-out 5s forwards;
     }
     .mark { width: min(68vw, 460px); height: auto; overflow: visible; will-change: transform, opacity; }
     .seed { fill: #e2dac9; opacity: 0; }
@@ -91,7 +91,8 @@ const SEEN_KEY = 'ao-intro';
     .letter { opacity: 0; }
 
     /* --- Arranca cuando el sitio ya cargó --- */
-    .play { animation: curtain-up 620ms cubic-bezier(0.76, 0, 0.24, 1) 2080ms forwards; }
+    /* Salida: el logo y el fondo se desvanecen juntos, rápido, mostrando la página de a poco. */
+    .play { animation: dissolve 520ms cubic-bezier(0.4, 0, 0.2, 1) 1880ms forwards; }
     .play .seed { transform-box: fill-box; transform-origin: center; animation: seed 520ms ease-out forwards; }
     .play .outline path { animation: draw 640ms cubic-bezier(0.65, 0, 0.35, 1) forwards; }
     .play .outline .foot { animation-duration: 360ms; }
@@ -99,7 +100,7 @@ const SEEN_KEY = 'ao-intro';
     .play .fill { animation: fade-in 380ms ease-out 680ms forwards; }
     .play .shine { animation: shine 820ms cubic-bezier(0.4, 0, 0.2, 1) 1060ms forwards; }
     .play .letter { animation: letter 460ms cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-    .play .mark { animation: mark-out 380ms ease-in 1900ms forwards; }
+    .play .mark { animation: mark-out 520ms cubic-bezier(0.4, 0, 0.2, 1) 1880ms forwards; }
 
     @keyframes seed { 0% { opacity: 0; transform: scale(0); } 30% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
     @keyframes draw { to { stroke-dashoffset: 0; } }
@@ -107,15 +108,16 @@ const SEEN_KEY = 'ao-intro';
     @keyframes fade-out { to { opacity: 0; } }
     @keyframes shine { 0% { opacity: 1; transform: translateX(0); } 85% { opacity: 1; } 100% { opacity: 0; transform: translateX(560px); } }
     @keyframes letter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-    @keyframes mark-out { to { opacity: 0; transform: translateY(-12px) scale(0.97); } }
-    @keyframes curtain-up { to { transform: translateY(-100%); visibility: hidden; } }
+    @keyframes mark-out { to { opacity: 0; transform: scale(1.03); } }
+    @keyframes dissolve { to { opacity: 0; visibility: hidden; } }
+    /* Nombre distinto a propósito: si fuera el mismo, el navegador no reinicia el reloj al arrancar .play. */
+    @keyframes dissolve-fallback { to { opacity: 0; visibility: hidden; } }
 
     /* "Reducir movimiento" (por ejemplo, Windows con los efectos de animación apagados): el logo se dibuja igual,
        pero en vez de deslizarse, las letras y la cortina solo se desvanecen. */
     @media (prefers-reduced-motion: reduce) {
       @keyframes letter { from { opacity: 0; } to { opacity: 1; } }
       @keyframes mark-out { to { opacity: 0; } }
-      @keyframes curtain-up { to { opacity: 0; visibility: hidden; } }
     }
   `,
 })
