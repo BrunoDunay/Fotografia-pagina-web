@@ -37,7 +37,7 @@ export async function up({ context: sequelize }) {
        (slug, name, short_description, description, hero_title, hero_subtitle, hero_description,
         seo_title, seo_description, sort_order, is_visible, is_provisional)
      VALUES
-       (:slug, 'Sesiones navideñas', :short, :long, '¡La magia de la Navidad llega a nuestro estudio!',
+       (:slug, 'Sesiones navideñas', :short, :long, 'Sesiones navideñas',
         'Sesiones navideñas 2026', :short,
         'Sesiones navideñas 2026 en Aguascalientes | Armando Ovalle',
         'Sesión de fotos navideña en estudio para familia, pareja o amigos: hasta 4 personas, 30 fotos editadas y pet friendly. Reserva tu fecha.',
@@ -48,6 +48,11 @@ export async function up({ context: sequelize }) {
   );
   const serviceId = rows[0]?.id;
   if (!serviceId) return; // ya existía: no se toca
+
+  // Galería vacía: sin ella el panel no muestra dónde subir las fotos (la API la crea al dar de alta un servicio).
+  await sequelize.query(`INSERT INTO galleries (service_id, title) VALUES (:serviceId, 'Sesiones navideñas')`, {
+    replacements: { serviceId },
+  });
 
   const [[pkg]] = await sequelize.query(
     `INSERT INTO packages (name, subtitle, price, currency, is_price_provisional, is_featured, is_active, sort_order)
