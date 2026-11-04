@@ -19,3 +19,9 @@ Thumbs.db
 
 # Documentos de clientes usados como referencia (traen datos personales)
 ideas/*.docx
+
+# Caché de HyperFrames y renders que se regeneran
+**/.hyperframes/
+video-promo/renders/
+# Referencia de terceros (repo público)
+ideas/animación para logo de entrada.mp4
