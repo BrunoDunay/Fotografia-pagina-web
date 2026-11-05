@@ -50,6 +50,15 @@ export const RELEASES: Release[] = [
     changes: [{ kind: 'nuevo', text: 'Esta página: ficha técnica, estado de la conexión e historial de versiones del sistema.' }],
   },
   {
+    version: '1.4.1',
+    date: '2026-11-04',
+    title: 'Ajustes de sesiones navideñas',
+    changes: [
+      { kind: 'correccion', text: 'Se crea la galería que faltaba de las sesiones navideñas.' },
+      { kind: 'mejora', text: 'Título más corto en el encabezado de la página navideña.' },
+    ],
+  },
+  {
     version: '1.4.0',
     date: '2026-11-04',
     title: 'Sesiones navideñas 2026',
