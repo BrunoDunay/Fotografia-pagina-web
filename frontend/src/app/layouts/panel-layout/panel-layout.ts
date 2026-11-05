@@ -5,6 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { PANEL_NAV } from './panel-nav';
+import { RELEASES } from '../../core/system/system-info';
 import { PanelUiStyles } from '../../pages/panel/shared/panel-ui-styles';
 import { ConfirmDialog } from '../../pages/panel/shared/confirm-dialog';
 
@@ -20,6 +21,7 @@ export class PanelLayout {
   protected readonly auth = inject(AuthService);
   protected readonly nav = PANEL_NAV;
   protected readonly menuOpen = signal(false);
+  protected readonly version = RELEASES[0].version;
 
   constructor() {
     // En móvil, cerrar el menú al navegar.

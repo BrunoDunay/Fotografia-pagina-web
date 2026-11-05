@@ -32,6 +32,7 @@ export const PANEL_ROUTES: Routes = [
 
       // ---- Cuenta ----
       { path: 'settings', title: 'Configuración | Panel', loadComponent: () => import('./settings/settings-admin').then((m) => m.SettingsAdmin) },
+      { path: 'system', title: 'Acerca del sistema | Panel', loadComponent: () => import('./system/system-about').then((m) => m.SystemAbout) },
 
       { path: '**', redirectTo: '' },
     ],

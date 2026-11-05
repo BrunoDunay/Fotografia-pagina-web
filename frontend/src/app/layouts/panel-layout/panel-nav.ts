@@ -45,6 +45,9 @@ export const PANEL_NAV: PanelNavGroup[] = [
   },
   {
     title: 'Cuenta',
-    items: [{ label: 'Configuración', path: '/panel/settings', icon: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19 12l2-1-2-4-2 1-2-2V4h-4v2L9 8 7 7l-2 4 2 1v0l-2 1 2 4 2-1 2 2v2h4v-2l2-2 2 1 2-4z' }],
+    items: [
+      { label: 'Configuración', path: '/panel/settings', icon: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19 12l2-1-2-4-2 1-2-2V4h-4v2L9 8 7 7l-2 4 2 1v0l-2 1 2 4 2-1 2 2v2h4v-2l2-2 2 1 2-4z' },
+      { label: 'Acerca del sistema', path: '/panel/system', icon: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5M12 8h.01' },
+    ],
   },
 ];

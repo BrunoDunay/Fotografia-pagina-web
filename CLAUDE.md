@@ -23,8 +23,14 @@ Instalación y producción: `README.md`. El brief original está en `promt_maest
   Ramas actuales: `pruebas/animacion-entrada`, `pruebas/salida-fundido`, `prueba-graphify`.
 - Textos comerciales en la base de datos; lo provisional se marca "Pendiente de confirmar".
 - Paleta del cliente: marfil / espresso / moca. No reutilizarla en otras demos de fotografía.
+- **Acerca del sistema** (`/panel/system`): ficha técnica, conexión con la API e historial de versiones. Cada cambio que se
+  publique agrega su entrada en `frontend/src/app/core/system/system-info.ts` (`RELEASES`, la más nueva primero) y sube
+  `version` en `frontend/package.json`: corrección = último número, mejora = el de en medio. `scripts/build-info.mjs`
+  guarda el commit y la fecha al compilar en Netlify/Vercel.
 
-## Estado (4 nov 2026)
+## Estado (5 nov 2026)
+
+- 5 nov 2026 en producción (pedido directo a `main`): página "Acerca del sistema", versión 1.5.0 con el historial desde el 1 oct.
 
 - 1 nov 2026 en producción: reseñas activas (`/reviews`, enlace para clientes `/reviews#escribir`,
   moderación en Panel → Reseñas), entrada con el logo AO, cortina entre páginas y logo animado al pasar el cursor.
