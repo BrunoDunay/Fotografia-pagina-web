@@ -4,6 +4,11 @@
  * aquí solo se valida que la combinación diseño + color exista.
  */
 export const TICKET_DESIGNS = {
+  // Navidad (fondos fotográficos: un solo color)
+  wreath: ['original'],
+  pine: ['original'],
+  ribbon: ['original'],
+  ornament: ['original'],
   // Bodas
   envelope: ['mocha', 'navy', 'burgundy', 'olive'],
   editorial: ['burgundy', 'black', 'olive', 'navy'],

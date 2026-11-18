@@ -23,7 +23,7 @@ export interface TicketView {
   time: string | null;
   place: string | null;
   message: string | null;
-  /** Ícono del día según el tipo de evento (corazón, corona, birrete, biberón, estrella). */
+  /** Ícono del día según el tipo de evento (corazón, corona, birrete, biberón, pino, estrella). */
   mark: TicketMarkKind;
   /** Foto propia de la reservación (URL optimizada); hoy ningún diseño la usa. */
   photo: string | null;

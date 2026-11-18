@@ -44,6 +44,15 @@ export const SYSTEM = {
 
 export const RELEASES: Release[] = [
   {
+    version: '1.7.0',
+    date: '2026-11-18',
+    title: 'Tickets navideños',
+    changes: [
+      { kind: 'nuevo', text: 'Cuatro diseños de ticket para sesiones navideñas (Corona, Pino, Moño y Esfera), hechos con las fotos de referencia del estudio.' },
+      { kind: 'mejora', text: 'Las sesiones navideñas sugieren el ticket "Corona" y marcan el día con un pino.' },
+    ],
+  },
+  {
     version: '1.6.0',
     date: '2026-11-18',
     title: 'Eliminar todas las fotos de una galería',

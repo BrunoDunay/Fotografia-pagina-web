@@ -23,7 +23,11 @@ export type TicketDesign =
   | 'cradle'
   | 'botanic'
   | 'leaves'
-  | 'calendar';
+  | 'calendar'
+  | 'pine'
+  | 'ribbon'
+  | 'ornament'
+  | 'wreath';
 
 /** Colores de una variación. Cada diseño decide cómo usa cada uno. */
 export interface TicketPalette {
@@ -41,7 +45,7 @@ export interface TicketPalette {
   accent: string;
 }
 
-export type TicketGroup = 'Bodas' | 'Playa y destino' | 'XV años' | 'Graduaciones' | 'Baby shower' | 'Sesiones y otros';
+export type TicketGroup = 'Navidad' | 'Bodas' | 'Playa y destino' | 'XV años' | 'Graduaciones' | 'Baby shower' | 'Sesiones y otros';
 
 export interface TicketDesignDef {
   key: TicketDesign;
@@ -63,6 +67,38 @@ const p = (key: string, label: string, main: string, dark: string, paper: string
 });
 
 export const TICKET_DESIGNS: TicketDesignDef[] = [
+  // ---------------- Navidad ----------------
+  // Fondos: las fotos de referencia (frontend/public/tickets/navidad), así que cada uno tiene un solo color.
+  // main/dark = fondo de la página del ticket · paper = papel · ink = texto · accent = detalles.
+  {
+    key: 'wreath',
+    label: 'Corona',
+    group: 'Navidad',
+    services: ['christmas-sessions'],
+    palettes: [p('original', 'Original', '#2e3a30', '#1e2a22', '#efe8dc', '#2e3a30', '#7a1f26')],
+  },
+  {
+    key: 'pine',
+    label: 'Pino',
+    group: 'Navidad',
+    services: [],
+    palettes: [p('original', 'Original', '#4a5a45', '#3a3a2c', '#efe6d8', '#1f4a3a', '#b04a3a')],
+  },
+  {
+    key: 'ribbon',
+    label: 'Moño',
+    group: 'Navidad',
+    services: [],
+    palettes: [p('original', 'Original', '#6b4a2f', '#8a7560', '#efe6da', '#5a3e28', '#6b4a2f')],
+  },
+  {
+    key: 'ornament',
+    label: 'Esfera',
+    group: 'Navidad',
+    services: [],
+    palettes: [p('original', 'Original', '#2b2a22', '#15140f', '#f7f2e8', '#f7f2e8', '#e0b66a')],
+  },
+
   // ---------------- Bodas ----------------
   {
     key: 'envelope',
@@ -338,12 +374,12 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
   },
 ];
 
-export const TICKET_GROUPS: TicketGroup[] = ['Bodas', 'Playa y destino', 'XV años', 'Graduaciones', 'Baby shower', 'Sesiones y otros'];
+export const TICKET_GROUPS: TicketGroup[] = ['Navidad', 'Bodas', 'Playa y destino', 'XV años', 'Graduaciones', 'Baby shower', 'Sesiones y otros'];
 
 export const DEFAULT_TICKET_DESIGN: TicketDesign = 'envelope';
 
 export function ticketDesign(key: string | null | undefined): TicketDesignDef {
-  return TICKET_DESIGNS.find((d) => d.key === key) ?? TICKET_DESIGNS[0];
+  return TICKET_DESIGNS.find((d) => d.key === key) ?? TICKET_DESIGNS.find((d) => d.key === DEFAULT_TICKET_DESIGN)!;
 }
 
 /** Variación de color del diseño; si no existe en ese diseño, la primera. */

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 /** Ícono que marca el día del evento, según el tipo de evento. */
-export type TicketMarkKind = 'heart' | 'crown' | 'cap' | 'bottle' | 'star';
+export type TicketMarkKind = 'heart' | 'crown' | 'cap' | 'bottle' | 'tree' | 'star';
 
-/** Tipo de evento (slug del servicio) → ícono. Lo que no es romántico, XV, graduación ni baby shower usa una estrella. */
+/** Tipo de evento (slug del servicio) → ícono. Lo que no es romántico, XV, graduación, baby shower ni Navidad usa una estrella. */
 export function ticketMarkFor(eventType: string | null | undefined): TicketMarkKind {
   switch (eventType) {
     case 'weddings':
@@ -17,6 +17,8 @@ export function ticketMarkFor(eventType: string | null | undefined): TicketMarkK
       return 'cap';
     case 'baby-showers':
       return 'bottle';
+    case 'christmas-sessions':
+      return 'tree';
     default:
       return 'star';
   }
@@ -30,11 +32,13 @@ const PATHS: Record<TicketMarkKind, string> = {
   cap: 'M12 3L1 8.5l11 5.5 8-4v6.2h1.6V9.2L23 8.5zM5.5 12.6V16c0 1.7 2.9 3 6.5 3s6.5-1.3 6.5-3v-3.4L12 15.800z',
   // Biberón
   bottle: 'M10 2h4v2.2h-4zM9 5h6a1 1 0 011 1v1.200H8V6a1 1 0 011-1zM8 8.400h8l.8 2.600V20a2 2 0 01-2 2H9.200a2 2 0 01-2-2v-9z',
+  // Pino de tres pisos con tronco
+  tree: 'M12 1.5l4.6 5.8h-2.6l4.4 5.6h-2.7l4.8 6.1H13.2V23h-2.4v-4H4.500l4.800-6.100H6.600L11 7.300H8.400z',
   star: 'M12 2.5l2.9 6 6.600.9-4.800 4.600 1.200 6.500L12 17.400 6.100 20.500l1.200-6.500L2.500 9.400l6.600-.9z',
 };
 
 /**
- * Ícono del día del evento (corazón, corona, birrete, biberón o estrella).
+ * Ícono del día del evento (corazón, corona, birrete, biberón, pino o estrella).
  * El color va como atributo para que también salga al guardar el ticket como imagen.
  */
 @Component({

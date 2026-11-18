@@ -93,7 +93,21 @@ describe('ícono del día en el ticket', () => {
     expect(ticketMarkFor('quinceanos')).toBe('crown');
     expect(ticketMarkFor('graduations')).toBe('cap');
     expect(ticketMarkFor('baby-showers')).toBe('bottle');
+    expect(ticketMarkFor('christmas-sessions')).toBe('tree');
     expect(ticketMarkFor('concerts')).toBe('star');
     expect(ticketMarkFor(null)).toBe('star');
+  });
+});
+
+describe('diseños del ticket', () => {
+  it('las sesiones navideñas sugieren un diseño de Navidad', async () => {
+    const { suggestedTicketDesign, ticketDesign } = await import('../ticket-designs');
+    expect(ticketDesign(suggestedTicketDesign('christmas-sessions')).group).toBe('Navidad');
+  });
+
+  it('un diseño desconocido sigue usando el sobre clásico', async () => {
+    const { ticketDesign } = await import('../ticket-designs');
+    expect(ticketDesign('no-existe').key).toBe('envelope');
+    expect(ticketDesign(null).key).toBe('envelope');
   });
 });

@@ -26,6 +26,10 @@ import { TicketClouds } from './designs/ticket-clouds';
 import { TicketGlass } from './designs/ticket-glass';
 import { TicketLeaves } from './designs/ticket-leaves';
 import { TicketCradle } from './designs/ticket-cradle';
+import { TicketPine } from './designs/ticket-pine';
+import { TicketRibbon } from './designs/ticket-ribbon';
+import { TicketOrnament } from './designs/ticket-ornament';
+import { TicketWreath } from './designs/ticket-wreath';
 
 /** Luminancia aproximada (0–255) de un #rrggbb. */
 function luminance(hex: string): number {
@@ -71,6 +75,10 @@ export type TicketData = Pick<
     TicketGlass,
     TicketLeaves,
     TicketCradle,
+    TicketPine,
+    TicketRibbon,
+    TicketOrnament,
+    TicketWreath,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -144,6 +152,18 @@ export type TicketData = Pick<
       }
       @case ('cradle') {
         <app-ticket-cradle [v]="view()" />
+      }
+      @case ('pine') {
+        <app-ticket-pine [v]="view()" />
+      }
+      @case ('ribbon') {
+        <app-ticket-ribbon [v]="view()" />
+      }
+      @case ('ornament') {
+        <app-ticket-ornament [v]="view()" />
+      }
+      @case ('wreath') {
+        <app-ticket-wreath [v]="view()" />
       }
     }
   `,
