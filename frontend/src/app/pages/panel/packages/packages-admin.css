@@ -99,11 +99,13 @@
   background: var(--color-overlay);
 }
 
+/* Centrada con margin (no con translate): un translate atraparía al editor lateral que se abre dentro. */
 .dialog {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  inset: 0;
   z-index: calc(var(--z-modal) - 5);
+  height: fit-content;
+  margin: auto;
   display: grid;
   gap: var(--space-4);
   width: min(880px, calc(100vw - 2rem));
@@ -112,14 +114,12 @@
   padding: var(--space-6);
   background: var(--color-surface);
   box-shadow: var(--shadow-lg);
-  translate: -50% -50%;
   animation: pop var(--duration-base, 240ms) var(--ease-out, ease-out);
 }
 
 @keyframes pop {
   from {
     opacity: 0;
-    scale: 0.98;
   }
 }
 
