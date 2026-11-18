@@ -1,5 +1,5 @@
 import { sequelize } from '../config/database.js';
-import { Package, PackageFeature, Service } from '../models/index.js';
+import { Package, PackageFeature, Service, ServicePackage } from '../models/index.js';
 import { notFound } from '../utils/app-error.js';
 import { toPackage } from '../services/serializers.js';
 
@@ -20,9 +20,14 @@ export async function listPublic(req, res) {
   const where = { isActive: true };
   const include = [{ model: PackageFeature, as: 'features' }];
   if (slug) {
-    include.push({ model: Service, as: 'services', where: { slug, isVisible: true }, attributes: [], through: { attributes: [] } });
+    include.push({ model: Service, as: 'services', where: { slug, isVisible: true }, attributes: ['id'], through: { attributes: ['sortOrder'] } });
   }
   const packages = await Package.findAll({ where, include, order: [['sortOrder', 'ASC']] });
+  // Con servicio: el orden que Armando le dio dentro de ese servicio (empates: orden general).
+  if (slug) {
+    const inService = (pkg) => pkg.services?.[0]?.ServicePackage?.sortOrder ?? 0;
+    packages.sort((a, b) => inService(a) - inService(b) || a.sortOrder - b.sortOrder);
+  }
   res.json(packages.map((pkg) => toPackage(pkg, { forPublic: true })));
 }
 
@@ -40,8 +45,20 @@ async function replaceFeatures(packageId, features, transaction) {
   );
 }
 
+/** Cambia los servicios del paquete. Donde se agrega por primera vez, queda al final de ese servicio. */
 async function replaceServices(pkg, serviceIds, transaction) {
-  if (serviceIds) await pkg.setServices(serviceIds, { transaction });
+  if (!serviceIds) return;
+  const wanted = new Set(serviceIds);
+  const current = await ServicePackage.findAll({ where: { packageId: pkg.id }, transaction });
+  for (const link of current) {
+    if (!wanted.has(link.serviceId)) await link.destroy({ transaction });
+  }
+  const linked = new Set(current.map((link) => link.serviceId));
+  for (const serviceId of wanted) {
+    if (linked.has(serviceId)) continue;
+    const last = (await ServicePackage.max('sortOrder', { where: { serviceId }, transaction })) ?? -1;
+    await ServicePackage.create({ serviceId, packageId: pkg.id, sortOrder: last + 1 }, { transaction });
+  }
 }
 
 export async function create(req, res) {

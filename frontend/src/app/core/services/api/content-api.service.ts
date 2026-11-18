@@ -94,6 +94,11 @@ export class ContentApiService {
     return this.http.put(`${this.api}/services/reorder`, { ids });
   }
 
+  /** Orden de los paquetes dentro de un servicio (el de su página). */
+  reorderServicePackages(serviceId: string, ids: string[]) {
+    return this.http.put(`${this.api}/services/${serviceId}/package-order`, { ids });
+  }
+
   deleteService(id: string) {
     return this.http.delete<void>(`${this.api}/services/${id}`);
   }

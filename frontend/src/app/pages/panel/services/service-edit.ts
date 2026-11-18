@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { ContentApiService } from '../../../core/services/api/content-api.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -15,13 +14,15 @@ import { ImagePicker } from '../shared/image-picker';
 import { VideoPicker } from '../shared/video-picker';
 import { ConfirmService } from '../shared/confirm.service';
 import { GalleryManager } from './gallery-manager';
+import { ServicePackages } from '../packages/service-packages';
+import { StudioPackage } from '../../../core/types/catalog.model';
 
 type Tab = 'info' | 'hero' | 'video' | 'packages' | 'gallery' | 'seo';
 
 /** Alta y edición de un servicio: textos, Hero/portada, video, paquetes, galería y SEO. */
 @Component({
   selector: 'app-service-edit',
-  imports: [ReactiveFormsModule, RouterLink, Btn, SkeletonText, PageHeader, ImagePicker, VideoPicker, GalleryManager],
+  imports: [ReactiveFormsModule, RouterLink, Btn, SkeletonText, PageHeader, ImagePicker, VideoPicker, GalleryManager, ServicePackages],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './service-edit.html',
   styleUrl: './service-edit.css',
@@ -47,7 +48,7 @@ export class ServiceEdit implements OnInit {
   protected readonly video = signal<Media | null>(null);
   protected readonly packageIds = signal<string[]>([]);
 
-  protected readonly allPackages = toSignal(this.api.packages().pipe(catchError(() => of([]))), { initialValue: [] });
+  protected readonly allPackages = signal<StudioPackage[]>([]);
 
   protected readonly tabs = computed<{ value: Tab; label: string }[]>(() => [
     { value: 'info', label: 'Información' },
@@ -73,6 +74,7 @@ export class ServiceEdit implements OnInit {
   });
 
   ngOnInit(): void {
+    this.api.packages().pipe(catchError(() => of([]))).subscribe((list) => this.allPackages.set(list));
     const id = this.id();
     if (!id) {
       this.loaded.set(true);
@@ -104,8 +106,12 @@ export class ServiceEdit implements OnInit {
     });
   }
 
-  protected togglePackage(id: string, checked: boolean): void {
-    this.packageIds.update((ids) => (checked ? [...ids, id] : ids.filter((x) => x !== id)));
+  /** La pestaña Paquetes guarda al momento: aquí solo se vuelven a leer los paquetes y su orden. */
+  protected reloadPackages(): void {
+    const id = this.id();
+    if (!id) return;
+    this.api.packages().subscribe((list) => this.allPackages.set(list));
+    this.api.service(id).subscribe((s) => this.packageIds.set(s.packageIds));
   }
 
   protected save(): void {
@@ -121,7 +127,7 @@ export class ServiceEdit implements OnInit {
       videoMediaId: this.video()?.id ?? null,
       heroMediaId: this.heroImage()?.id ?? null,
       coverMediaId: this.coverImage()?.id ?? null,
-      packageIds: this.packageIds(),
+      // Los paquetes se guardan desde su pestaña, al momento; no se mandan aquí para no pisar ese orden.
     };
     this.saving.set(true);
     const request = this.isNew() ? this.api.createService(body) : this.api.updateService(this.id()!, body);

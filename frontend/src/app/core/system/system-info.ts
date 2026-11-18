@@ -44,6 +44,17 @@ export const SYSTEM = {
 
 export const RELEASES: Release[] = [
   {
+    version: '1.8.0',
+    date: '2026-11-18',
+    title: 'Servicios y paquetes en tarjetas',
+    changes: [
+      { kind: 'mejora', text: 'Servicios: tarjetas con foto, como en el sitio; se acomodan arrastrándolas.' },
+      { kind: 'mejora', text: 'Paquetes: organizados por servicio. Cada tarjeta muestra sus paquetes; al abrirla se eligen, se acomodan y se editan.' },
+      { kind: 'mejora', text: 'En cada servicio, la pestaña Paquetes muestra sus paquetes en tarjetas para acomodarlos, editarlos, agregar o quitar.' },
+      { kind: 'nuevo', text: 'Cada servicio tiene su propio orden de paquetes, y es el que se ve en su página.' },
+    ],
+  },
+  {
     version: '1.7.1',
     date: '2026-11-18',
     title: 'Ajustes de los tickets navideños',

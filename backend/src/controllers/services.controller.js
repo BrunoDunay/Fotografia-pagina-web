@@ -1,5 +1,5 @@
 import { sequelize } from '../config/database.js';
-import { Service, MediaAsset, Gallery, GalleryImage, Package, PackageFeature, Faq } from '../models/index.js';
+import { Service, ServicePackage, MediaAsset, Gallery, GalleryImage, Package, PackageFeature, Faq } from '../models/index.js';
 import { notFound } from '../utils/app-error.js';
 import { slugify } from '../utils/slugify.js';
 import { toMedia, toPackage, toServiceDetail, toServiceSummary } from '../services/serializers.js';
@@ -18,6 +18,16 @@ const mediaIncludes = [
   { model: MediaAsset, as: 'heroMedia' },
   { model: MediaAsset, as: 'videoMedia' },
 ];
+
+/**
+ * Orden de los paquetes dentro de un servicio: el que Armando acomoda en el panel (service_packages.sort_order);
+ * si dos empatan (paquetes viejos con 0), decide el orden general de Paquetes.
+ */
+export function byServiceOrder(packages) {
+  return [...packages].sort(
+    (a, b) => (a.ServicePackage?.sortOrder ?? 0) - (b.ServicePackage?.sortOrder ?? 0) || a.sortOrder - b.sortOrder,
+  );
+}
 
 async function findServiceOr404(where) {
   const service = await Service.findOne({ where, include: mediaIncludes });
@@ -64,12 +74,9 @@ export async function getBySlug(req, res) {
   const isPortrait = (m) => m.height >= m.width;
   const preview = [...media.filter(isPortrait), ...media.filter((m) => !isPortrait(m))].slice(0, 3).map(toMedia);
 
-  // El orden lo define el panel de Paquetes (orden global), igual que en la Home.
-  packages.sort((a, b) => a.sortOrder - b.sortOrder);
-
   res.json({
     ...toServiceDetail(service),
-    packages: packages.map((pkg) => toPackage(pkg, { forPublic: true })),
+    packages: byServiceOrder(packages).map((pkg) => toPackage(pkg, { forPublic: true })),
     faqs: faqs.map(({ id, question, answer }) => ({ id, question, answer })),
     gallery: { imageCount, preview },
   });
@@ -80,7 +87,7 @@ export async function listAdmin(_req, res) {
   const services = await Service.findAll({
     include: [
       ...mediaIncludes,
-      { model: Package, as: 'packages', attributes: ['id'], through: { attributes: ['sortOrder'] } },
+      { model: Package, as: 'packages', attributes: ['id', 'sortOrder'], through: { attributes: ['sortOrder'] } },
       { model: Gallery, as: 'gallery', attributes: ['id'] },
     ],
     order: [['sortOrder', 'ASC'], ['name', 'ASC']],
@@ -90,7 +97,7 @@ export async function listAdmin(_req, res) {
   res.json(
     services.map((s) => ({
       ...toServiceDetail(s),
-      packageIds: s.packages.map((p) => p.id),
+      packageIds: byServiceOrder(s.packages).map((p) => p.id),
       galleryId: s.gallery?.id ?? null,
       imageCount: s.gallery ? (countByGallery[s.gallery.id] ?? 0) : 0,
     })),
@@ -99,9 +106,9 @@ export async function listAdmin(_req, res) {
 
 export async function getAdmin(req, res) {
   const service = await findServiceOr404({ id: req.valid.params.id });
-  const packages = await service.getPackages({ attributes: ['id'], joinTableAttributes: ['sortOrder'] });
+  const packages = await service.getPackages({ attributes: ['id', 'sortOrder'], joinTableAttributes: ['sortOrder'] });
   const gallery = await Gallery.findOne({ where: { serviceId: service.id } });
-  res.json({ ...toServiceDetail(service), packageIds: packages.map((p) => p.id), galleryId: gallery?.id ?? null });
+  res.json({ ...toServiceDetail(service), packageIds: byServiceOrder(packages).map((p) => p.id), galleryId: gallery?.id ?? null });
 }
 
 async function setPackages(service, packageIds, transaction) {
@@ -151,6 +158,17 @@ export async function reorder(req, res) {
   await sequelize.transaction(async (transaction) => {
     for (const [index, id] of ids.entries()) {
       await Service.update({ sortOrder: index }, { where: { id }, transaction });
+    }
+  });
+  res.json({ message: 'Orden actualizado.' });
+}
+
+/** Admin: orden de los paquetes dentro de un servicio (el que se ve en su página). */
+export async function reorderPackages(req, res) {
+  const service = await findServiceOr404({ id: req.valid.params.id });
+  await sequelize.transaction(async (transaction) => {
+    for (const [index, packageId] of req.valid.body.ids.entries()) {
+      await ServicePackage.update({ sortOrder: index }, { where: { serviceId: service.id, packageId }, transaction });
     }
   });
   res.json({ message: 'Orden actualizado.' });

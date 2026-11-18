@@ -73,28 +73,6 @@
       <p class="p-help">Es opcional. Al guardar, el video aparece en la página del servicio, entre la descripción y los paquetes.</p>
     </section>
 
-    <!-- Paquetes -->
-    <section class="p-card p-form" [hidden]="tab() !== 'packages'">
-      <p class="p-help">
-        Los paquetes que marques se mostrarán en la sección de paquetes de <strong>{{ form.controls.name.value || 'este servicio' }}</strong>
-        y serán los que puedas elegir al registrar un evento de este tipo. Sin paquetes, la página invita a pedir una cotización.
-      </p>
-      <ul class="pkg-list">
-        @for (p of allPackages(); track p.id) {
-          <li>
-            <label class="p-check">
-              <input type="checkbox" [checked]="packageIds().includes(p.id)" (change)="togglePackage(p.id, $any($event.target).checked); form.markAsDirty()" />
-              {{ p.name }}
-              @if (!p.isActive) {
-                <span class="p-badge">Inactivo</span>
-              }
-            </label>
-          </li>
-        }
-      </ul>
-      <a class="p-link" routerLink="/panel/packages">Administrar paquetes</a>
-    </section>
-
     <!-- SEO -->
     <section class="p-card p-form" [hidden]="tab() !== 'seo'">
       <p class="p-help">Cómo aparece esta página en los resultados de Google y al compartir su enlace. Vacío = se genera automáticamente.</p>
@@ -108,12 +86,28 @@
       </div>
     </section>
 
-    @if (tab() !== 'gallery') {
+    @if (tab() !== 'gallery' && tab() !== 'packages') {
       <div class="p-actions">
         <button appBtn type="submit" [loading]="saving()" [disabled]="saving()">{{ isNew() ? 'Crear servicio' : 'Guardar cambios' }}</button>
       </div>
     }
   </form>
+
+  <!-- Paquetes: se guardan al momento (no esperan a "Guardar cambios"); fuera del form porque el editor de paquete es otro form -->
+  @if (tab() === 'packages') {
+    <section class="p-card p-form">
+      <p class="p-help">
+        Estos paquetes se muestran en la página de <strong>{{ form.controls.name.value || 'este servicio' }}</strong>, en este orden,
+        y son los que puedes elegir al registrar un evento de este tipo. Los cambios de esta pestaña se guardan al momento.
+      </p>
+      @if (service(); as s) {
+        <app-service-packages [serviceId]="s.id" [serviceName]="s.name" [packageIds]="packageIds()" [packages]="allPackages()" (changed)="reloadPackages()" />
+      } @else {
+        <p class="p-alert">Primero crea el servicio; después podrás agregarle paquetes aquí.</p>
+      }
+      <a class="p-link" routerLink="/panel/packages">Ver todos los paquetes</a>
+    </section>
+  }
 
   @if (tab() === 'gallery' && service()?.galleryId; as galleryId) {
     <section class="p-card">

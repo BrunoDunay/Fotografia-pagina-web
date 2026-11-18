@@ -23,6 +23,7 @@ describe('rutas privadas sin sesión → 401', () => {
     ['get', '/api/services/admin'],
     ['post', '/api/services'],
     ['delete', '/api/galleries/00000000-0000-0000-0000-000000000000/images'],
+    ['put', '/api/services/00000000-0000-0000-0000-000000000000/package-order'],
     ['put', '/api/themes/mode'],
     ['get', '/api/auth/me'],
   ];

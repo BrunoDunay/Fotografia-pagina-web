@@ -28,6 +28,7 @@ export const servicesRoutes = Router()
   .get('/:slug', validate({ params: s.slugParams }), services.getBySlug)
   .post('/', requireAuth, validate({ body: s.serviceCreateBody }), services.create)
   .put('/:id', requireAuth, validate({ params: idParams, body: s.serviceUpdateBody }), services.update)
+  .put('/:id/package-order', requireAuth, validate({ params: idParams, body: reorderBody }), services.reorderPackages)
   .patch('/:id/visibility', requireAuth, validate({ params: idParams, body: s.visibilityBody }), services.setVisibility)
   .delete('/:id', requireAuth, validate({ params: idParams }), services.remove);
 

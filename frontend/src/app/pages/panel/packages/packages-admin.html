@@ -1,103 +1,80 @@
-<app-page-header title="Paquetes" subtitle="Precios y características. Mientras un precio esté oculto, el público ve una invitación a pedir su cotización.">
-  <button appBtn type="button" (click)="edit('new')">+ Nuevo paquete</button>
+<app-page-header title="Paquetes" subtitle="Cada tarjeta es un servicio con sus paquetes. Haz clic en una para acomodar y editar sus paquetes; arrastra las tarjetas para cambiar el orden de los servicios.">
+  <button appBtn type="button" (click)="editing.set('new')">+ Nuevo paquete</button>
 </app-page-header>
 
-<div class="layout" [class.has-editor]="editing() !== null">
-  <div>
-    @if (packages(); as list) {
-      <ul class="p-list" cdkDropList (cdkDropListDropped)="drop($event)">
-        @for (p of list; track p.id) {
-          <li class="p-list-item" cdkDrag [class.is-selected]="isEditing(p)" [class.is-inactive]="!p.isActive">
-            <span class="p-drag" cdkDragHandle aria-label="Arrastrar para ordenar">⠿</span>
-            <button type="button" class="row" (click)="edit(p)">
-              <strong>{{ p.name }}</strong>
-              <span class="p-help">{{ serviceNames(p.serviceIds) }} · {{ p.features.length }} característica(s)</span>
-            </button>
-            @if (p.isFeatured) {
-              <span class="p-badge p-badge--accent">Recomendado</span>
-            }
-            @if (!p.isActive) {
-              <span class="p-badge">Inactivo</span>
-            }
-            <span class="price" [class.is-pending]="p.price === null || p.isPriceProvisional">
-              {{ p.price === null ? 'Sin precio' : p.isPriceProvisional ? money(p.price) + ' · no visible' : money(p.price) }}
-            </span>
-          </li>
-        } @empty {
-          <li class="p-card p-empty">Aún no hay paquetes.</li>
+@if (services(); as list) {
+  <div class="grid" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)">
+    @for (s of list; track s.id) {
+      <app-service-tile
+        class="tile"
+        cdkDrag
+        (cdkDragStarted)="dragging = true"
+        [name]="s.name"
+        [cover]="s.cover"
+        [hidden]="!s.isVisible"
+        tabindex="0"
+        role="button"
+        [attr.aria-label]="'Paquetes de ' + s.name"
+        (click)="open(s)"
+        (keydown.enter)="open(s)"
+      >
+        @if (!s.isVisible) {
+          <span tileBadges class="p-badge">Oculto</span>
         }
-      </ul>
-    } @else {
-      <app-skeleton-table [rows]="5" [columns]="3" />
+        <span class="count">{{ s.packageIds.length === 0 ? 'Sin paquetes' : s.packageIds.length === 1 ? '1 paquete' : s.packageIds.length + ' paquetes' }}</span>
+        @if (packagesOf(s); as pkgs) {
+          @if (pkgs.length) {
+            <ol class="names">
+              @for (p of pkgs; track p.id) {
+                <li [class.is-inactive]="!p.isActive">
+                  <span>{{ p.name }}</span>
+                  <small>{{ p.price === null ? '—' : money(p.price) }}</small>
+                </li>
+              }
+            </ol>
+          }
+        }
+        <span class="manage">Ver y editar →</span>
+      </app-service-tile>
     }
   </div>
 
-  @if (editing() !== null) {
-    <form class="p-card p-form editor fade-up" [formGroup]="form" (ngSubmit)="save()" novalidate>
-      <div class="p-row">
-        <h2 class="p-card__title">{{ editing() === 'new' ? 'Nuevo paquete' : 'Editar paquete' }}</h2>
-        <span class="p-spacer"></span>
-        <button type="button" class="p-icon-btn" (click)="editing.set(null)" aria-label="Cerrar editor"><app-icon name="close" [size]="16" /></button>
-      </div>
-
-      <div class="field">
-        <label class="field__label" for="name">Nombre *</label>
-        <input id="name" class="field__control" formControlName="name" />
-      </div>
-      <div class="field">
-        <label class="field__label" for="subtitle">Subtítulo</label>
-        <input id="subtitle" class="field__control" formControlName="subtitle" placeholder="Ej. Ideal para bodas íntimas" />
-      </div>
-      <div class="p-grid">
-        <div class="field">
-          <label class="field__label" for="price">Precio (MXN)</label>
-          <input id="price" class="field__control" type="number" min="0" step="100" formControlName="price" placeholder="Sin definir" />
-        </div>
-        <label class="p-check align-end">
-          <input type="checkbox" formControlName="isPriceProvisional" /> Ocultar el precio al público
-        </label>
-      </div>
-      <div class="p-row">
-        <label class="p-check"><input type="checkbox" formControlName="isFeatured" /> Recomendado</label>
-        <label class="p-check"><input type="checkbox" formControlName="isActive" /> Activo (visible)</label>
-      </div>
-
-      <div class="field">
-        <span class="field__label">Características</span>
-        <div formArrayName="features" cdkDropList (cdkDropListDropped)="moveFeature($event)" class="features">
-          @for (f of features.controls; track f; let i = $index) {
-            <div class="feature" [formGroupName]="i" cdkDrag>
-              <span class="p-drag" cdkDragHandle>⠿</span>
-              <input class="field__control" formControlName="label" placeholder="Ej. USB en caja de madera" aria-label="Característica" />
-              <input class="field__control value" formControlName="value" placeholder="Detalle (opcional)" aria-label="Detalle" />
-              <button type="button" class="p-icon-btn p-icon-btn--danger" (click)="features.removeAt(i); form.markAsDirty()" aria-label="Quitar">
-                <app-icon name="close" [size]="14" />
-              </button>
-            </div>
-          }
-        </div>
-        <button type="button" class="p-link add" (click)="addFeature()">+ Agregar característica</button>
-      </div>
-
-      <div class="field">
-        <span class="field__label">Se muestra en</span>
-        <div class="services">
-          @for (s of services(); track s.id) {
-            <label class="p-check">
-              <input type="checkbox" [checked]="form.controls.serviceIds.value.includes(s.id)" (change)="toggleService(s.id, $any($event.target).checked)" />
-              {{ s.name }}
-            </label>
-          }
-        </div>
-      </div>
-
-      <div class="p-row">
-        @if (editingPackage(); as pkg) {
-          <button appBtn variant="ghost" type="button" class="danger" (click)="remove(pkg)">Eliminar</button>
+  @if (unassigned().length) {
+    <section class="p-card loose">
+      <h2 class="p-card__title">Sin servicio</h2>
+      <p class="p-help">Estos paquetes no aparecen en ninguna página. Ábrelos para asignarlos a un servicio o eliminarlos.</p>
+      <ul class="loose__list">
+        @for (p of unassigned(); track p.id) {
+          <li>
+            <button type="button" class="loose__item" (click)="editing.set(p)">
+              <strong>{{ p.name }}</strong>
+              <span class="p-help">{{ p.price === null ? 'Sin precio' : money(p.price) }}</span>
+            </button>
+          </li>
         }
-        <span class="p-spacer"></span>
-        <button appBtn type="submit" [loading]="saving()" [disabled]="saving() || form.invalid">Guardar paquete</button>
-      </div>
-    </form>
+      </ul>
+    </section>
   }
-</div>
+} @else {
+  <app-skeleton-table [rows]="5" [columns]="3" />
+}
+
+<!-- Ventana con los paquetes del servicio elegido -->
+@if (openService(); as s) {
+  <div class="backdrop" (click)="openId.set(null)"></div>
+  <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="svc-pkgs-title">
+    <header class="p-row dialog__head">
+      <div>
+        <p class="p-help">Paquetes de</p>
+        <h2 id="svc-pkgs-title" class="dialog__title">{{ s.name }}</h2>
+      </div>
+      <span class="p-spacer"></span>
+      <button type="button" class="p-icon-btn" (click)="openId.set(null)" aria-label="Cerrar"><app-icon name="close" [size]="16" /></button>
+    </header>
+    <app-service-packages [serviceId]="s.id" [serviceName]="s.name" [packageIds]="s.packageIds" [packages]="packages()" (changed)="load()" />
+  </section>
+}
+
+@if (editing(); as e) {
+  <app-package-editor [pkg]="e" (saved)="onEditorDone()" (removed)="onEditorDone()" (closed)="editing.set(null)" />
+}
