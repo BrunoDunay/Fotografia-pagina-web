@@ -44,6 +44,16 @@ export const SYSTEM = {
 
 export const RELEASES: Release[] = [
   {
+    version: '1.7.1',
+    date: '2026-11-18',
+    title: 'Ajustes de los tickets navideños',
+    changes: [
+      { kind: 'mejora', text: 'Esfera: dentro solo va el nombre del evento, más grande (hasta dos renglones).' },
+      { kind: 'mejora', text: 'Pino: letras más grandes, acento vino, logo legible y el monograma AO bordado en la almohada.' },
+      { kind: 'mejora', text: 'Moño: "Sesión navideña" y la fecha en color vino.' },
+    ],
+  },
+  {
     version: '1.7.0',
     date: '2026-11-18',
     title: 'Tickets navideños',

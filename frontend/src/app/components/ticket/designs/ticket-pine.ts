@@ -5,6 +5,7 @@ import { TicketView, fitSize } from '../ticket-view';
 /**
  * Pino (ref. Sesiones navideñas / "A Slim Tree"): la foto de la sala con el pino y su sombra en la pared.
  * La información va a la derecha, donde la referencia tenía su texto (limpiado de la imagen).
+ * La almohada del sillón lleva el monograma AO bordado (ya viene en la imagen).
  * Medidas en cqw sobre el lienzo de 1080×1920 (1 cqw = 10.8 px).
  */
 @Component({
@@ -44,7 +45,8 @@ import { TicketView, fitSize } from '../ticket-view';
   `,
   styles: `
     :host {
-      --status-scale: 0.6;
+      --status-scale: 0.66;
+      --status-weight: 500;
       --status-font: var(--font-serif);
 
       position: relative;
@@ -56,32 +58,33 @@ import { TicketView, fitSize } from '../ticket-view';
     p, h1 { margin: 0; }
     .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
-    .copy { position: absolute; top: 22.4cqw; left: 55cqw; right: 4cqw; display: flex; flex-direction: column; align-items: flex-start; }
-    .eyebrow { font-size: 1.9cqw; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--t-accent); }
-    .names { display: grid; margin-top: 4cqw; font-family: var(--font-serif); font-weight: 600; line-height: 1.02; overflow-wrap: anywhere; }
+    .copy { position: absolute; top: 20cqw; left: 54cqw; right: 3cqw; display: flex; flex-direction: column; align-items: flex-start; }
+    .eyebrow { font-size: 2.7cqw; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--t-accent); }
+    .names { display: grid; margin-top: 3.4cqw; font-family: var(--font-serif); font-weight: 600; line-height: 1.02; overflow-wrap: anywhere; }
     .names i { font-size: 0.8em; font-weight: 400; line-height: 1.1; }
-    .rule { width: 17.5cqw; height: 0.28cqw; margin: 4.5cqw 0 3.6cqw; background: var(--t-accent); }
-    .date { font-size: 1.9cqw; font-weight: 600; letter-spacing: 0.16em; line-height: 1.5; text-transform: uppercase; color: var(--t-accent); }
-    .detail { font-size: 1.8cqw; letter-spacing: 0.12em; line-height: 1.6; text-transform: uppercase; }
+    .rule { width: 19cqw; height: 0.35cqw; margin: 4cqw 0 3.4cqw; background: var(--t-accent); }
+    .date { font-size: 2.8cqw; font-weight: 600; letter-spacing: 0.1em; line-height: 1.35; text-transform: uppercase; color: var(--t-accent); }
+    .detail { font-size: 2.5cqw; font-weight: 500; letter-spacing: 0.06em; line-height: 1.5; text-transform: uppercase; }
 
-    .status { margin-top: 5cqw; align-items: flex-start; }
+    .status { margin-top: 4.4cqw; align-items: flex-start; color: var(--t-ink); }
 
     .foot { position: absolute; left: 8cqw; right: 8cqw; bottom: 7cqw; display: grid; justify-items: center; gap: 3.6cqw; text-align: center; }
     .message {
       display: -webkit-box;
       overflow: hidden;
       font-family: var(--font-serif);
-      font-size: 3.6cqw;
+      font-size: 4.2cqw;
       font-style: italic;
       line-height: 1.3;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
       line-clamp: 2;
     }
-    .logo { width: 26cqw; height: auto; opacity: 0.85; }
+    /* El logo trae el monograma champán: sobre la alfombra clara se pinta oscuro para que se lea. */
+    .logo { width: 38cqw; height: auto; filter: brightness(0); opacity: 0.78; }
   `,
 })
 export class TicketPine {
   readonly v = input.required<TicketView>();
-  protected readonly nameSize = computed(() => fitSize([...this.v().names].sort((a, b) => b.length - a.length)[0], 8, 4.6, 9));
+  protected readonly nameSize = computed(() => fitSize([...this.v().names].sort((a, b) => b.length - a.length)[0], 10, 6, 8));
 }

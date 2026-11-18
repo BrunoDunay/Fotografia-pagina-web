@@ -4,7 +4,7 @@ import { TicketView, fitSize } from '../ticket-view';
 
 /**
  * Esfera (ref. Sesiones navideñas / esfera de cristal): la foto de la esfera con nieve colgando del pino.
- * Los nombres van dentro de la esfera, donde la referencia tenía su marca; fecha y cuenta regresiva debajo.
+ * Los nombres van dentro de la esfera (hasta dos renglones), donde la referencia tenía su marca; fecha y cuenta regresiva debajo.
  * Medidas en cqw sobre el lienzo de 1080×1920 (1 cqw = 10.8 px).
  */
 @Component({
@@ -15,9 +15,7 @@ import { TicketView, fitSize } from '../ticket-view';
     <img class="bg" src="/tickets/navidad/ornament.webp" alt="" width="1080" height="1920" />
 
     <div class="inside">
-      <p class="eyebrow">Sesión navideña</p>
       <h1 class="names" [style.font-size]="nameSize()">{{ v().title }}</h1>
-      <p class="short">{{ v().shortDate }}</p>
     </div>
 
     <div class="info">
@@ -31,7 +29,7 @@ import { TicketView, fitSize } from '../ticket-view';
   `,
   styles: `
     :host {
-      --status-scale: 0.66;
+      --status-scale: 0.8;
       --status-font: var(--font-serif);
 
       position: relative;
@@ -47,21 +45,19 @@ import { TicketView, fitSize } from '../ticket-view';
     /* Dentro de la esfera, arriba del sillón. */
     .inside {
       position: absolute;
-      top: 66cqw;
+      top: 60cqw;
       left: 50%;
-      width: 60cqw;
-      height: 29cqw;
+      width: 56cqw;
+      height: 36cqw;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 1.4cqw;
       translate: -50% 0;
-      text-shadow: 0 0.3cqw 1.4cqw rgb(0 0 0 / 0.55);
+      text-shadow: 0 0.3cqw 1.2cqw rgb(0 0 0 / 0.7), 0 0 0.4cqw rgb(0 0 0 / 0.5);
     }
-    .eyebrow { font-size: 1.9cqw; letter-spacing: 0.4em; text-transform: uppercase; opacity: 0.9; }
-    .names { font-family: var(--font-script); font-weight: 400; line-height: 1.1; overflow-wrap: anywhere; }
-    .short { font-family: var(--font-serif); font-size: 3cqw; letter-spacing: 0.3em; }
+    .names { font-family: var(--font-script); font-weight: 400; line-height: 1.05; overflow-wrap: break-word; }
 
     .info {
       position: absolute;
@@ -74,13 +70,13 @@ import { TicketView, fitSize } from '../ticket-view';
       gap: 1.8cqw;
       text-shadow: 0 0.2cqw 1cqw rgb(0 0 0 / 0.5);
     }
-    .date { font-size: 2.6cqw; letter-spacing: 0.26em; text-transform: uppercase; }
-    .where { font-size: 2.1cqw; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.85; }
+    .date { font-size: 3.5cqw; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; }
+    .where { font-size: 2.8cqw; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.9; }
     .info app-ticket-status { margin-top: 1.4cqw; }
-    .logo { width: 26cqw; height: auto; margin-top: 2.4cqw; opacity: 0.9; }
+    .logo { width: 30cqw; height: auto; margin-top: 2.4cqw; opacity: 0.95; }
   `,
 })
 export class TicketOrnament {
   readonly v = input.required<TicketView>();
-  protected readonly nameSize = computed(() => fitSize(this.v().title, 9.4, 5, 14));
+  protected readonly nameSize = computed(() => fitSize(this.v().title, 12.5, 8, 12));
 }

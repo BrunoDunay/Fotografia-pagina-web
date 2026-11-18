@@ -52,7 +52,7 @@ import { TicketView, fitSize } from '../ticket-view';
     .title, .message, .status, .rule, .date, .place, .time, .logo { position: absolute; left: 50%; translate: -50% 0; }
 
     .title { top: 45cqw; width: 76cqw; display: grid; justify-items: center; gap: 1cqw; }
-    .script { font-family: var(--font-script); font-size: 8cqw; line-height: 1; }
+    .script { font-family: var(--font-script); font-size: 8cqw; line-height: 1; color: var(--t-accent); }
     .names { font-family: var(--font-serif); font-weight: 500; line-height: 1.02; overflow-wrap: anywhere; }
     .message {
       top: 64.5cqw;
@@ -68,8 +68,8 @@ import { TicketView, fitSize } from '../ticket-view';
       line-clamp: 2;
     }
     .status { top: 73.4cqw; }
-    .rule { top: 89.5cqw; width: 44cqw; height: 0.2cqw; background: currentColor; opacity: 0.45; }
-    .date { top: 93.4cqw; width: 80cqw; font-size: 3.2cqw; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .rule { top: 89.5cqw; width: 44cqw; height: 0.25cqw; background: var(--t-accent); opacity: 0.7; }
+    .date { top: 93.4cqw; width: 80cqw; font-size: 3.2cqw; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--t-accent); }
     .place { top: 98.8cqw; width: 80cqw; font-size: 2.4cqw; letter-spacing: 0.04em; text-transform: uppercase; }
     .time { top: 118.4cqw; width: 70cqw; font-size: 2.6cqw; letter-spacing: 0.06em; text-transform: uppercase; }
     .logo { top: 131.5cqw; width: 27cqw; height: auto; opacity: 0.8; }

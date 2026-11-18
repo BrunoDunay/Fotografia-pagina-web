@@ -82,21 +82,21 @@ export const TICKET_DESIGNS: TicketDesignDef[] = [
     label: 'Pino',
     group: 'Navidad',
     services: [],
-    palettes: [p('original', 'Original', '#4a5a45', '#3a3a2c', '#efe6d8', '#1f4a3a', '#b04a3a')],
+    palettes: [p('original', 'Original', '#4a5a45', '#3a3a2c', '#efe6d8', '#1f3d30', '#6e1f2a')],
   },
   {
     key: 'ribbon',
     label: 'Moño',
     group: 'Navidad',
     services: [],
-    palettes: [p('original', 'Original', '#6b4a2f', '#8a7560', '#efe6da', '#5a3e28', '#6b4a2f')],
+    palettes: [p('original', 'Original', '#6b4a2f', '#8a7560', '#efe6da', '#5a3e28', '#8a2c38')],
   },
   {
     key: 'ornament',
     label: 'Esfera',
     group: 'Navidad',
     services: [],
-    palettes: [p('original', 'Original', '#2b2a22', '#15140f', '#f7f2e8', '#f7f2e8', '#e0b66a')],
+    palettes: [p('original', 'Original', '#2b2a22', '#15140f', '#f7f2e8', '#f7f2e8', '#f0cf86')],
   },
 
   // ---------------- Bodas ----------------

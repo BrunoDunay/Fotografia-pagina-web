@@ -56,7 +56,7 @@ import { TicketView } from './ticket-view';
     .unit strong {
       font-family: var(--status-font, var(--font-sans));
       font-size: calc(8.6cqw * var(--s));
-      font-weight: 300;
+      font-weight: var(--status-weight, 300);
       line-height: 1;
       font-variant-numeric: tabular-nums;
     }
