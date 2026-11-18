@@ -25,7 +25,12 @@
   </div>
 
   @if (g.images.length) {
-    <p class="p-help">Arrastra para ordenar. La primera foto aparece primero en la galería pública.</p>
+    <div class="toolbar">
+      <p class="p-help">Arrastra para ordenar. La primera foto aparece primero en la galería pública.</p>
+      <button appBtn variant="ghost" size="sm" type="button" class="remove-all" (click)="removeAll()" [disabled]="removingAll() || progress() !== null">
+        {{ removingAll() ? 'Eliminando…' : 'Eliminar todas' }}
+      </button>
+    </div>
     <div class="grid" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="drop($event)">
       @for (img of g.images; track img.id; let i = $index) {
         <figure class="tile" cdkDrag>

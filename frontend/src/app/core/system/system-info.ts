@@ -44,6 +44,15 @@ export const SYSTEM = {
 
 export const RELEASES: Release[] = [
   {
+    version: '1.6.0',
+    date: '2026-11-18',
+    title: 'Eliminar todas las fotos de una galería',
+    changes: [
+      { kind: 'nuevo', text: 'En cada servicio, el botón "Eliminar todas" borra de golpe las fotos de su galería (pide confirmación antes).' },
+      { kind: 'correccion', text: 'Al crear un evento que no ocupa la fecha, el aviso ya no dice que la fecha quedó ocupada.' },
+    ],
+  },
+  {
     version: '1.5.1',
     date: '2026-11-13',
     title: 'Seguridad de dependencias',

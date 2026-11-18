@@ -151,6 +151,10 @@ export class ContentApiService {
     return this.http.put(`${this.api}/galleries/${galleryId}/cover`, { imageId });
   }
 
+  deleteAllGalleryImages(galleryId: string) {
+    return this.http.delete<{ removed: number; failed: number }>(`${this.api}/galleries/${galleryId}/images`);
+  }
+
   deleteGalleryImage(galleryId: string, imageId: string) {
     return this.http.delete<void>(`${this.api}/galleries/${galleryId}/images/${imageId}`);
   }

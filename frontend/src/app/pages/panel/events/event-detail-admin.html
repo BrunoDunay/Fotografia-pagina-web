@@ -10,7 +10,11 @@
 
   @if (created() && ticketUrl()) {
     <div class="created p-card">
-      <p><strong>¡Listo!</strong> La fecha quedó ocupada en el calendario público y el ticket está listo para compartir.</p>
+      <p>
+        <strong>¡Listo!</strong>
+        @if (event()?.blocksAvailability) { La fecha quedó ocupada en el calendario público y el ticket está listo para compartir. }
+        @else { El ticket está listo para compartir. La fecha sigue libre en el calendario público. }
+      </p>
       <div class="p-row">
         <button appBtn size="sm" type="button" (click)="copyLink()">Copiar enlace del ticket</button>
         @if (shareToClient(); as wa) {

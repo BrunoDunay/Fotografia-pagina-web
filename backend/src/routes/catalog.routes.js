@@ -47,6 +47,7 @@ export const galleriesRoutes = Router()
   .post('/:id/images', requireAuth, uploadManyImages, validate({ params: idParams }), galleries.uploadImages)
   .put('/:id/order', requireAuth, validate({ params: idParams, body: reorderBody }), galleries.reorderImages)
   .put('/:id/cover', requireAuth, validate({ params: idParams, body: s.setCoverBody }), galleries.setCover)
+  .delete('/:id/images', requireAuth, validate({ params: idParams }), galleries.removeAllImages)
   .delete('/:id/images/:imageId', requireAuth, validate({ params: s.galleryImageParams }), galleries.removeImage);
 
 export const mediaRoutes = Router()

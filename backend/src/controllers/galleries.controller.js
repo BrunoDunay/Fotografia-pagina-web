@@ -130,6 +130,40 @@ export async function setCover(req, res) {
   res.json({ message: 'Portada actualizada.' });
 }
 
+/**
+ * Admin: elimina todas las fotos de la galería de golpe (registro y archivo en Cloudinary).
+ * Reporta cuántas se borraron y cuántas fallaron; las que fallan se quedan para reintentar.
+ * Las portadas que apuntaban a esas fotos quedan vacías solas (ON DELETE SET NULL).
+ */
+export async function removeAllImages(req, res) {
+  const gallery = await findGalleryOr404(req.valid.params.id);
+  const images = await GalleryImage.findAll({
+    where: { galleryId: gallery.id },
+    include: [{ model: MediaAsset, as: 'media' }],
+  });
+
+  let removed = 0;
+  let failed = 0;
+  for (let i = 0; i < images.length; i += UPLOAD_CONCURRENCY) {
+    const batch = images.slice(i, i + UPLOAD_CONCURRENCY);
+    const results = await Promise.allSettled(
+      batch.map(async (image) => {
+        await image.destroy();
+        if (image.media) await deleteMediaAsset(image.media);
+      }),
+    );
+    for (const result of results) {
+      if (result.status === 'fulfilled') removed++;
+      else {
+        failed++;
+        console.error('Fallo al eliminar imagen:', result.reason);
+      }
+    }
+  }
+
+  res.json({ removed, failed });
+}
+
 export async function removeImage(req, res) {
   const { id, imageId } = req.valid.params;
   const image = await GalleryImage.findOne({

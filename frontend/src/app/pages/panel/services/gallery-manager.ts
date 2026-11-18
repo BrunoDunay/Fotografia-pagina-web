@@ -6,6 +6,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { GalleryImage } from '../../../core/types/catalog.model';
 import { Photo } from '../../../components/photo/photo';
 import { Icon } from '../../../components/icon/icon';
+import { Btn } from '../../../components/buttons/btn';
 import { ConfirmService } from '../shared/confirm.service';
 
 const MAX_MB = 15;
@@ -13,11 +14,11 @@ const BATCH = 20;
 
 /**
  * Galería de un servicio: subir varias fotos (con barra de progreso), ordenar arrastrando,
- * elegir portada y eliminar. Respeta el límite de fotos de la galería.
+ * elegir portada y eliminar (una por una o todas de golpe). Respeta el límite de fotos de la galería.
  */
 @Component({
   selector: 'app-gallery-manager',
-  imports: [CdkDropList, CdkDrag, Photo, Icon],
+  imports: [CdkDropList, CdkDrag, Photo, Icon, Btn],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './gallery-manager.html',
   styleUrl: './gallery-manager.css',
@@ -32,6 +33,7 @@ export class GalleryManager implements OnInit {
   protected readonly gallery = signal<AdminGallery | null>(null);
   protected readonly progress = signal<number | null>(null);
   protected readonly dragging = signal(false);
+  protected readonly removingAll = signal(false);
 
   ngOnInit(): void {
     this.load();
@@ -129,6 +131,32 @@ export class GalleryManager implements OnInit {
     this.api.setGalleryCover(g.id, image.id).subscribe(() => {
       this.toast.success('Portada de la galería actualizada.');
       this.load();
+    });
+  }
+
+  protected async removeAll(): Promise<void> {
+    const g = this.gallery();
+    if (!g || !g.images.length) return;
+    const total = g.images.length;
+    const ok = await this.confirm.ask({
+      title: 'Eliminar todas las fotos',
+      message: `Se eliminarán las ${total} fotos de esta galería y del almacenamiento. No se puede deshacer.`,
+      confirmLabel: `Eliminar ${total} fotos`,
+      danger: true,
+    });
+    if (!ok) return;
+    this.removingAll.set(true);
+    this.api.deleteAllGalleryImages(g.id).subscribe({
+      next: ({ removed, failed }) => {
+        if (removed) this.toast.success(`${removed} foto(s) eliminada(s).`);
+        if (failed) this.toast.error(`${failed} foto(s) no se pudieron eliminar. Intenta de nuevo.`);
+        this.removingAll.set(false);
+        this.load();
+      },
+      error: () => {
+        this.removingAll.set(false);
+        this.load();
+      },
     });
   }
 
