@@ -22,6 +22,7 @@ import { SITE_URL } from '../../core/config/api.config';
 import { PublicReservation } from '../../core/types/agenda.model';
 import { formatLongDate } from '../../core/utils/date-mx';
 import { ticketPalette } from '../../core/ticket-designs';
+import { downloadBlob, renderTicketJpeg } from '../../core/utils/ticket-image';
 import { ReservationTicket } from '../../components/ticket/reservation-ticket';
 import { Btn } from '../../components/buttons/btn';
 import { Icon } from '../../components/icon/icon';
@@ -29,7 +30,6 @@ import { Icon } from '../../components/icon/icon';
 type LoadState = { status: 'loading' } | { status: 'ready'; reservation: PublicReservation } | { status: 'missing' };
 
 /** Ancho de la imagen exportada: formato de historia 1080×1920. */
-const EXPORT_WIDTH = 1080;
 
 /**
  * Ticket digital (/reservation/:code). Layout propio, sin navbar: pensado para abrirse
@@ -109,7 +109,7 @@ export class ReservationPage {
     });
   }
 
-  /** Genera el PNG 1080×1920 del ticket; en celular abre "Compartir" (historias, WhatsApp…), si no, lo descarga. */
+  /** Descarga el ticket tal cual se ve, como JPG de 1080×1920 (formato de historia). Sin menú de compartir. */
   protected async saveImage(): Promise<void> {
     const element = this.ticketRef()?.nativeElement;
     const r = this.reservation();
@@ -117,36 +117,9 @@ export class ReservationPage {
 
     this.exporting.set(true);
     try {
-      const { toBlob } = await import('html-to-image');
-      await document.fonts.ready;
-      // Lienzo exacto 1080×1920 (el alto en pantalla puede tener decimales).
-      const blob = await toBlob(element, {
-        pixelRatio: 1,
-        canvasWidth: EXPORT_WIDTH,
-        canvasHeight: Math.round((EXPORT_WIDTH * 16) / 9),
-        // La sombra del ticket es para la pantalla, no para la imagen.
-        style: { boxShadow: 'none' },
-      });
-      if (!blob) throw new Error('empty');
-
-      const file = new File([blob], `ticket-${r.code}.png`, { type: 'image/png' });
-      // Solo en celular/tablet: en escritorio (p. ej. Edge en Windows) "Compartir" abre un diálogo
-      // del sistema poco útil; ahí es mejor descargar directo.
-      const touchDevice = matchMedia('(pointer: coarse)').matches;
-      if (touchDevice && navigator.canShare?.({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], title: r.title });
-          return;
-        } catch (error) {
-          if ((error as DOMException).name === 'AbortError') return;
-          // Si compartir falla por otra razón, se descarga.
-        }
-      }
-      const url = URL.createObjectURL(blob);
-      const link = Object.assign(document.createElement('a'), { href: url, download: file.name });
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      this.toast.success('Imagen guardada.');
+      const blob = await renderTicketJpeg(element, ticketPalette(r.design, r.palette).paper);
+      downloadBlob(blob, `ticket-${r.code}.jpg`);
+      this.toast.success('Imagen descargada.');
     } catch {
       this.toast.error('No se pudo generar la imagen. Intenta de nuevo o toma una captura de pantalla.');
     } finally {

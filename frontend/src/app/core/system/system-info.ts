@@ -44,6 +44,16 @@ export const SYSTEM = {
 
 export const RELEASES: Release[] = [
   {
+    version: '1.8.1',
+    date: '2026-11-19',
+    title: 'Descarga del ticket',
+    changes: [
+      { kind: 'correccion', text: 'El botón del ticket descarga la imagen directo (JPG 1080×1920), sin abrir el menú de compartir del teléfono.' },
+      { kind: 'correccion', text: 'En iPhone la imagen ya no sale negra ni sin contenido: se espera a que carguen fotos y letras antes de armarla.' },
+      { kind: 'correccion', text: 'La imagen descargada queda idéntica a la de pantalla (se cargan las letras en su grosor real). También aplica a la imagen del correo de confirmación.' },
+    ],
+  },
+  {
     version: '1.8.0',
     date: '2026-11-18',
     title: 'Servicios y paquetes en tarjetas',

@@ -15,14 +15,14 @@
       <div class="actions">
         <button appBtn variant="light" type="button" [loading]="exporting()" [disabled]="exporting()" (click)="saveImage()">
           <app-icon name="download" [size]="16" />
-          Guardar imagen
+          Descargar imagen
         </button>
         <button appBtn variant="ghost" class="actions__ghost" type="button" (click)="shareLink()">
           <app-icon [name]="canShareLink() ? 'share' : 'link'" [size]="16" />
           {{ canShareLink() ? 'Compartir enlace' : 'Copiar enlace' }}
         </button>
       </div>
-      <p class="hint">La imagen tiene formato de historia (1080 × 1920).</p>
+      <p class="hint">Se descarga como imagen JPG en formato de historia (1080 × 1920).</p>
     }
     @case ('missing') {
       <div class="missing">

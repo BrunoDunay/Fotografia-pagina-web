@@ -18,6 +18,7 @@ import { ConfirmService } from '../shared/confirm.service';
 import { TicketPreviewData, TicketStylePicker } from '../shared/ticket-style-picker';
 import { ReservationTicket, TicketData } from '../../../components/ticket/reservation-ticket';
 import { Media } from '../../../core/types/common.model';
+import { renderTicketJpeg } from '../../../core/utils/ticket-image';
 import {
   EVENT_STATUS_LABEL,
   PAYMENT_CONCEPT_LABEL,
@@ -225,10 +226,7 @@ export class EventDetailAdmin implements OnInit {
     if (!element) return null;
     try {
       this.mailNow.set(Date.now());
-      const { toCanvas } = await import('html-to-image');
-      await document.fonts.ready;
-      const canvas = await toCanvas(element, { pixelRatio: 1, canvasWidth: 1080, canvasHeight: 1920, style: { boxShadow: 'none' } });
-      return await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+      return await renderTicketJpeg(element, '#ffffff', 0.9);
     } catch {
       return null;
     }
