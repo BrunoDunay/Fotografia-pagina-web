@@ -63,7 +63,8 @@ import { TicketView, fitSize } from '../ticket-view';
     .names { display: grid; margin-top: 3.4cqw; font-family: var(--font-serif); font-weight: 600; line-height: 1.02; overflow-wrap: anywhere; }
     .names i { font-size: 0.8em; font-weight: 400; line-height: 1.1; }
     .rule { width: 19cqw; height: 0.35cqw; margin: 4cqw 0 3.4cqw; background: var(--t-accent); }
-    .date { font-size: 2.8cqw; font-weight: 600; letter-spacing: 0.1em; line-height: 1.35; text-transform: uppercase; color: var(--t-accent); }
+    /* Cabe en un renglón con holgura: si queda justo, la pantalla y la imagen descargada lo cortan distinto. */
+    .date { font-size: 2.7cqw; font-weight: 600; letter-spacing: 0.05em; line-height: 1.35; text-transform: uppercase; color: var(--t-accent); }
     .detail { font-size: 2.5cqw; font-weight: 500; letter-spacing: 0.06em; line-height: 1.5; text-transform: uppercase; }
 
     .status { margin-top: 4.4cqw; align-items: flex-start; color: var(--t-ink); }
